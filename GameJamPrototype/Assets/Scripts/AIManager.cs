@@ -27,7 +27,7 @@ public class AIManager : MonoBehaviour
     // called before start as game loads
     void Awake()
     {
-        
+        Debug.Log("AI Manager Awake");
         if (Instance == null)
         {
             {
@@ -49,6 +49,7 @@ public class AIManager : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
+        Debug.Log("AI Manager Started");
         spawnManager = FindObjectOfType<SpawnManager>();
         InvokeRepeating(nameof(CheckEnemies), 0f, checkInterval);
         StartCoroutine(AssignAttackers());
@@ -81,7 +82,7 @@ public class AIManager : MonoBehaviour
     {
         if (!activeEnemies.Contains(enemy))
         {
-            //Debug.Log("Registered Enemy");
+            Debug.Log("Registered Enemy");
             activeEnemies.Add(enemy);//Adds enemy to the active list if not already present
         }
     }
@@ -112,6 +113,7 @@ public class AIManager : MonoBehaviour
     }
     private void CheckEnemies()
     {
+        Debug.Log("Checking Enemies");
         foreach (var enemy in activeEnemies) //loop through all registered enemies
         {
             //Check if enemy in range
