@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     private float o2Decay = .14f; //Decay rate per half second. 
     private float o2DecayRate = .5f;//Rate of o2 Decay in seconds
     public bool o2DecayOn = true;
+    private float o2HealthDecay = 2.5f;
     private float kickO2Drain = 4;
     private float sprintMult = 2;
     public bool isSprinting;
@@ -25,15 +26,23 @@ public class UIManager : MonoBehaviour
         while (o2DecayOn)
         {
             yield return new WaitForSeconds(o2DecayRate);
-            if (isSprinting)
+            if (playerO2 >= 0)
             {
-                playerO2 -= o2Decay * sprintMult;
+                
+                if (isSprinting)
+                {
+                    playerO2 -= o2Decay * sprintMult;
+                }
+                else
+                {
+                    playerO2 -= o2Decay;
+                }
+                Debug.Log("Player o2 decremented to " + playerO2);
             }
-            else
+            else if (playerO2 < 0)
             {
-                playerO2 -= o2Decay;
+                playerHealth -= o2HealthDecay ;
             }
-            Debug.Log("Player o2 decremented to " + playerO2);
             yield return null;
         }        
     }
@@ -43,6 +52,14 @@ public class UIManager : MonoBehaviour
         {
             playerO2 -= (o2Decay * kickO2Drain);
         }
+    }
+    public void RefillPlayerO2()
+    {
+        playerO2 = 100f;
+    }
+    public void HealPlayer()
+    {
+        playerHealth = 100f;
     }
     public void HurtPlayer(float damage)
     {
