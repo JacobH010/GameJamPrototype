@@ -5,11 +5,23 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f; // Speed of player movement
     private List<GameObject> enemiesInRange = new List<GameObject>(); // List to store all enemies in range
+    private UIManager uiManager;
 
+    private void Start()
+    {
+
+        uiManager = GetComponent<UIManager>();
+    }
     private void Update()
     {
         MovePlayer();
-
+        if (Input.GetKey(KeyCode.LeftShift)) 
+        {
+            uiManager.isSprinting = true;
+        }else
+            {
+                uiManager.isSprinting = false;
+            }
         // Check if Space key is pressed and destroy all enemies in range
         if (Input.GetKeyDown(KeyCode.Space))
         {
