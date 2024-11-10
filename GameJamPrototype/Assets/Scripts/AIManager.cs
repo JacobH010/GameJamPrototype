@@ -116,7 +116,7 @@ public class AIManager : MonoBehaviour
             Debug.LogError("Player not found in scene! ensure player character is tagged with the player tag in the editor");
             return Vector3.zero;
         }
-        Debug.Log("Get Player Location ran... Player location = " + GetPlayerLocation());
+        //Debug.Log("Get Player Location ran... Player location = " + GetPlayerLocation());
     }
     private void CheckEnemies()
     {
