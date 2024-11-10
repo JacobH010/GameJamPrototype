@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             enemiesInRange.Add(other.gameObject);
-            Debug.Log("Enemy Entered Trigger Zone");
+           // Debug.Log("Enemy Entered Trigger Zone");
         }
     }
 
@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             enemiesInRange.Remove(other.gameObject);
-            Debug.Log("Enemy Exited Trigger Zone");
+           // Debug.Log("Enemy Exited Trigger Zone");
         }
     }
 
@@ -78,5 +78,9 @@ public class PlayerController : MonoBehaviour
             }
         }
         enemiesInRange.Clear(); // Clear the list after destroying all enemies
+    }
+    public void HitByEnemy(float damage)
+    {
+        uiManager.HurtPlayer(damage);
     }
 }

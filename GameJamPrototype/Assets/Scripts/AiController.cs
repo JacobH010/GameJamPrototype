@@ -25,10 +25,11 @@ public class AIController : MonoBehaviour
 
     //Attack Settings
     public bool isAttacking { get; private set; }
-    public float attackSpeed = 1000f;
+    public float attackSpeed = 100f;
     private float attackDistance = 10f;
     private float attackCooldown = 3f;
     public float attackAccelartion = 30f;
+    public float damage = 10f;
     public bool isCooldown { get; private set; }
     //private float lastAttackTime = -Mathf.Infinity;
 
@@ -47,6 +48,8 @@ public class AIController : MonoBehaviour
     public NavMeshAgent navMeshAgent { get; private set; }
     private SpawnManager spawnManager;
    
+    private PlayerController playerController;
+   
     //Enum defining AI State Machine Variables
     public enum AIState { Roam, Following, Fleeing, Searching, Attacking }
     private AIState currentState = AIState.Roam;
@@ -56,6 +59,12 @@ public class AIController : MonoBehaviour
         //Initialize References
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
+        
+        playerController = FindObjectOfType<PlayerController>();
+        if (playerController == null)
+        {
+            Debug.LogError("Player Controller null in AI Controller");
+        }
         if (navMeshAgent == null)
         {
             Debug.LogError("NAV MESH AGENT FAILED TO LOAD");
@@ -157,11 +166,12 @@ public class AIController : MonoBehaviour
 
             navMeshAgent.speed = attackSpeed;
             navMeshAgent.acceleration = attackAccelartion;
-
+            
             navMeshAgent.SetDestination(GetAttackPosition());
+            yield return null;
             //Debug.Log("Attack Command Recieved");
             yield return new WaitUntil(() => navMeshAgent.remainingDistance <= .8f);
-
+            
             isAttacking = false;
             aiManager.RemoveFromAttackers(this);
             
@@ -443,5 +453,18 @@ public class AIController : MonoBehaviour
     {
         SetState(AIState.Roam);
         navMeshAgent = GetComponent<NavMeshAgent>();
+    }
+    private void OnTriggerEnter(Collider other)
+
+    {
+        Debug.Log("Collision detected");
+        if (other.gameObject.CompareTag("Player") && isAttacking)
+        {
+            Debug.Log("damage player");
+            playerController.HitByEnemy(damage);
+        } else if (other.gameObject.CompareTag("Player") && !isAttacking)
+        {
+            Debug.Log("Player Collision Detected - Not attacking");
+        }
     }
 }
