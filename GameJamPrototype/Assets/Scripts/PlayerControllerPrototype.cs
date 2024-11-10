@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Y))
         {
             uiManager.HurtPlayer(15);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ReturnToMainMenu();
         }
         if (Input.GetKey(KeyCode.LeftShift)) 
         {
@@ -82,5 +87,9 @@ public class PlayerController : MonoBehaviour
     public void HitByEnemy(float damage)
     {
         uiManager.HurtPlayer(damage);
+    }
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
