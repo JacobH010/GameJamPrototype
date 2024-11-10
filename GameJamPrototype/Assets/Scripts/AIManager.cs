@@ -50,6 +50,7 @@ public class AIManager : MonoBehaviour
     // Update is called once per frame
     void Start()
     {
+        //Debug.Log("The AI Manager is running");
         spawnManager = FindObjectOfType<SpawnManager>();
         InvokeRepeating(nameof(CheckEnemies), 0f, checkInterval);
         StartCoroutine(AssignAttackers());
@@ -62,9 +63,10 @@ public class AIManager : MonoBehaviour
     IEnumerator CheckAndClearAtatckers()
     {
         yield return new WaitForSeconds(checkInterval * 4f);
+        //Debug.Log("Check Enemies Ran");
         if (attackers.Count == lastAttackerCount)
         {
-            Debug.Log("Clearing Lists");
+           // Debug.Log("Clearing Lists");
             attackers.Clear();
             lastAttackerIndex = 0;
         }
@@ -99,24 +101,30 @@ public class AIManager : MonoBehaviour
     //Method to get player current location
     public Vector3 GetPlayerLocation()
     {
+        //Debug.Log("Player location ran");
         GameObject playerObject = GameObject.FindWithTag("Player");
         if (playerObject != null)
         {
+            //Debug.Log("Get Player Location ran");
             locationOfPlayer = playerObject.transform;//Sets player reference
+            //Debug.Log("Player Location is = " + playerObject.transform.ToString());
             return locationOfPlayer.position;
+            
         }
         else
         {
             Debug.LogError("Player not found in scene! ensure player character is tagged with the player tag in the editor");
             return Vector3.zero;
         }
+        Debug.Log("Get Player Location ran... Player location = " + GetPlayerLocation());
     }
     private void CheckEnemies()
     {
+        //Debug.Log("Check Enememies is running");
         foreach (var enemy in activeEnemies) //loop through all registered enemies
         {
             //Check if enemy in range
-            if (Vector3.Distance(enemy.transform.position, locationOfPlayer.transform.position) <= detectionRange)
+            if (Vector3.Distance(enemy.transform.position, GetPlayerLocation()) <= detectionRange)
             {
                 if (HasLineOfSight(enemy))
                 {
@@ -141,6 +149,8 @@ public class AIManager : MonoBehaviour
                 {
                     enemy.StopFollowing();
                 }
+               // Debug.Log("Enemies in range returning false");
+               // Debug.Log("Range to player = " + Vector3.Distance(enemy.transform.position, GetPlayerLocation()));
             }
             
         }
@@ -149,8 +159,8 @@ public class AIManager : MonoBehaviour
     public bool HasLineOfSight(AIController enemy)
     {
         //Debug.Log("Line of Sight Testing");
-        Vector3 directionToPlayer = locationOfPlayer.position - enemy.transform.position;
-        float distanceToPlayer = Vector3.Distance(enemy.transform.position, locationOfPlayer.position);
+        Vector3 directionToPlayer = GetPlayerLocation() - enemy.transform.position;
+        float distanceToPlayer = Vector3.Distance(enemy.transform.position, GetPlayerLocation());
 
         
         if (Physics.Raycast(enemy.transform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer,

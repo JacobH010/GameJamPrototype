@@ -3194,7 +3194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8171120852399775996, guid: 3cd25ebb98f3b8c408fa3a738f0e36bb, type: 3}
-  poolSize: 25
+  poolSize: 1
   spawnInterval: 0.75
   respawnDelay: 3
   spawnRadius: 10
@@ -18991,6 +18991,25 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7994490304912883524, guid: c747f044d43c26949a89202be6d16dff, type: 3}
   m_PrefabInstance: {fileID: 2043000429}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1317467828 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5187085201797984449, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
+  m_PrefabInstance: {fileID: 1891432668}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1317467836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1317467828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47cb27ed96be3684694048235680dad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  o2DecayOn: 1
+  isSprinting: 0
 --- !u!4 &1330618509 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4710983840306315618, guid: 9c351c8dd49bb164e81630da2d0cf9b0, type: 3}
@@ -19973,6 +19992,10 @@ PrefabInstance:
     - target: {fileID: 6027860046486379190, guid: 60ef7215c6d555c42b561a62ca566e42, type: 3}
       propertyPath: m_Name
       value: PostProcessingCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7529705697821828446, guid: 60ef7215c6d555c42b561a62ca566e42, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34327,15 +34350,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4800135271704089236, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.24469008
+      value: 0.28
       objectReference: {fileID: 0}
     - target: {fileID: 4800135271704089236, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.5985637
+      value: 18.64
       objectReference: {fileID: 0}
     - target: {fileID: 4800135271704089236, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.9932432
+      value: -9.95
       objectReference: {fileID: 0}
     - target: {fileID: 4800135271704089236, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -34376,7 +34399,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5187085201797984449, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1317467836}
   m_SourcePrefab: {fileID: 100100000, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
 --- !u!4 &1929014031 stripped
 Transform:

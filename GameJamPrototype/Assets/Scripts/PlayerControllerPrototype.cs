@@ -15,6 +15,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         MovePlayer();
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            uiManager.HurtPlayer(15);
+        }
         if (Input.GetKey(KeyCode.LeftShift)) 
         {
             uiManager.isSprinting = true;

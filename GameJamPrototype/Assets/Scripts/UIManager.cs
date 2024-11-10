@@ -1,18 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     private float playerHealth = 100f;
     private float playerO2 = 100f;
-    private float o2Decay = .14f; //Decay rate per half second. 
+    private float o2Decay = .1f; //Decay rate per half second. 
     private float o2DecayRate = .5f;//Rate of o2 Decay in seconds
     public bool o2DecayOn = true;
     private float o2HealthDecay = 2.5f;
     private float kickO2Drain = 4;
     private float sprintMult = 2;
     public bool isSprinting;
+
+    public Slider healthSlider;
+    public Slider o2Slider;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -37,12 +43,14 @@ public class UIManager : MonoBehaviour
                 {
                     playerO2 -= o2Decay;
                 }
-                Debug.Log("Player o2 decremented to " + playerO2);
+                //Debug.Log("Player o2 decremented to " + playerO2);
             }
             else if (playerO2 < 0)
             {
                 playerHealth -= o2HealthDecay ;
+                healthSlider.value = playerHealth;
             }
+            o2Slider.value = playerO2;
             yield return null;
         }        
     }
@@ -64,9 +72,19 @@ public class UIManager : MonoBehaviour
     public void HurtPlayer(float damage)
     {
         playerHealth -= damage;
-        if (playerHealth <= 0)
+        if (healthSlider == null)
         {
-            GameOver();
+            Debug.Log("Health Slider VAlue is null");
+        }
+        else
+        {
+
+
+            healthSlider.value = playerHealth;
+            if (playerHealth <= 0)
+            {
+                GameOver();
+            }
         }
     }
     public void GameOver()

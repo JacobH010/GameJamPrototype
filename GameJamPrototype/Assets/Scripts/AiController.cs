@@ -17,17 +17,18 @@ public class AIController : MonoBehaviour
     //Follow Settings
     private float followSpeed = 4.5f;
     private float sprintSpeed = 9f;
-    private float followDistance = 5f;
-    private float fleeDistance = 2.5f;
-    private float safeDistance = 12f;
+    private float followDistance = 10f;
+    private float fleeDistance = 5f;
+    private float safeDistance = 15f;
     public bool isFollowing { get; private set; }
     public bool isfleeing { get; private set; }
 
     //Attack Settings
     public bool isAttacking { get; private set; }
-    private float attackSpeed = 30f;
-    private float attackDistance = 8f;
+    public float attackSpeed = 1000f;
+    private float attackDistance = 10f;
     private float attackCooldown = 3f;
+    public float attackAccelartion = 30f;
     public bool isCooldown { get; private set; }
     //private float lastAttackTime = -Mathf.Infinity;
 
@@ -155,6 +156,7 @@ public class AIController : MonoBehaviour
         {
 
             navMeshAgent.speed = attackSpeed;
+            navMeshAgent.acceleration = attackAccelartion;
 
             navMeshAgent.SetDestination(GetAttackPosition());
             //Debug.Log("Attack Command Recieved");
