@@ -18,7 +18,7 @@ public class MainMenu : MonoBehaviour
     }
     public void StartGamePrototype()
     {
-        SceneManager.LoadScene("Prototype_OfficeLevel");
+        SceneManager.LoadScene("LoadoutSelection");
     }
     public void StartMovementStage()
     {

@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AIStageing.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/LoadoutSelection.unity
+    guid: 3819a50c1302c8c41b65274624999c85
   m_configObjects: {}

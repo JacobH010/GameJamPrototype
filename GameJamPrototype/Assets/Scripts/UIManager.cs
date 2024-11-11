@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    private float playerHealth = 100f;
+    public float playerHealth = 100f;
     private float playerO2 = 100f;
     private float o2Decay = .1f; //Decay rate per half second. 
     private float o2DecayRate = .5f;//Rate of o2 Decay in seconds
@@ -15,13 +15,29 @@ public class UIManager : MonoBehaviour
     private float kickO2Drain = 4;
     private float sprintMult = 2;
     public bool isSprinting;
+    public Button useHealth;
+    public Button useO2;
+    public TextMeshProUGUI healthPacksRemaining;
+    public TextMeshProUGUI o2Remaining;
+    private float healthPacks;
+    private float o2Tanks;
+    private float ammoPacks;
+
 
     public Slider healthSlider;
     public Slider o2Slider;
+
+    private LoadoutManager loadoutManager;
     
     // Start is called before the first frame update
     void Start()
     {
+        loadoutManager = LoadoutManager.loadoutManager;
+        if (loadoutManager == null)
+        {
+            Debug.LogError("Loadout MAnager NULL");
+        }
+        AcceptLoadoutVariables();
         StartCoroutine(Decrement02());
     }
 
@@ -43,7 +59,7 @@ public class UIManager : MonoBehaviour
                 {
                     playerO2 -= o2Decay;
                 }
-                //Debug.Log("Player o2 decremented to " + playerO2);
+                Debug.Log("Player o2 decremented to " + playerO2);
             }
             else if (playerO2 < 0)
             {
@@ -65,10 +81,7 @@ public class UIManager : MonoBehaviour
     {
         playerO2 = 100f;
     }
-    public void HealPlayer()
-    {
-        playerHealth = 100f;
-    }
+    
     public void HurtPlayer(float damage)
     {
         playerHealth -= damage;
@@ -87,9 +100,41 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+    public void HealPlayer()
+    {
+        if (healthPacks > 0)
+        {
+            healthPacks -= 1;
+            playerHealth = 100;
+            healthSlider.value = playerHealth;
+        }
+    }
+    public void RefillO2()
+    {
+        if (o2Tanks > 0)
+        {
+            o2Tanks -= 1;
+            playerO2 = 100;
+            o2Slider.value = playerO2;
+        }
+    }
     public void GameOver()
     {
         Debug.Log("Game Over!!");
         Time.timeScale = 0f;
+    }
+    public void AcceptLoadoutVariables()
+    {
+        healthPacks = loadoutManager.healthPacks;
+        if (healthPacks == null)
+        {
+            Debug.Log("Health Packs Variable null");
+        }
+        o2Tanks = loadoutManager.o2Tanks;
+        ammoPacks = loadoutManager.ammoPacks;
+        healthPacksRemaining.text = healthPacks.ToString();
+        o2Remaining.text = o2Tanks.ToString();
+
+        Debug.Log("health packs selected = " + healthPacks + ". O2 tanks selected = " + o2Tanks + ". Ammo Selected = " + ammoPacks + ".");
     }
 }

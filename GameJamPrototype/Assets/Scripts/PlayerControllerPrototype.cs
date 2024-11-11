@@ -8,10 +8,14 @@ public class PlayerController : MonoBehaviour
     private List<GameObject> enemiesInRange = new List<GameObject>(); // List to store all enemies in range
     private UIManager uiManager;
 
+    private LoadoutManager loadoutManager;
+    
+
     private void Start()
     {
-
+        //loadoutManager = LoadoutManager.loadoutManager;
         uiManager = GetComponent<UIManager>();
+        
     }
     private void Update()
     {
@@ -88,8 +92,11 @@ public class PlayerController : MonoBehaviour
     {
         uiManager.HurtPlayer(damage);
     }
+    
+
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
     }
+    
 }
