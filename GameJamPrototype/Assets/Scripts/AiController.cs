@@ -48,7 +48,7 @@ public class AIController : MonoBehaviour
     public NavMeshAgent navMeshAgent { get; private set; }
     private SpawnManager spawnManager;
    
-    private PlayerController playerController;
+    private PlayerControllerPrototype playerController;
    
     //Enum defining AI State Machine Variables
     public enum AIState { Roam, Following, Fleeing, Searching, Attacking }
@@ -60,7 +60,7 @@ public class AIController : MonoBehaviour
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
         
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<PlayerControllerPrototype>();
         if (playerController == null)
         {
             Debug.LogError("Player Controller null in AI Controller");
