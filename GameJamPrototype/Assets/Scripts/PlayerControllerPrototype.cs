@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class PlayerControllerPrototype : MonoBehaviour
 {
     public float moveSpeed = 5f; // Speed of player movement
     private List<GameObject> enemiesInRange = new List<GameObject>(); // List to store all enemies in range
