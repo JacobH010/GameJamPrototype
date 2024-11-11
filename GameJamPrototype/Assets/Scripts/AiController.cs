@@ -30,6 +30,7 @@ public class AIController : MonoBehaviour
     private float attackCooldown = 3f;
     public float attackAccelartion = 30f;
     public float damage = 10f;
+    public float pushForce = 10f;
     public bool isCooldown { get; private set; }
     //private float lastAttackTime = -Mathf.Infinity;
 
@@ -49,6 +50,8 @@ public class AIController : MonoBehaviour
     private SpawnManager spawnManager;
    
     private PlayerControllerPrototype playerController;
+
+    private Rigidbody rb;
    
     //Enum defining AI State Machine Variables
     public enum AIState { Roam, Following, Fleeing, Searching, Attacking }
@@ -59,7 +62,7 @@ public class AIController : MonoBehaviour
         //Initialize References
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
-        
+        rb = GetComponent<Rigidbody>();
         playerController = FindObjectOfType<PlayerControllerPrototype>();
         if (playerController == null)
         {
@@ -457,11 +460,24 @@ public class AIController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
 
     {
-        Debug.Log("Collision detected");
+       // Debug.Log("Collision detected");
         if (other.gameObject.CompareTag("Player") && isAttacking)
         {
             Debug.Log("damage player");
             playerController.HitByEnemy(damage);
+            Rigidbody playerRigidbody = other.GetComponent<Rigidbody>();
+            if (playerRigidbody != null)
+            {
+                Vector3 forceDirection = (other.transform.position - transform.position).normalized;
+                Debug.Log("Force direction set =" +  forceDirection);
+                //Adds force to player in direction of AI movement
+                playerRigidbody.AddForce(forceDirection * pushForce, ForceMode.Impulse);
+                Debug.Log("Added force to player");
+            }
+            else
+            {
+                Debug.Log("Player rigidbody reference not found");
+            }
         } else if (other.gameObject.CompareTag("Player") && !isAttacking)
         {
             Debug.Log("Player Collision Detected - Not attacking");

@@ -5785,7 +5785,6 @@ GameObject:
   - component: {fileID: 1890980463}
   - component: {fileID: 1890980462}
   - component: {fileID: 1890980461}
-  - component: {fileID: 1890980460}
   - component: {fileID: 1890980467}
   m_Layer: 7
   m_Name: Player
@@ -5794,27 +5793,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!135 &1890980460
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1890980459}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1890980461
 Rigidbody:
   m_ObjectHideFlags: 0
