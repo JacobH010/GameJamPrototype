@@ -16,11 +16,25 @@ public class ShotgunController : MonoBehaviour
     private float nextFireTime = 0f;        // Timer to handle firing rate
 
     private PlayerController playerController;  // Reference to the player controller for aiming check
+    public Rigidbody2D barrelRigidbody;     // Reference to the barrel's Rigidbody2D
+    private bool gravitySet = false;        // Tracks if gravity has already been set
+
+    [Header("Delete Zone")]
+    public Collider2D deleteZoneCollider;   // Reference to the delete zone collider
+
+    // Public property to allow other scripts to access the out-of-ammo status
+    public bool IsOutOfAmmo => isOutOfAmmo;
 
     private void Start()
     {
         // Get the PlayerController component from the player object
         playerController = FindObjectOfType<PlayerController>();
+
+        // Ensure the delete collider starts as disabled
+        if (deleteZoneCollider != null)
+        {
+            deleteZoneCollider.enabled = false;
+        }
     }
 
     private void Update()
@@ -30,6 +44,20 @@ public class ShotgunController : MonoBehaviour
         {
             Shoot();
             nextFireTime = Time.time + 1f / fireRate; // Set the next allowed firing time based on fire rate
+        }
+
+        // Check if out of ammo and set barrel gravity scale to 50 only once
+        if (isOutOfAmmo && barrelRigidbody != null && !gravitySet)
+        {
+            barrelRigidbody.gravityScale = 50f;
+            gravitySet = true; // Ensure this runs only once
+            Debug.Log("Gravity set to 50 due to out of ammo.");
+        }
+
+        // Enable or disable the delete zone collider based on ammo status
+        if (deleteZoneCollider != null)
+        {
+            deleteZoneCollider.enabled = isOutOfAmmo;
         }
     }
 
@@ -58,40 +86,41 @@ public class ShotgunController : MonoBehaviour
         // Loop to create each pellet
         for (int i = 0; i < pelletsPerShot; i++)
         {
-            // Calculate spread for each pellet
             Quaternion spreadRotation = Quaternion.Euler(
-                Random.Range(-spreadAngle, spreadAngle),  // Random X-axis spread
-                Random.Range(-spreadAngle, spreadAngle),  // Random Y-axis spread
-                0                                        // Keep Z-axis stable
+                Random.Range(-spreadAngle, spreadAngle),
+                Random.Range(-spreadAngle, spreadAngle),
+                0
             );
 
-            // Instantiate the pellet with the spread rotation applied
             GameObject pellet = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation * spreadRotation);
             Rigidbody rb = pellet.GetComponent<Rigidbody>();
 
-            // Set the pellet's velocity
             if (rb != null)
             {
-                rb.velocity = pellet.transform.forward * projectileSpeed; // Use pellet's forward direction after spread
+                rb.velocity = pellet.transform.forward * projectileSpeed;
             }
         }
     }
 
-    // Placeholder method for reloading using a physics-based action
     public void Reload()
     {
-        currentAmmo = 2; // Reset ammo count to 2
-        isOutOfAmmo = false; // Allow shooting again
+        currentAmmo = 2;
+        isOutOfAmmo = false;
+        gravitySet = false;
         Debug.Log("Reloaded!");
+
+        if (barrelRigidbody != null)
+        {
+            barrelRigidbody.gravityScale = 0f;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Example: Check if the player collides with an ammo box to reload
         if (other.CompareTag("AmmoBox"))
         {
-            Reload(); // Call Reload when colliding with an ammo box
-            Destroy(other.gameObject); // Optionally destroy the ammo box after pickup
+            Reload();
+            Destroy(other.gameObject);
         }
     }
 }
