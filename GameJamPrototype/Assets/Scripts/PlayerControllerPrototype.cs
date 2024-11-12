@@ -20,7 +20,7 @@ public class PlayerControllerPrototype : MonoBehaviour
     private void Update()
     {
         MovePlayer();
-        if (Input.GetKeyDown(KeyCode.Y))
+        if (Input.GetKeyDown(KeyCode.Y) && uiManager != null)
         {
             uiManager.HurtPlayer(15);
         }
@@ -28,13 +28,17 @@ public class PlayerControllerPrototype : MonoBehaviour
         {
             ReturnToMainMenu();
         }
-        if (Input.GetKey(KeyCode.LeftShift)) 
+        if (Input.GetKey(KeyCode.LeftShift) && uiManager != null) 
         {
             uiManager.isSprinting = true;
-        }else
+        }else if (uiManager != null) 
             {
                 uiManager.isSprinting = false;
-            }
+        }
+        else
+        {
+            Debug.Log("UI Manager null");
+        }
         // Check if Space key is pressed and destroy all enemies in range
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -90,9 +94,14 @@ public class PlayerControllerPrototype : MonoBehaviour
     }
     public void HitByEnemy(float damage)
     {
-        uiManager.HurtPlayer(damage);
+        if (uiManager != null)
+        {
+
+
+            uiManager.HurtPlayer(damage);
+
+        }
     }
-    
 
     public void ReturnToMainMenu()
     {
