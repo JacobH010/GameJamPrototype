@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Enemy
   - Projectile
+  - Item
+  - Barrel
+  - Shell
+  - Boundry
+  - DeleteZone
   layers:
   - Default
   - TransparentFX
@@ -18,7 +23,7 @@ TagManager:
   - PostProcessing
   - 3DUI
   - Projectile
-  - 
+  - Loaders
   - 
   - 
   - 

@@ -107,6 +107,7 @@ public class UIManager : MonoBehaviour
             healthPacks -= 1;
             playerHealth = 100;
             healthSlider.value = playerHealth;
+            healthPacksRemaining.text = healthPacks.ToString();
         }
     }
     public void RefillO2()
@@ -116,6 +117,7 @@ public class UIManager : MonoBehaviour
             o2Tanks -= 1;
             playerO2 = 100;
             o2Slider.value = playerO2;
+            o2Remaining.text = o2Tanks.ToString();
         }
     }
     public void GameOver()
