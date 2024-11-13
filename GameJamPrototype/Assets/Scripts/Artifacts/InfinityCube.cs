@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//INHERITANCE
 public class InfinityCube : ScannerItems
 {
     private SpriteRenderer imageComponent;
@@ -19,6 +20,7 @@ public class InfinityCube : ScannerItems
     {
         
     }
+    //POLYMORPHISM
     public override void ArtifactAction()
     {
         base.ArtifactAction();
