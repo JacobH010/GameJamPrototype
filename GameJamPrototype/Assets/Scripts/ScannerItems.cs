@@ -21,5 +21,9 @@ public class ScannerItems : DragCashScript
     {
         
     }
+    public virtual void ArtifactAction()
+    {
+        Debug.Log("Artifact action called");
+    }
     
 }
