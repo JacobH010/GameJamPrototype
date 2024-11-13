@@ -1975,8 +1975,8 @@ GameObject:
   - component: {fileID: 1123789812}
   - component: {fileID: 1123789814}
   - component: {fileID: 1123789813}
-  - component: {fileID: 1123789815}
   - component: {fileID: 1123789816}
+  - component: {fileID: 1123789817}
   m_Layer: 12
   m_Name: Square
   m_TagString: Scanner
@@ -2035,7 +2035,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.36, y: 1.36}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -2085,8 +2085,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.8553459, g: 0.24476863, b: 0.24476863, a: 1}
+  m_Sprite: {fileID: 589684543, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2096,31 +2096,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1123789815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1123789811}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7018a17567b293b449c0eb849088011b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVelocity: 5
-  flingDrag: 5
-  smoothing: 5
-  initialGravityScale: 0
-  maxGravityScale: 0
-  gravityIncreaseDuration: 0
-  xMomentumPreservation: 0.75
-  xVelocityTaperRate: 1
-  rotationSpeed: 10
-  rotationSmoothness: 5
-  rotationPreservation: 0.75
-  flavorText: This is flavor text from scanned from the item.
-  objectName: NAME
 --- !u!50 &1123789816
 Rigidbody2D:
   serializedVersion: 4
@@ -2148,6 +2123,35 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1123789817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123789811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef850e67c67de4d4c9d3ac1c1878aa0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVelocity: 5
+  flingDrag: 5
+  smoothing: 5
+  initialGravityScale: 0
+  maxGravityScale: 0
+  gravityIncreaseDuration: 0
+  xMomentumPreservation: 0.75
+  xVelocityTaperRate: 1
+  rotationSpeed: 10
+  rotationSmoothness: 5
+  rotationPreservation: 0.75
+  flavorText: This is flavor text from scanned from the item.
+  objectName: NAME
+  sprites:
+  - {fileID: -1470068146, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}
+  - {fileID: -1314473568, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}
+  - {fileID: -1634169375, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}
 --- !u!1 &1234811982
 GameObject:
   m_ObjectHideFlags: 0
