@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScannerItems : DragItemScript
+public class ScannerItems : DragCashScript
 {
     
     // Start is called before the first frame update
