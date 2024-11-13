@@ -39,11 +39,9 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler
                 draggableComponent.StartDragging();
             }
 
-            Debug.Log("Shotgun shell spawned and started dragging.");
         }
         else
         {
-            Debug.LogError("Shotgun shell prefab or UiPrototype1 parent is not assigned.");
         }
     }
 }

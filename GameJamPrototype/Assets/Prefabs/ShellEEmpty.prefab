@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 101201108932053725}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: ClickableArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,7 +33,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.41, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 1483.93, y: 167.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8827582168794216404
 GameObject:
@@ -49,8 +49,8 @@ GameObject:
   - component: {fileID: 2090317515792594798}
   - component: {fileID: 1542115592548981398}
   - component: {fileID: 1121838044246696986}
-  m_Layer: 5
-  m_Name: Shell
+  m_Layer: 12
+  m_Name: ShellEEmpty
   m_TagString: Shell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,18 +63,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8827582168794216404}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.52, y: 0.6904109, z: 0.6904109}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.19, y: 0.46, z: 0.46}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 101201108932053725}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -196.4, y: -168.5}
-  m_SizeDelta: {x: -952.2, y: -474}
+  m_AnchoredPosition: {x: -227, y: -168}
+  m_SizeDelta: {x: -860, y: -440}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7691588281403747294
 CanvasRenderer:
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: 0393595e0664243428576f0e33936e4a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 7aa6f8622fa602345ab5bbfb61e54e36, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -146,7 +146,7 @@ Rigidbody2D:
   m_Mass: 0.44
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 104.76
+  m_GravityScale: 104
   m_Material: {fileID: 6200000, guid: b3c428b1d1c765d49a0a99f1d3432043, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
@@ -154,7 +154,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
@@ -190,6 +190,6 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.006202204, y: -0.14945407}
-  m_Size: {x: 7.229918, y: 65.50707}
+  m_Offset: {x: 0.12002242, y: -0.27355525}
+  m_Size: {x: 98.35936, y: 99.85996}
   m_Direction: 0

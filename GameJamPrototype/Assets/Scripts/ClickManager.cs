@@ -1,64 +1,54 @@
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
-public class ClickManager : MonoBehaviour
+public class ClickManager : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private GameObject selectedObject = null;
     private RectTransform selectedRectTransform = null;
 
-    void Update()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        if (Input.GetMouseButtonDown(0)) // Left mouse button clicked
+        // Get mouse position from the event data
+        Vector3 mousePosition = eventData.position;
+
+        // Raycast for UI elements under the mouse position
+        var results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (var result in results)
         {
-            Vector3 mousePosition = Input.mousePosition;
+            GameObject hitObject = result.gameObject;
 
-            // Raycast for UI elements under the mouse position
-            PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+            // Check if the object is tagged as Cash, Bag, or Item
+            if (hitObject.CompareTag("Item") || hitObject.CompareTag("Barrel"))
             {
-                position = mousePosition
-            };
-            var results = new System.Collections.Generic.List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerEventData, results);
+                selectedObject = hitObject;
+                selectedRectTransform = hitObject.GetComponent<RectTransform>();
 
-            foreach (var result in results)
-            {
-                GameObject hitObject = result.gameObject;
-
-                // Check if the object is tagged as Cash, Bag, or Item
-                if (hitObject.CompareTag("Item") || hitObject.CompareTag("Barrel"))
+                // Ensure it has a DragItemScript and start dragging
+                if (selectedObject.TryGetComponent(out DragItemScript dragItem))
                 {
-                    selectedObject = hitObject;
-                    selectedRectTransform = hitObject.GetComponent<RectTransform>();
-
-                    // Ensure it has either a DragItemScript or DragCashScript and start dragging
-                    if (selectedObject.TryGetComponent(out DragItemScript dragItem))
-                    {
-                        dragItem.StartDragging();
-                    }
-                    else if (selectedObject.TryGetComponent(out DragCashScript dragCash))
-                    {
-                        dragCash.StartDragging();
-                    }
-                    break;
+                    dragItem.StartDragging();
                 }
+                break;
             }
         }
+    }
 
+    public void OnPointerUp(PointerEventData eventData)
+    {
         // Detect mouse up and call OnMouseUp for the selected object
-        if (Input.GetMouseButtonUp(0) && selectedObject != null)
+        if (selectedObject != null)
         {
             if (selectedObject.TryGetComponent(out DragItemScript dragItem))
             {
                 dragItem.OnMouseUp();
             }
-            else if (selectedObject.TryGetComponent(out DragCashScript dragCash))
-            {
-                dragCash.OnMouseUp();
-            }
 
+            // Clear after releasing
             selectedObject = null;
-            selectedRectTransform = null; // Clear after releasing
+            selectedRectTransform = null;
         }
     }
 }

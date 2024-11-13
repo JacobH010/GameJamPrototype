@@ -34,16 +34,22 @@ public class RotationResetOnClick : MonoBehaviour, IPointerDownHandler
                 rb.angularVelocity = 0f; // Stop any ongoing rotation
             }
 
-            Debug.Log("Rotation reset triggered and gravity set to 0");
         }
         else
         {
-            Debug.Log("Cannot reset rotation: Out of ammo.");
+
         }
     }
 
     private void Update()
     {
+        // If out of ammo, cancel the rotation reset
+        if (shotgunController != null && shotgunController.IsOutOfAmmo)
+        {
+            isResetting = false;
+            return;
+        }
+
         if (isResetting)
         {
             // Smoothly rotate towards the reset angle
@@ -57,7 +63,6 @@ public class RotationResetOnClick : MonoBehaviour, IPointerDownHandler
             {
                 rectTransform.rotation = Quaternion.Euler(0, 0, resetRotationAngle);
                 isResetting = false;
-                Debug.Log("Rotation reset complete");
             }
         }
     }
