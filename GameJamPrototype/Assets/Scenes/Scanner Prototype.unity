@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 32873123}
   - component: {fileID: 32873122}
   - component: {fileID: 32873121}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Commit Scan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 38865416}
   - component: {fileID: 38865418}
   - component: {fileID: 38865417}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Backsplash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -408,7 +408,7 @@ GameObject:
   - component: {fileID: 192850325}
   - component: {fileID: 192850327}
   - component: {fileID: 192850326}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: ScannerBlankScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 265399953}
   - component: {fileID: 265399952}
   - component: {fileID: 265399951}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Search Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -655,7 +655,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 12288
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -696,7 +696,7 @@ GameObject:
   - component: {fileID: 332013604}
   - component: {fileID: 332013606}
   - component: {fileID: 332013605}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: ScannerTexture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1043,7 +1043,7 @@ GameObject:
   - component: {fileID: 598692449}
   - component: {fileID: 598692451}
   - component: {fileID: 598692450}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1177,7 +1177,7 @@ GameObject:
   - component: {fileID: 621465329}
   - component: {fileID: 621465331}
   - component: {fileID: 621465330}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: ScannerScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1248,7 +1248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 722882499}
   - component: {fileID: 722882500}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Drawer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1558,7 +1558,7 @@ GameObject:
   - component: {fileID: 964889490}
   - component: {fileID: 964889492}
   - component: {fileID: 964889491}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1695,7 +1695,7 @@ GameObject:
   - component: {fileID: 992871866}
   - component: {fileID: 992871865}
   - component: {fileID: 992871864}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: SaveScans
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1827,7 +1827,7 @@ GameObject:
   - component: {fileID: 1095105528}
   - component: {fileID: 1095105530}
   - component: {fileID: 1095105529}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: ScannerCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1977,7 +1977,7 @@ GameObject:
   - component: {fileID: 1123789816}
   - component: {fileID: 1123789817}
   - component: {fileID: 1123789818}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Square
   m_TagString: Scanner
   m_Icon: {fileID: 0}
@@ -2181,7 +2181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1234811983}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Scanner Info Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2277,7 +2277,7 @@ GameObject:
   - component: {fileID: 1376492110}
   - component: {fileID: 1376492109}
   - component: {fileID: 1376492108}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2381,7 +2381,7 @@ GameObject:
   - component: {fileID: 1468580353}
   - component: {fileID: 1468580355}
   - component: {fileID: 1468580354}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2519,7 +2519,7 @@ GameObject:
   - component: {fileID: 1485897664}
   - component: {fileID: 1485897666}
   - component: {fileID: 1485897665}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: CommitScan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2653,9 +2653,9 @@ GameObject:
   - component: {fileID: 1692800545}
   - component: {fileID: 1692800547}
   - component: {fileID: 1692800546}
-  - component: {fileID: 1692800549}
   - component: {fileID: 1692800548}
-  m_Layer: 12
+  - component: {fileID: 1692800549}
+  m_Layer: 13
   m_Name: Scanner Retical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2766,7 +2766,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.41462946, y: -0.27530235}
+  m_Offset: {x: -0.06402874, y: -0.16039848}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2777,7 +2777,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4.033849, y: 4.3113403}
+  m_Size: {x: 10.499319, y: 10.562845}
   m_EdgeRadius: 0
 --- !u!1 &1791312233
 GameObject:
@@ -2792,7 +2792,7 @@ GameObject:
   - component: {fileID: 1791312236}
   - component: {fileID: 1791312235}
   - component: {fileID: 1791312240}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: Scanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2979,7 +2979,7 @@ GameObject:
   - component: {fileID: 1987063281}
   - component: {fileID: 1987063283}
   - component: {fileID: 1987063284}
-  m_Layer: 12
+  m_Layer: 13
   m_Name: ScannerContainer
   m_TagString: Scanner
   m_Icon: {fileID: 0}
@@ -3085,7 +3085,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987063279}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ae15fef3d192f83439d3c473f0552650, type: 3}
   m_Name: 

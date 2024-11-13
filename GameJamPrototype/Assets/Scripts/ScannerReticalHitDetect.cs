@@ -20,6 +20,8 @@ public class ScannerReticalHitDetect : MonoBehaviour
     private bool itemScannable = false;
     private void Update()
     {
+        
+        //Debug.Log("Scanner Retical Script Calling");
         if (itemScannable && Input.GetKey(KeyCode.Tab))
         {
             
@@ -57,9 +59,12 @@ public class ScannerReticalHitDetect : MonoBehaviour
     // Start is called before the first frame update
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        //Debug.Log("Scanner Retical Detected Collision");
         if (collision.gameObject.CompareTag("Scanner"))
         {
+            //Debug.Log("Scanner Connected with Scanner Item");
             GameObject target = collision.gameObject;
+            
             retical.color = Color.red;
             commitScanPrompt.gameObject.SetActive(true);
             ScannerItems itemScript = target.GetComponent<ScannerItems>();
