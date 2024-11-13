@@ -5012,6 +5012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4add1e12a5592a64b88485eefff0e9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedObject: {fileID: 0}
 --- !u!222 &4053795236366812831
 CanvasRenderer:
   m_ObjectHideFlags: 0

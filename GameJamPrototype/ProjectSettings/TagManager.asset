@@ -4,35 +4,29 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Enemy
-  - Projectile
-  - Item
-  - Barrel
-  - Shell
   - Boundry
   - DeleteZone
+  - Item
+  - Projectile
+  - Shell
+  - Barrel
   - Scanner
-  - ScanItem
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Obstical
+  - 
   - Water
   - UI
-  - Enemy
-  - Player
-  - PostProcessing
-  - 3DUI
-  - Projectile
-  - Loaders
-<<<<<<< HEAD
-  - UIInWorld
-  - Item
-=======
-  - EmptyShells
   - 
->>>>>>> Reload-and-UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
