@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5722867531712903664}
   m_Layer: 3
   m_Name: PF_Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2883,6 +2883,20 @@ MonoBehaviour:
   projectileSpeed: 20
   muzzleFlash: {fileID: 0}
   shootingSound: {fileID: 0}
+  currentAmmo: 2
+  maxAmmo: 2
+  isOutOfAmmo: 0
+  barrelRigidbody: {fileID: 0}
+  shellEmptyPrefab: {fileID: 0}
+  loadedShellPrefab: {fileID: 0}
+  shellSpawnLocation: {fileID: 0}
+  canvas: {fileID: 0}
+  shellSpawnDelay: 0.5
+  shellForce: 100
+  shellUpwardForce: 50
+  shellRotationalForce: 10
+  deleteZoneCollider: {fileID: 0}
+  triggerEmptyAndEject: 1
 --- !u!4 &2276309278541206434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 81040e430c34da141865746dbc7b3487, type: 3}
