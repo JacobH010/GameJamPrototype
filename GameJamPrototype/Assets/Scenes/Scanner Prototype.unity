@@ -925,6 +925,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_Player Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 6067751881323452479, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
