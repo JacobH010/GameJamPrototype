@@ -4,10 +4,10 @@ using UnityEngine.EventSystems;
 
 public class ClickManager : MonoBehaviour
 {
-    private GameObject selectedObject = null;
+    public GameObject selectedObject = null;
     private RectTransform selectedRectTransform = null;
 
-    void Update()
+    protected virtual void Update()
     {
         if (Input.GetMouseButtonDown(0)) // Left mouse button clicked
         {
@@ -62,3 +62,4 @@ public class ClickManager : MonoBehaviour
         }
     }
 }
+

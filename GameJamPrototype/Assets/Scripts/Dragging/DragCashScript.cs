@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 
 public class DragCashScript : MonoBehaviour
 {
-    private bool isDragging = false;
+    public bool isDragging {  get; private set; }
     private Collider2D cashCollider;
     private Rigidbody2D rb;
 
@@ -50,6 +50,7 @@ public class DragCashScript : MonoBehaviour
 
     void Awake()
     {
+        isDragging = false;
         // Ensure Rigidbody and Collider components are initialized properly
         cashCollider = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
@@ -57,7 +58,7 @@ public class DragCashScript : MonoBehaviour
         rb.gravityScale = 0;
     }
 
-    public void StartDragging()
+     public virtual void StartDragging()
     {
         isDragging = true;
         rb.bodyType = RigidbodyType2D.Kinematic; // Disable physics during drag
@@ -72,7 +73,7 @@ public class DragCashScript : MonoBehaviour
         trackedAngularVelocity = 0f;
     }
 
-    public void OnMouseUp()
+    public virtual void OnMouseUp()
     {
         if (isDragging)
         {

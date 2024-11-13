@@ -11,6 +11,8 @@ TagManager:
   - Shell
   - Boundry
   - DeleteZone
+  - Scanner
+  - ScanItem
   layers:
   - Default
   - TransparentFX
@@ -25,7 +27,7 @@ TagManager:
   - Projectile
   - Loaders
   - UIInWorld
-  - 
+  - Item
   - 
   - 
   - 

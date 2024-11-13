@@ -37,7 +37,7 @@ public class PlayerControllerPrototype : MonoBehaviour
         }
         else
         {
-            Debug.Log("UI Manager null");
+          //  Debug.Log("UI Manager null");
         }
         // Check if Space key is pressed and destroy all enemies in range
         if (Input.GetKeyDown(KeyCode.Space))
