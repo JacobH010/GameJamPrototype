@@ -114,7 +114,7 @@ MonoBehaviour:
   objectName: Pencil
   monitaryValue: 2
   scanValue: 0
-  commonality: 4
+  commonality: 10
   itemWeight: 1
 --- !u!60 &-967241274335053973
 PolygonCollider2D:

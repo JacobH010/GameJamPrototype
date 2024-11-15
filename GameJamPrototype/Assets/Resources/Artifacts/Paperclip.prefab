@@ -110,7 +110,7 @@ MonoBehaviour:
   xVelocityTaperRate: 8
   rotationSpeed: 35
   rotationSmoothness: 1.2
-  rotationPreservation: 0.01
+  rotationPreservation: 0.026
   flavorText: This is flavor text from scanned from the item.
   objectName: NAME
   monitaryValue: 5

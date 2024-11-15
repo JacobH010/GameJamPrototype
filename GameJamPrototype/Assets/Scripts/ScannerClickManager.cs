@@ -8,6 +8,8 @@ public class ScannerClickManager : ClickManager
     public GameObject commitScanButton; // Button to appear when an item is detected
     public RawImage reticle; // Reticle UI element to change color when an item is detected
 
+    public Camera playerCamera;
+    private bool playerInRangeToOpen = false;
 
     private void Start()
     {
@@ -21,9 +23,60 @@ public class ScannerClickManager : ClickManager
         if (Input.GetMouseButtonDown(0))
         {
             PerformPhysics2DRaycast();
+            PerformPhysics3DRaycast();
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            playerInRangeToOpen = true;
+            Debug.Log("Player entered trigger for searchable container");
+            Debug.Log(playerInRangeToOpen.ToString());
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            playerInRangeToOpen = false;
+        }
+    }
+    private void PerformPhysics3DRaycast()
 
+    {
+        // Ensure Camera.main is assigned
+        if (Camera.main == null)
+        {
+            Debug.LogError("No camera tagged as 'MainCamera' found in the scene.");
+            return;
+        }
+
+        Vector3 mousePosition = Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(mousePosition);
+
+        // Ray's origin is the mouse's position in world space
+        Vector3 rayOrigin = ray.origin;
+
+        // Ray's direction is the camera's forward direction
+        Vector3 rayDirection = Camera.main.transform.forward;
+
+        // Draw the ray in the scene view
+        Debug.DrawRay(rayOrigin, rayDirection * 50f, Color.green, 1f);
+
+        // Optionally perform a Physics.Raycast
+        if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, 50f))
+        {
+            GameObject clickedObject = hit.collider.gameObject;
+            Debug.Log($"Raycast hit: {clickedObject.name}");
+
+            if (clickedObject.CompareTag("SearchContainer") && !Input.GetMouseButton(1) && playerInRangeToOpen)
+            {
+                SearchableContainer containerScript = clickedObject.GetComponent<SearchableContainer>();
+                containerScript.OpenContainer();
+            }
+        }
+    }
     private void PerformPhysics2DRaycast()
     {
         // Ensure Camera.main is assigned
@@ -39,7 +92,7 @@ public class ScannerClickManager : ClickManager
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
         // Draw the 2D ray in the Scene view for visualization
-        Debug.DrawRay(worldPosition, Vector2.up * 0.5f, Color.green, 1f);
+        Debug.DrawRay(worldPosition, Vector2.up, Color.green, 1f);
 
         // Perform a 2D raycast to detect objects with 2D colliders
         RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);

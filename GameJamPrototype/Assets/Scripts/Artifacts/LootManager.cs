@@ -59,30 +59,49 @@ public class LootManager : MonoBehaviour
 
         for (int i = 0; i < Mathf.Min(maxItems, artifactsCopy.Count); i++)
         {
-            // Pick a random artifact
-            int randomIndex = Random.Range(0, artifactsCopy.Count);
-            GameObject artifact = artifactsCopy[randomIndex];
+            // Calculate total weight of all remaining artifacts
+            int totalWeight = 0;
+            foreach (var artifact in artifactsCopy)
+            {
+                totalWeight += artifact.GetComponent<ScannerItems>().commonality;
+            }
 
-            // Check if it's low commonality and already selected
-            if (artifact.GetComponent<ScannerItems>().commonality <= nonDuplicateThreshold && lowRarityItems.Contains(artifact))
+            // Select a random weight value
+            int randomWeight = Random.Range(0, totalWeight);
+            GameObject selectedArtifact = null;
+
+            // Iterate to find the artifact corresponding to the random weight
+            int cumulativeWeight = 0;
+            foreach (var artifact in artifactsCopy)
+            {
+                cumulativeWeight += artifact.GetComponent<ScannerItems>().commonality;
+                if (randomWeight < cumulativeWeight)
+                {
+                    selectedArtifact = artifact;
+                    break;
+                }
+            }
+
+            // Check if the selected artifact is low commonality and already selected
+            if (selectedArtifact.GetComponent<ScannerItems>().commonality <= nonDuplicateThreshold && lowRarityItems.Contains(selectedArtifact))
             {
                 i--; // Retry
                 continue;
             }
 
-            // Add artifact to the selected list
-            selectedArtifacts.Add(artifact);
+            // Add the selected artifact to the result list
+            selectedArtifacts.Add(selectedArtifact);
 
             // If low commonality, add to the exclusion set
-            if (artifact.GetComponent<ScannerItems>().commonality <= nonDuplicateThreshold)
+            if (selectedArtifact.GetComponent<ScannerItems>().commonality <= nonDuplicateThreshold)
             {
-                lowRarityItems.Add(artifact);
+                lowRarityItems.Add(selectedArtifact);
             }
 
-            // Remove from the local copy to avoid duplicates
-            artifactsCopy.RemoveAt(randomIndex);
+            // Remove the selected artifact from the local copy
+            artifactsCopy.Remove(selectedArtifact);
         }
-        Debug.Log($"MasterLootDictionary count: {MasterLootDictionary.Count}");
+
         return selectedArtifacts;
     }
 }
