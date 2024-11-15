@@ -34,13 +34,15 @@ public class ScannerClickManager : ClickManager
         }
 
         // Get the mouse position in world space
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = Mathf.Abs(Camera.main.transform.position.z); // Set Z distance for 2D plane
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
 
         // Draw the 2D ray in the Scene view for visualization
-        Debug.DrawRay(mousePosition, Vector2.zero, Color.green, 1f);
+        Debug.DrawRay(worldPosition, Vector2.up * 0.5f, Color.green, 1f);
 
         // Perform a 2D raycast to detect objects with 2D colliders
-        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+        RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
 
         if (hit.collider != null)
 {

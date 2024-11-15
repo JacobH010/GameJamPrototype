@@ -7,17 +7,24 @@ using UnityEngine.UI;
 
 public class ScannerItems : DragCashScript
 {
+    [Header("Artifact Properties")]
     public string flavorText = "This is flavor text from scanned from the item.";
-
     public string objectName = "NAME";
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    [Range(0, 1000)]
+    public int monitaryValue = 5;
+
+    [Range(0, 1000)]
+    public int scanValue = 5;
+
+    [Tooltip("Rarity 10 is common")]
+    [Range(1,10)]
+    public int rarity = 10;
+
+    
+
+    public float itemWeight = 1;
+    private void start()
     {
         
     }

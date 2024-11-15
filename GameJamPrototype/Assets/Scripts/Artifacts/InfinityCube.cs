@@ -7,7 +7,7 @@ public class InfinityCube : ScannerItems
 {
     private SpriteRenderer imageComponent;
     private int stateSelector;
-
+    
     public Sprite[] sprites;
     // Start is called before the first frame update
     void Start()

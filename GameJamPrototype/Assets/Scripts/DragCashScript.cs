@@ -66,7 +66,8 @@ public class DragCashScript : MonoBehaviour
         rb.angularVelocity = 0f; // Stop any rotation
 
         lastMousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        lastMousePosition.z = 0f; // Set the Z position to prevent Z-axis movement
+        lastMousePosition.z = Mathf.Abs(Camera.main.transform.position.z);
+        
 
         // Initialize rotation tracking
         previousRotationAngle = transform.eulerAngles.z;
