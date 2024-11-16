@@ -3544,19 +3544,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3401117965400397941, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4.7704997
+      value: 4.2929726
       objectReference: {fileID: 0}
     - target: {fileID: 3401117965400397941, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.841892
+      value: 1.6575186
       objectReference: {fileID: 0}
     - target: {fileID: 3401117965400397941, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.841892
+      value: 1.6575186
       objectReference: {fileID: 0}
     - target: {fileID: 3401117965400397941, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 288
+      value: 307
+      objectReference: {fileID: 0}
+    - target: {fileID: 3401117965400397941, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -207
       objectReference: {fileID: 0}
     - target: {fileID: 3781915586976749404, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_Texture
@@ -3710,6 +3714,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1957434275}
+    - target: {fileID: 5723018154012948505, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 52.193695
+      objectReference: {fileID: 0}
+    - target: {fileID: 5723018154012948505, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -179.27673
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053381072587828758, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -395
+      objectReference: {fileID: 0}
+    - target: {fileID: 6053381072587828758, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 178
+      objectReference: {fileID: 0}
     - target: {fileID: 6144373098011957826, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_Name
       value: UIPrototype1
@@ -3916,11 +3936,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8360652107030413921, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -274.9
+      value: -410
       objectReference: {fileID: 0}
     - target: {fileID: 8360652107030413921, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -154.2
+      value: -152
       objectReference: {fileID: 0}
     - target: {fileID: 8360652107030413921, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
