@@ -47,6 +47,7 @@ public class LootSpawner : MonoBehaviour
             spawnedItem.AddComponent<ItemCoontainerID>();
             ItemCoontainerID itemContainerID = spawnedItem.GetComponent<ItemCoontainerID>();
             itemContainerID.containerID = containerID;
+            itemContainerID.prefabName = artifact.name;
             Debug.Log($"Spawner {gameObject.name}: Spawned {artifact.name} at {spawnedItem.transform.position}.");
         }
     }
