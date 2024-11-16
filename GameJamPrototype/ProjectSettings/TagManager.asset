@@ -12,6 +12,7 @@ TagManager:
   - Barrel
   - Scanner
   - Enemy
+  - ShellBox
   layers:
   - Default
   - TransparentFX

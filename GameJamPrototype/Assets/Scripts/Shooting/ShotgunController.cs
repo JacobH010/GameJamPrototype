@@ -184,6 +184,13 @@ public class ShotgunController : MonoBehaviour
             GameObject shell = Instantiate(loadedShellPrefab, shellSpawnLocation.position, Quaternion.identity, canvas.transform);
             Rigidbody2D shellRb = shell.GetComponent<Rigidbody2D>();
 
+            // Set the shell's IsJustSpawned flag to false
+            ShellBehavior shellBehavior = shell.GetComponent<ShellBehavior>();
+            if (shellBehavior != null)
+            {
+                shellBehavior.IsJustSpawned = false;
+            }
+
             if (shellRb != null)
             {
                 float randomLeftForce = Random.Range(minForce, maxForce);
