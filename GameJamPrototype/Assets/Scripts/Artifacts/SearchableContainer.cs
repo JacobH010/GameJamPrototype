@@ -60,49 +60,32 @@ public class SearchableContainer : MonoBehaviour
             searchObject.SetActive(true);
 
             //Create new container state or load old container state
-            ContainerState state = GameStateManager.gameStateManager.GetContainerState(containerID);
-            if (state == null)
+
+            //Spawn new loot items
+            Queue<Transform> queue = new Queue<Transform>();
+            queue.Enqueue(searchObject.transform);
+
+            while (queue.Count > 0)
             {
-                state = new ContainerState { containerID = containerID };
-                GameStateManager.gameStateManager.SaveContainerState(state);
-                
-                //Spawn new loot items
-                Queue<Transform> queue = new Queue<Transform>();
-                queue.Enqueue(searchObject.transform);
+                Transform current = queue.Dequeue();
+                //Debug.Log($"Found descendant: {current.gameObject.name}");
 
-                while (queue.Count > 0)
+                // Check for the LootSpawner component
+                LootSpawner lootSpawner = current.GetComponent<LootSpawner>();
+                if (lootSpawner != null)
                 {
-                    Transform current = queue.Dequeue();
-                    //Debug.Log($"Found descendant: {current.gameObject.name}");
+                    lootSpawner.SpawnLoot(containerID);
+                }
 
-                    // Check for the LootSpawner component
-                    LootSpawner lootSpawner = current.GetComponent<LootSpawner>();
-                    if (lootSpawner != null)
-                    {
-                        lootSpawner.SpawnLoot(containerID);
-                    }
-
-                    // Enqueue all children of the current transform
-                    foreach (Transform child in current)
-                    {
-                        queue.Enqueue(child);
-                    }
+                // Enqueue all children of the current transform
+                foreach (Transform child in current)
+                {
+                    queue.Enqueue(child);
                 }
             }
-            else
-            {
-                foreach (LootItemState itemState in state.spawnedItems)
-                {
-                    if (!itemState.isCollected)
-                    {
-                        GameObject prefab = Resources.Load<GameObject>(itemState.itemName);
-                        Instantiate(prefab, itemState.position, Quaternion.identity);
-                    }
-                }
-            }
-                       
         }
+    }      
+ }
 
         
-    }
-}
+    
