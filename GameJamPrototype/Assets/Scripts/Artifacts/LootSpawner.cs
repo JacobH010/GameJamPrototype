@@ -13,27 +13,29 @@ public class LootSpawner : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
     
+    
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log("LootSpawner ran");
         //lootManager = FindObjectOfType<LootManager>();
-        SpawnLoot(minimumCommonality, maxItems);
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = false;
+        
+        
     }
 
     // Update is called once per frame
     void OnEnable()
     {
-        SpawnLoot(minimumCommonality, maxItems);
+        
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.enabled = false;
     }
-    void SpawnLoot(int minCommonality, int maxItems)
+    public void SpawnLoot(string containerID)
     {
         Debug.Log($"Spawner {gameObject.name} starting loot spawn.");
 
         // Get artifacts meeting the commonality requirement
-        List<GameObject> filteredArtifacts = lootManager.GetArtifactsByMinCommonality(minCommonality);
+        List<GameObject> filteredArtifacts = lootManager.GetArtifactsByMinCommonality(minimumCommonality);
 
         // Select up to maxItems while enforcing no duplicates for low commonality items
         List<GameObject> itemsToSpawn = lootManager.SelectRandomArtifacts(filteredArtifacts, maxItems);
@@ -42,6 +44,9 @@ public class LootSpawner : MonoBehaviour
         foreach (GameObject artifact in itemsToSpawn)
         {
             GameObject spawnedItem = Instantiate(artifact, GetRandomSpawnLocation(), GetRandomRotation());
+            spawnedItem.AddComponent<ItemCoontainerID>();
+            ItemCoontainerID itemContainerID = spawnedItem.GetComponent<ItemCoontainerID>();
+            itemContainerID.containerID = containerID;
             Debug.Log($"Spawner {gameObject.name}: Spawned {artifact.name} at {spawnedItem.transform.position}.");
         }
     }

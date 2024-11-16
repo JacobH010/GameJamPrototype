@@ -26,22 +26,7 @@ public class ScannerClickManager : ClickManager
             PerformPhysics3DRaycast();
         }
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            playerInRangeToOpen = true;
-            Debug.Log("Player entered trigger for searchable container");
-            Debug.Log(playerInRangeToOpen.ToString());
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            playerInRangeToOpen = false;
-        }
-    }
+    
     private void PerformPhysics3DRaycast()
 
     {
@@ -70,7 +55,7 @@ public class ScannerClickManager : ClickManager
             GameObject clickedObject = hit.collider.gameObject;
             Debug.Log($"Raycast hit: {clickedObject.name}");
 
-            if (clickedObject.CompareTag("SearchContainer") && !Input.GetMouseButton(1) && playerInRangeToOpen)
+            if (clickedObject.CompareTag("SearchContainer") && !Input.GetMouseButton(1))
             {
                 SearchableContainer containerScript = clickedObject.GetComponent<SearchableContainer>();
                 containerScript.OpenContainer();

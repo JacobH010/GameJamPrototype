@@ -24,6 +24,8 @@ public class ScannerItems : DragCashScript
     
 
     public float itemWeight = 1;
+
+    public string containerID = string.Empty;
     private void start()
     {
         
