@@ -201,6 +201,11 @@ MonoBehaviour:
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
   m_ScrollDeltaPerTick: 6
+--- !u!50 &196765579 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 2640612556321054145, guid: e27661958f5e8de49901874214100f2b, type: 3}
+  m_PrefabInstance: {fileID: 232186136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &232186136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -244,6 +249,10 @@ PrefabInstance:
     - target: {fileID: 3197733197239693338, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3361567358724277968, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 4326608305968493581, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_Pivot.x
@@ -954,7 +963,7 @@ MonoBehaviour:
   selectedObject: {fileID: 0}
   commitScanButton: {fileID: 1485897663}
   reticle: {fileID: 1692800546}
-  playerCamera: {fileID: 0}
+  playerCamera: {fileID: 1921646885}
 --- !u!114 &477806064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2410,6 +2419,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9c351c8dd49bb164e81630da2d0cf9b0, type: 3}
+--- !u!223 &1332884668 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 5453431648261952013, guid: e27661958f5e8de49901874214100f2b, type: 3}
+  m_PrefabInstance: {fileID: 232186136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1351640631 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4059584133253570756, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
@@ -2438,9 +2452,21 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 730765948448465203, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 1332884668}
+    - target: {fileID: 730765948448465203, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+      propertyPath: barrelRigidbody
+      value: 
+      objectReference: {fileID: 196765579}
+    - target: {fileID: 730765948448465203, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: deleteZoneCollider
       value: 
       objectReference: {fileID: 1476221191}
+    - target: {fileID: 730765948448465203, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+      propertyPath: shellSpawnLocation
+      value: 
+      objectReference: {fileID: 1962274168}
     - target: {fileID: 1989778553433096547, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.2717414
@@ -2480,6 +2506,10 @@ PrefabInstance:
     - target: {fileID: 1989778553433096547, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3536431803036737485, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 3665865669493341538, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: m_TagString
@@ -2521,6 +2551,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!20 &1921646885 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2007379775777687003, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+  m_PrefabInstance: {fileID: 1489645475}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1962274168 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2214814249989707484, guid: e27661958f5e8de49901874214100f2b, type: 3}
+  m_PrefabInstance: {fileID: 232186136}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2104130616
 GameObject:
   m_ObjectHideFlags: 0
