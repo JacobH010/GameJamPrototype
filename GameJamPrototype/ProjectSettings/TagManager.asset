@@ -12,8 +12,9 @@ TagManager:
   - Barrel
   - Scanner
   - Enemy
+  - ShellBox
   - SearchContainer
-  layers:
+layers:
   - Default
   - TransparentFX
   - Ignore Raycast
