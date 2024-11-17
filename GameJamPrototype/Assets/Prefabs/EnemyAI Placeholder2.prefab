@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1339b8920a60d1c4d96ebcbe3d9dd940, type: 2}
     - target: {fileID: -1018664272722485354, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_Name
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_TagString
@@ -86,7 +86,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1339b8920a60d1c4d96ebcbe3d9dd940, type: 2}
     - target: {fileID: 9013638940889411661, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bc9d708ee1c545469cd17d3e8fcf42c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackSpeed: 100
+  attackSpeed: 50
   attackAccelartion: 30
   damage: 10
   pushForce: 1.5

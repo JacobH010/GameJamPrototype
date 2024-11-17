@@ -13,6 +13,10 @@ public class SpawnManager : MonoBehaviour
     public float spawnRadius = 10f;
 
     private bool playerNearby = false;
+    public GameObject player;
+    public GameObject playerPrefab;
+    public GameObject aIManager;
+    private AIManager aiManagerScript;
 
 
 
@@ -28,6 +32,9 @@ public class SpawnManager : MonoBehaviour
         {
             enemyController = enemyPrefab.GetComponent<AIController>();
         }
+       // aiManagerScript = aIManager.GetComponent<AIManager>();
+     //   aiManagerScript.playerGameObject = player;
+    //    aiManagerScript.playerPrefab = playerPrefab;
     }
 
     void InitializePool()
@@ -35,6 +42,8 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < poolSize; i++)
         {
             GameObject enemy = Instantiate(enemyPrefab);
+            AIController aiController = enemy.GetComponent<AIController>();
+            //aiController.playerPrefab = player;
             enemy.SetActive(false);
             enemyPool.Add(enemy);
             //Debug.Log("Enemy count in pool" + i.ToString());

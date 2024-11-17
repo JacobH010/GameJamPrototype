@@ -39,6 +39,10 @@ public class UIManager : MonoBehaviour
         }
         AcceptLoadoutVariables();
         StartCoroutine(Decrement02());
+        if (healthSlider == null)
+        {
+            Debug.LogError("Health Slider Null at start");
+        }
     }
 
     // Update is called once per frame

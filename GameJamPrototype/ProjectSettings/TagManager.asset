@@ -14,22 +14,23 @@ TagManager:
   - Enemy
   - ShellBox
   - SearchContainer
-layers:
+  - Obstical
+  layers:
   - Default
   - TransparentFX
   - Ignore Raycast
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
   - Obstical
-  - Enemy
-  - UIInWorld
   - Player
+  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

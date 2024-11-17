@@ -7,6 +7,14 @@ public class PlayerController : MonoBehaviour
     private bool isAiming = false;                  // Tracks if the player is aiming
     public float aimRotationOffset = 10f;           // Rotation offset angle for aiming (adjust as needed)
 
+    private UIManager uiManager;
+
+    private LoadoutManager loadoutManager;
+    private void Start()
+    {
+        loadoutManager = LoadoutManager.loadoutManager;
+        uiManager = GetComponent<UIManager>();
+    }
     public bool IsAiming()
     {
         return isAiming;
@@ -85,5 +93,15 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = newPosition;
         playerMovementEvent?.RaiseEvent(newPosition); // Trigger the event with the new position
+    }
+    public void HitByEnemy(float damage)
+    {
+        if (uiManager != null)
+        {
+
+
+            uiManager.HurtPlayer(damage);
+
+        }
     }
 }
