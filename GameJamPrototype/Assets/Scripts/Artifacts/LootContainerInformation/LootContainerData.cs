@@ -8,6 +8,7 @@ public class LootItemData
 {
     public string itemID;//Unique identifier for the item
     public Vector2 itemPosition; //Position of the item within the container
+    public Quaternion itemRotation; //Rotation of the object
 }
 [System.Serializable]
     public class LootContainerData

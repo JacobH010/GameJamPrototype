@@ -110,7 +110,7 @@ public class SearchableContainer : MonoBehaviour
                 Debug.Log("Sucessfully loaded GameObject");
                 Debug.Log(itemData.itemPosition.ToString());
                 // Instantiate a new item at the saved position
-                GameObject newItem = Instantiate(prefab, itemData.itemPosition, Quaternion.identity );
+                GameObject newItem = Instantiate(prefab, itemData.itemPosition, itemData.itemRotation );
                 
 
                 // Assign the containerID and prefabName to the new item
@@ -209,7 +209,8 @@ public class SearchableContainer : MonoBehaviour
                 items.Add(new LootItemData
                 {
                     itemID = item.prefabName, // Ensure this matches the prefab's name or unique ID
-                    itemPosition = item.transform.localPosition // Save the local position relative to its parent
+                    itemPosition = item.transform.localPosition, // Save the local position relative to its parent
+                    itemRotation = item.transform.rotation
                 });
             }
         }

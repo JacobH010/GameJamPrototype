@@ -1700,7 +1700,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 306636604553954806, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 730765948448465203, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: canvas
@@ -2223,6 +2223,10 @@ PrefabInstance:
     - target: {fileID: 1726646286242009822, guid: 94550e9c6ad48ac42bc0900ecd65b345, type: 3}
       propertyPath: m_Name
       value: InfinityCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 2068307961229596471, guid: 94550e9c6ad48ac42bc0900ecd65b345, type: 3}
+      propertyPath: m_TagString
+      value: Scanner
       objectReference: {fileID: 0}
     - target: {fileID: 2329640688262525109, guid: 94550e9c6ad48ac42bc0900ecd65b345, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[8].x
