@@ -95,7 +95,7 @@ public class LoadoutManager : MonoBehaviour
         if (availableSlots >= 0)
         {
             
-            SceneManager.LoadScene("MovementPrototype");
+            SceneManager.LoadScene("AIStageing");
         }
         else
         {

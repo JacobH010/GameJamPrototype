@@ -24,6 +24,9 @@ public class AIManager : MonoBehaviour
     private int attackersNeeded = 0;
     private int lastAttackerCount = 0;
     private int lastAttackerIndex = -1;
+
+    public GameObject playerGameObject;
+    public GameObject playerPrefab;
     // called before start as game loads
     void Awake()
     {
@@ -38,7 +41,7 @@ public class AIManager : MonoBehaviour
                 //Find the player in teh scene by tag
             }
             //ABSTRACTION
-            GetPlayerLocation();
+            
         }
         else
         {
@@ -54,7 +57,44 @@ public class AIManager : MonoBehaviour
         spawnManager = FindObjectOfType<SpawnManager>();
         InvokeRepeating(nameof(CheckEnemies), 0f, checkInterval);
         StartCoroutine(AssignAttackers());
+       // StartCoroutine(Start1());
+        /*
+        if (playerPrefab != null)
+        {
+            Transform[] descendants = playerPrefab.GetComponentsInChildren<Transform>(true); // Include inactive objects
+            foreach (Transform descendant in descendants)
+            {
+                if (descendant.CompareTag("Player"))
+                {
+                    playerGameObject = descendant.gameObject;
+                    break; // Stop once we've found the correct descendant
+                }
+            }
+
+            if (playerGameObject != null)
+            {
+                Debug.Log("Player GameObject found: " + playerGameObject.name);
+            }
+            else
+            {
+                Debug.LogError("No GameObject with the 'Player' tag found among descendants.");
+            }
+        }
+        else
+        {
+            Debug.LogError("playerPrefab is null. Ensure it is assigned.");
+        }*/
+        if (playerGameObject == null)
+        {
+            Debug.LogError("PlayerGameObject Null in start method");
+        }
+        else
+        {
+            Debug.Log("Player object is " +  playerGameObject.name);
+        }
+        GetPlayerLocation();
     }
+    
     private void LateUpdate()
     {
     //    StartCoroutine(CheckAndClearAtatckers());
@@ -102,12 +142,12 @@ public class AIManager : MonoBehaviour
     public Vector3 GetPlayerLocation()
     {
         //Debug.Log("Player location ran");
-        GameObject playerObject = GameObject.FindWithTag("Player");
+        GameObject playerObject = playerGameObject;
         if (playerObject != null)
         {
             //Debug.Log("Get Player Location ran");
             locationOfPlayer = playerObject.transform;//Sets player reference
-            //Debug.Log("Player Location is = " + playerObject.transform.ToString());
+            //Debug.Log("Player Location is = " + playerObject.transform.position.ToString());
             return locationOfPlayer.position;
             
         }
@@ -128,6 +168,7 @@ public class AIManager : MonoBehaviour
             {
                 if (HasLineOfSight(enemy))
                 {
+                    //Debug.Log("Has Line of Sight returned truel");
                     if (!enemy.isFollowing && !enemy.isfleeing)
                     {
                         playerLastSeenLocation = GetPlayerLocation();
@@ -136,6 +177,7 @@ public class AIManager : MonoBehaviour
                 }
                 else
                 {
+                   // Debug.Log("Has line of sight returned false");
                     if (enemy.isFollowing && !enemy.isfleeing)
                     {
                         enemy.StopFollowing();
@@ -160,12 +202,16 @@ public class AIManager : MonoBehaviour
     {
         //Debug.Log("Line of Sight Testing");
         Vector3 directionToPlayer = GetPlayerLocation() - enemy.transform.position;
+       // Debug.Log("Direciton to player is " + directionToPlayer);
         float distanceToPlayer = Vector3.Distance(enemy.transform.position, GetPlayerLocation());
-
+        Physics.Raycast(enemy.transform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer,
+             ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore);
+    //    Debug.Log("Ray hit object: " + hit.collider.name);
         
-        if (Physics.Raycast(enemy.transform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer,
+        if (Physics.Raycast(enemy.transform.position, directionToPlayer, out hit, distanceToPlayer,
              ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore))
         {
+          //  Debug.Log("Player Hit by raycast");
             
             // Check if the ray hit the player or an obstacle
             if (hit.transform == locationOfPlayer)
@@ -178,8 +224,9 @@ public class AIManager : MonoBehaviour
                 return false;
             }
         }
-
+        
         return false; // Obstructed view
+        
     }
     IEnumerator AssignAttackers()
     {

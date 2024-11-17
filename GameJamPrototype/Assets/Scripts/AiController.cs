@@ -48,8 +48,10 @@ public class AIController : MonoBehaviour
     public AIManager aiManager { get; private set; }
     public NavMeshAgent navMeshAgent { get; private set; }
     private SpawnManager spawnManager;
-   
-    private PlayerControllerPrototype playerController;
+
+    //public GameObject playerPrefab;
+  //  public GameObject playerGameObject;
+    private PlayerController playerController;
 
     private Rigidbody rb;
    
@@ -63,7 +65,8 @@ public class AIController : MonoBehaviour
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
         rb = GetComponent<Rigidbody>();
-        playerController = FindObjectOfType<PlayerControllerPrototype>();
+        playerController = FindObjectOfType<PlayerController>();
+       
         if (playerController == null)
         {
             Debug.LogError("Player Controller null in AI Controller");
@@ -457,14 +460,21 @@ public class AIController : MonoBehaviour
         SetState(AIState.Roam);
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Projectile"))
+        {
+            gameObject.SetActive(false);
+        }
+    }
     private void OnTriggerEnter(Collider other)
 
     {
-       // Debug.Log("Collision detected");
+        //Debug.Log("Collision detected");
         if (other.gameObject.CompareTag("Player") && isAttacking)
         {
             Debug.Log("damage player");
-            playerController.HitByEnemy(damage);
+           playerController.HitByEnemy(damage);
             Rigidbody playerRigidbody = other.GetComponent<Rigidbody>();
             if (playerRigidbody != null)
             {

@@ -13,7 +13,7 @@ public class PlayerControllerPrototype : MonoBehaviour
 
     private void Start()
     {
-        //loadoutManager = LoadoutManager.loadoutManager;
+        loadoutManager = LoadoutManager.loadoutManager;
         uiManager = GetComponent<UIManager>();
         
     }

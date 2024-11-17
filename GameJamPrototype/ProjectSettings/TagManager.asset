@@ -13,6 +13,8 @@ TagManager:
   - Scanner
   - Enemy
   - ShellBox
+  - SearchContainer
+  - Obstical
   layers:
   - Default
   - TransparentFX
@@ -20,15 +22,15 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
   - Obstical
-  - Enemy
-  - UIInWorld
   - Player
+  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

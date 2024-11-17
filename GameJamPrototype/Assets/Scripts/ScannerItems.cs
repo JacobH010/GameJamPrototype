@@ -17,13 +17,15 @@ public class ScannerItems : DragCashScript
     [Range(0, 1000)]
     public int scanValue = 5;
 
-    [Tooltip("Rarity 10 is common")]
+    [Tooltip("Commonality 10 is very common")]
     [Range(1,10)]
-    public int rarity = 10;
+    public int commonality = 10;
 
     
 
     public float itemWeight = 1;
+
+    public string containerID = string.Empty;
     private void start()
     {
         

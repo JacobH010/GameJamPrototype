@@ -23,4 +23,11 @@ public class Projectile : MonoBehaviour
         // Destroy the projectile on impact
         Destroy(gameObject);
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(other.gameObject);
+        }
+    }
 }
