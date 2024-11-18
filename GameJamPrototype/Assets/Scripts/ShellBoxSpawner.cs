@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler
+public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [Header("Shell Spawn Settings")]
     public GameObject shotgunShellPrefab;  // Reference to the shotgun shell prefab
@@ -15,6 +15,8 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler
     public Sprite[] boxSprites;            // Array of sprites representing the box states
     public int maxShellCount = 12;         // Maximum number of shells the box can hold
 
+    private DraggableImage currentSpawnedShell;
+
     private void Awake()
     {
         // If no spawn point is specified, use the box's RectTransform
@@ -24,13 +26,14 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    // Method required by IPointerDownHandler to handle clicks
     public void OnPointerDown(PointerEventData eventData)
     {
         if (shellCount > 0)
         {
-            SpawnAndStartDraggingShell();
-            shellCount--;
+            // Spawn the shell and begin dragging
+            SpawnAndStartDraggingShell(eventData);
+
+            shellCount--; // Decrease shell count
             UpdateBoxSprite(); // Update the sprite after spawning
         }
         else
@@ -39,21 +42,44 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    private void SpawnAndStartDraggingShell()
+    public void OnPointerUp(PointerEventData eventData)
     {
-        // Ensure both the prefab and parent are set
+        // Ensure the current shell stops dragging
+        if (currentSpawnedShell != null)
+        {
+            currentSpawnedShell.StopDragging();
+            currentSpawnedShell = null; // Clear reference after stopping drag
+        }
+    }
+
+    private void SpawnAndStartDraggingShell(PointerEventData eventData)
+    {
         if (shotgunShellPrefab != null && uiPrototypeParent != null)
         {
             GameObject spawnedShell = Instantiate(shotgunShellPrefab, spawnPoint.position, Quaternion.identity, uiPrototypeParent);
 
-            // Mark the shell as "just spawned"
-            spawnedShell.AddComponent<ShellBehavior>().MarkAsJustSpawned();
-
-            // Start dragging immediately
+            // Initialize the shell's behavior
             DraggableImage draggableComponent = spawnedShell.GetComponent<DraggableImage>();
             if (draggableComponent != null)
             {
-                draggableComponent.StartDragging();
+                draggableComponent.ResetShell(); // Reset the shell state
+                draggableComponent.StartDragging(); // Start dragging immediately
+
+                // Set the initial drag target position based on the click
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    draggableComponent.canvasRectTransform,
+                    eventData.position,
+                    eventData.pressEventCamera,
+                    out Vector2 localMousePosition);
+
+                draggableComponent.targetPosition = localMousePosition; // Update the initial target position
+            }
+
+            // Mark the shell as "just spawned"
+            ShellBehavior shellBehavior = spawnedShell.AddComponent<ShellBehavior>();
+            if (shellBehavior != null)
+            {
+                shellBehavior.MarkAsJustSpawned();
             }
         }
         else
@@ -61,6 +87,7 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler
             Debug.LogWarning("Shotgun shell prefab or UI prototype parent not set.");
         }
     }
+
 
     private void UpdateBoxSprite()
     {
