@@ -15,6 +15,7 @@ TagManager:
   - ShellBox
   - SearchContainer
   - Obstical
+  - o2tank
   layers:
   - Default
   - TransparentFX
@@ -25,7 +26,7 @@ TagManager:
   - Obstical
   - Player
   - Enemy
-  - 
+  - StopArea1
   - 
   - 
   - 
@@ -51,4 +52,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: O2 Strap
+    uniqueID: 3224528601
     locked: 0

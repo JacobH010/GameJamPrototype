@@ -21,13 +21,15 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     private ShotgunController shotgunController; // Reference to the ShotgunController
     private RectTransform rectTransform;
-    private RectTransform canvasRectTransform;
+    public RectTransform canvasRectTransform;
     private Canvas canvas;
-    private Vector2 targetPosition; // Target position to center the shell on the mouse
+    public Vector2 targetPosition; // Target position to center the shell on the mouse
     private Rigidbody2D rb2D;
     private bool wasKinematicBeforeDrag;
-    private Vector2 lastDragDelta = Vector2.zero;
-    private bool isDragging = false;
+    public Vector2 lastDragDelta = Vector2.zero;
+    public bool isDragging = false;
+
+    private bool isXAxisLocked = false; // New state to lock movement to x-axis
 
     private Vector3 previousMousePosition;
 
@@ -39,65 +41,160 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         rb2D = GetComponent<Rigidbody2D>();
     }
 
+    public void LockYAxisAndRotation(float fixedY, float fixedRotationZ)
+    {
+        isXAxisLocked = true;
+
+        // Disable fling force by setting multiplier to 0
+        flingForceMultiplier = 0f;
+
+        // Continuously enforce y-position and rotation lock in Update
+        StartCoroutine(LockYAndRotationRoutine(fixedY, fixedRotationZ));
+    }
+
+    public void ForceStopDragging()
+    {
+        if (!isDragging) return;
+
+        isDragging = false;
+
+        if (rb2D != null)
+        {
+            rb2D.bodyType = RigidbodyType2D.Dynamic; // Restore dynamic state
+            rb2D.gravityScale = releasedGravityScale; // Restore gravity
+            rb2D.velocity = Vector2.zero; // Clear velocity
+            rb2D.angularVelocity = 0f; // Clear angular velocity
+        }
+
+        lastDragDelta = Vector2.zero; // Reset drag delta
+        Debug.Log("Dragging forcibly stopped.");
+    }
+
+
+
+
+    private System.Collections.IEnumerator LockYAndRotationRoutine(float fixedY, float fixedRotationZ)
+    {
+        while (isXAxisLocked)
+        {
+            // Lock the y-position and rotation
+            rectTransform.localPosition = new Vector3(
+                rectTransform.localPosition.x,
+                fixedY,
+                rectTransform.localPosition.z
+            );
+
+            rectTransform.rotation = Quaternion.Euler(0, 0, fixedRotationZ);
+
+            yield return null;
+        }
+    }
+
+    public void ResetShell()
+    {
+        if (rb2D != null)
+        {
+            rb2D.bodyType = RigidbodyType2D.Dynamic; // Ensure it's dynamic for fling behavior
+            rb2D.velocity = Vector2.zero; // Clear velocity
+            rb2D.angularVelocity = 0f; // Clear angular velocity
+            rb2D.gravityScale = releasedGravityScale; // Restore gravity scale
+            rb2D.constraints = RigidbodyConstraints2D.None; // Ensure no constraints
+        }
+
+        // Reset internal states
+        isDragging = false; // Ensure dragging starts fresh
+        isXAxisLocked = false; // Clear any locks
+        lastDragDelta = Vector2.zero; // Reset fling-related state
+        previousMousePosition = Vector3.zero; // Clear previous mouse position
+
+        Debug.Log("Shell reset.");
+    }
+
+
+
+
+
     private void Start()
     {
         shotgunController = FindObjectOfType<ShotgunController>();
 
         if (shotgunController == null)
         {
-           
+
         }
     }
 
     private void Update()
     {
-        if (isDragging && Input.GetMouseButtonUp(0))
-        {
-            StopDragging();
-        }
-
         if (isDragging)
         {
-            // Continuously update the target position to follow the mouse smoothly
+            // Allow dragging on the x-axis
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRectTransform,
                 Input.mousePosition,
                 canvas.worldCamera,
                 out Vector2 localMousePosition))
             {
-                targetPosition = localMousePosition; // Continuously set the target position to the mouse position
+                targetPosition.x = localMousePosition.x; // Update x-position
             }
 
-            // Smoothly interpolate to the updated target position (mouse center)
-            Vector2 smoothPosition = Vector2.Lerp((Vector2)rectTransform.localPosition, targetPosition, centeringSmoothing * Time.deltaTime);
+            if (isXAxisLocked)
+            {
+                // Apply x-axis locked position
+                rectTransform.localPosition = new Vector2(
+                    targetPosition.x,
+                    rectTransform.localPosition.y // Y and rotation are managed externally
+                );
+            }
+            else
+            {
+                // Regular dragging behavior
+                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    canvasRectTransform,
+                    Input.mousePosition,
+                    canvas.worldCamera,
+                    out Vector2 updatedMousePosition))
+                {
+                    targetPosition = updatedMousePosition; // Update both x and y positions
+                }
 
-            // Calculate the rotated bounds of the RectTransform
-            Vector2 rotatedSize = GetRotatedBounds(rectTransform);
+                // Smoothly follow the target position
+                Vector2 smoothPosition = Vector2.Lerp(rectTransform.localPosition, targetPosition, centeringSmoothing * Time.deltaTime);
 
-            // Get the canvas bounds in local space
-            Vector2 canvasSize = canvasRectTransform.rect.size;
-            float minX = -canvasSize.x / 2 + rotatedSize.x / 2;
-            float maxX = canvasSize.x / 2 - rotatedSize.x / 2;
-            float minY = -canvasSize.y / 2 + rotatedSize.y / 2;
-            float maxY = canvasSize.y / 2 - rotatedSize.y / 2;
+                // Clamp position within bounds
+                Bounds bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(canvasRectTransform, rectTransform);
+                float minX = -canvasRectTransform.rect.width / 2 + bounds.extents.x;
+                float maxX = canvasRectTransform.rect.width / 2 - bounds.extents.x;
+                float minY = -canvasRectTransform.rect.height / 2 + bounds.extents.y;
+                float maxY = canvasRectTransform.rect.height / 2 - bounds.extents.y;
 
-            // Clamp the position within the canvas bounds
-            Vector2 clampedPosition = new Vector2(
-                Mathf.Clamp(smoothPosition.x, minX, maxX),
-                Mathf.Clamp(smoothPosition.y, minY, maxY)
-            );
+                // Apply clamped position
+                Vector2 clampedPosition = new Vector2(
+                    Mathf.Clamp(smoothPosition.x, minX, maxX),
+                    Mathf.Clamp(smoothPosition.y, minY, maxY)
+                );
 
-            lastDragDelta = clampedPosition - (Vector2)rectTransform.localPosition;
-            rectTransform.localPosition = clampedPosition;
+                // Calculate and update the drag delta for fling calculation
+                lastDragDelta = clampedPosition - (Vector2)rectTransform.localPosition;
 
-            // Update rotation only if the mouse is moving faster than the threshold
-            if (Vector3.Distance(Input.mousePosition, previousMousePosition) > movementThreshold)
+                rectTransform.localPosition = clampedPosition;
+            }
+
+            // Update rotation if the mouse moves significantly and is not locked
+            if (!isXAxisLocked && Vector3.Distance(Input.mousePosition, previousMousePosition) > movementThreshold)
             {
                 SmoothRotateTowardsMouse();
-                previousMousePosition = Input.mousePosition; // Update the last known mouse position
+                previousMousePosition = Input.mousePosition; // Update the previous mouse position
             }
         }
+
+        // Check for releasing drag
+        if (isDragging && Input.GetMouseButtonUp(0))
+        {
+            StopDragging();
+        }
     }
+
 
     private Vector2 GetRotatedBounds(RectTransform rectTransform)
     {
@@ -120,7 +217,7 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, mouseWorldPosition, canvas.worldCamera, out Vector2 localMousePosition);
 
         Vector2 directionToMouse = localMousePosition - (Vector2)rectTransform.localPosition;
-        float targetAngle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg - 90f; // Offset by 90 degrees to point top of shell towards mouse
+        float targetAngle = Mathf.Atan2(directionToMouse.y, directionToMouse.x) * Mathf.Rad2Deg - 90f; // Offset by 90 degrees to point top towards mouse
 
         Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
         rectTransform.rotation = Quaternion.Slerp(rectTransform.rotation, targetRotation, rotationSmoothing * Time.deltaTime);
@@ -136,23 +233,41 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
     public void StartDragging()
     {
-        isDragging = true;
-
-        if (rb2D != null)
+        if (!isDragging) // Prevent duplicate initialization
         {
-            wasKinematicBeforeDrag = rb2D.isKinematic;
-            rb2D.bodyType = RigidbodyType2D.Kinematic;
-            rb2D.velocity = Vector2.zero;
-            rb2D.angularVelocity = 0f;
-            rb2D.gravityScale = 0f;
+            isDragging = true;
+
+            if (rb2D != null)
+            {
+                wasKinematicBeforeDrag = rb2D.isKinematic;
+                rb2D.bodyType = RigidbodyType2D.Kinematic; // Temporarily make it kinematic for drag
+                rb2D.velocity = Vector2.zero; // Reset velocity
+                rb2D.angularVelocity = 0f;
+                rb2D.gravityScale = 0f; // Disable gravity
+            }
+
+            // Initialize target position based on mouse position
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRectTransform, Input.mousePosition, canvas.worldCamera, out targetPosition);
+
+            lastDragDelta = Vector2.zero; // Initialize last drag delta
+            previousMousePosition = Input.mousePosition; // Record the initial mouse position
+
+            Debug.Log("Dragging started.");
+
+            // Force initial drag delta to simulate movement
+            UpdateDragDelta();
         }
-
-        // Calculate the initial position to center the shell on the mouse position
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, Input.mousePosition, canvas.worldCamera, out targetPosition);
-
-        lastDragDelta = Vector2.zero; // Reset drag delta at the start of dragging
-        previousMousePosition = Input.mousePosition; // Initialize previous mouse position at drag start
     }
+
+    private void UpdateDragDelta()
+    {
+        Vector2 currentPosition = rectTransform.localPosition;
+        lastDragDelta = targetPosition - currentPosition; // Force update of drag delta
+        Debug.Log($"Forced Drag Delta Update: lastDragDelta={lastDragDelta}");
+    }
+
+
 
     public void OnDrag(PointerEventData eventData)
     {
@@ -167,7 +282,7 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         StopDragging();
     }
 
-    private void StopDragging()
+    public void StopDragging()
     {
         if (!isDragging) return;
 
@@ -175,21 +290,36 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
 
         if (rb2D != null)
         {
-            rb2D.bodyType = wasKinematicBeforeDrag ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
-            rb2D.gravityScale = releasedGravityScale;
+            rb2D.bodyType = RigidbodyType2D.Dynamic; // Restore dynamic state
+            rb2D.gravityScale = releasedGravityScale; // Restore gravity
 
             if (lastDragDelta != Vector2.zero)
             {
-                Vector2 flingForce = lastDragDelta * flingForceMultiplier;
+                // Calculate drag speed
+                float dragSpeed = lastDragDelta.magnitude;
+
+                // Apply a scaling curve or dampen small drag speeds
+                float dynamicMultiplier = Mathf.Pow(dragSpeed / 100f, 0.5f) * flingForceMultiplier; // Scale with square root
+                dynamicMultiplier = Mathf.Clamp(dynamicMultiplier, 0.5f, flingForceMultiplier);
+                Vector2 flingForce = lastDragDelta.normalized * dynamicMultiplier;
                 rb2D.AddForce(flingForce, ForceMode2D.Impulse);
 
-                float rotationForce = lastDragDelta.x * rotationForceMultiplier;
+                // Apply a smaller rotation force
+                float rotationForce = Mathf.Clamp(lastDragDelta.x * rotationForceMultiplier, -10f, 10f); // Clamp rotation force
                 rb2D.AddTorque(rotationForce, ForceMode2D.Impulse);
+
+                Debug.Log($"Dynamic fling: dragSpeed={dragSpeed}, dynamicMultiplier={dynamicMultiplier}, force={flingForce}, torque={rotationForce}");
+            }
+            else
+            {
+                Debug.LogWarning("No fling force applied; lastDragDelta was zero.");
             }
         }
 
-        lastDragDelta = Vector2.zero; // Reset drag delta after stopping drag
+        lastDragDelta = Vector2.zero; // Reset drag delta
     }
+
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
