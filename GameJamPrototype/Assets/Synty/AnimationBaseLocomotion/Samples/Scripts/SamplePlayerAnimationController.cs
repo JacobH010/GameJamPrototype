@@ -91,7 +91,7 @@ namespace Synty.AnimationBaseLocomotion.Samples
         private InputReader _inputReader;
         [Tooltip("Animator component for controlling player animations")]
         [SerializeField]
-        private Animator _animator;
+        public Animator _animator;
         [Tooltip("Character Controller component for controlling player movement")]
         [SerializeField]
         private CharacterController _controller;
@@ -336,7 +336,7 @@ namespace Synty.AnimationBaseLocomotion.Samples
         #region Start
 
         /// <inheritdoc cref="Start" />
-        private void Start()
+        protected virtual void Start()
         {
             _targetLockOnPos = transform.Find("TargetLockOnPos");
 
@@ -648,7 +648,7 @@ namespace Synty.AnimationBaseLocomotion.Samples
         #region Updates
 
         /// <inheritdoc cref="Update" />
-        private void Update()
+        protected virtual void Update()
         {
             HandleAimingInput();
             switch (_currentState)
@@ -666,8 +666,11 @@ namespace Synty.AnimationBaseLocomotion.Samples
                     UpdateCrouchState();
                     break;
             }
+           
         }
+        
 
+        
         /// <summary>
         ///     Updates the animator to have the latest values.
         /// </summary>
