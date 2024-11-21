@@ -168,7 +168,12 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
             // Use the layer mask to exclude UI objects
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity/*, raycastLayerMask*/))
             {
+                Quaternion rotationOffset = Quaternion.Euler(aimOffset);
                 Vector3 lookDirection = hit.point - transform.position;
+                if (isAiming)
+                {
+                    lookDirection = rotationOffset * lookDirection;
+                }
                 lookDirection.y = 0; // Keep rotation flat
 
                 if (lookDirection != Vector3.zero)
@@ -206,7 +211,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         animator.SetFloat("DirectionX", directionX, 0.2f, Time.deltaTime);
         animator.SetFloat("DirectionY", directionY, 0.2f, Time.deltaTime);
 
-        Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
+        //Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
 
         if (animator.GetBool("IsAiming") != isAiming)
         {

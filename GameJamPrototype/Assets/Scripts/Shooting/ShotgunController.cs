@@ -17,7 +17,8 @@ public class ShotgunController : MonoBehaviour
     public bool isOutOfAmmo = false;             // Tracks whether the player is out of ammo
     private float nextFireTime = 0f;             // Timer to handle firing rate
 
-    private PlayerController playerController;   // Reference to the player controller for aiming check
+    public GameObject player;                    // Reference to the player controller for aiming check
+    private PlayerController2 playerController;
     public Rigidbody2D barrelRigidbody;          // Reference to the barrel's Rigidbody2D
     private bool gravitySet = false;             // Tracks if gravity has already been set
     private int shellsFired = 0;                 // Tracks the number of shells fired since last reload
@@ -43,7 +44,7 @@ public class ShotgunController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MonitorAmmo());
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = player.GetComponent<PlayerController2>();
 
         if (deleteZoneCollider != null)
         {
@@ -56,8 +57,9 @@ public class ShotgunController : MonoBehaviour
         // Check if the barrel's gravity scale is not 50 and the z rotation is greater than -5
         if (barrelRigidbody.gravityScale != 50f && barrelRigidbody.rotation > -5f)
         {
+            Debug.Log($"IS Aiming is set to {playerController.isAiming} in Player Controller 2");
             // Check if the player can shoot based on ammo, aiming status, cooldown, and barrel rotation
-            if (playerController != null && playerController.IsAiming() && !isOutOfAmmo && Input.GetButtonDown("Fire1") && Time.time >= nextFireTime && !IsBarrelInRestrictedRotation())
+            if (playerController != null && playerController.isAiming && !isOutOfAmmo && Input.GetButtonDown("Fire1") && Time.time >= nextFireTime && !IsBarrelInRestrictedRotation())
             {
                 Shoot();
                 nextFireTime = Time.time + 1f / fireRate; // Set the next allowed firing time based on fire rate
