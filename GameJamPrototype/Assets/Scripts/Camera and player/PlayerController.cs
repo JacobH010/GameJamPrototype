@@ -6,6 +6,10 @@ public class PlayerController : MonoBehaviour
     public float rotationSpeed = 5f;                // Speed at which the player rotates towards the aim point
     private bool isAiming = false;                  // Tracks if the player is aiming
     public float aimRotationOffset = 10f;           // Rotation offset angle for aiming (adjust as needed)
+    private Vector3 moveDirection;
+    public float moveSpeed = 5f;
+    [SerializeField]
+    private Animator animator;
 
     private UIManager uiManager;
 
@@ -14,77 +18,101 @@ public class PlayerController : MonoBehaviour
     {
         loadoutManager = LoadoutManager.loadoutManager;
         uiManager = GetComponent<UIManager>();
+        animator = GetComponent<Animator>();
     }
     public bool IsAiming()
     {
         return isAiming;
     }
     private void Update()
+    { 
+        
+            isAiming = Input.GetMouseButton(1); // Right Mouse Button to aim
+
+            if (!isAiming)
+            {
+                // Handle movement and rotation
+                Vector3 newPosition = HandleMovement();
+                MovePlayer(newPosition);
+                RotateTowardsMovement(moveDirection); // Rotate to face movement direction
+            }
+            else
+            {
+                // Handle aiming rotation
+                RotateTowardsMouse();
+                moveDirection = Vector3.zero; // Reset moveDirection when aiming
+            }
+
+            // Update Animator parameters
+            UpdateAnimator(moveDirection);
+        
+    }
+    private void UpdateAnimator(Vector3 moveDirection)
     {
-        // Check if aiming input is active (e.g., right-click to aim)
-        isAiming = Input.GetMouseButton(1); // Right mouse button for aiming
+        // Calculate speed based on moveDirection magnitude
+        float speed = moveDirection.magnitude;
+        speed = Mathf.Clamp(speed, 0, 1); // Ensure speed stays within a normalized range
 
-        Vector3 newPosition = transform.position;
+        // Update Animator parameters
+        animator.SetFloat("Speed", speed); // Update Speed parameter
+        animator.SetBool("IsAiming", isAiming); // Update IsAiming parameter
 
-        // Handle player movement based on WASD input
-        if (!isAiming)
-        {
-            newPosition = HandleMovement();
-        }
-
-        // Move player and raise event regardless of aiming or not
-        if (newPosition != transform.position)
-        {
-            MovePlayer(newPosition);
-        }
-
-        // Handle rotation based on whether the player is aiming
         if (isAiming)
         {
-            RotateTowardsMouse();
+            // Calculate aiming directions for animations
+            Vector2 direction = new Vector2(moveDirection.x, moveDirection.z).normalized;
+            animator.SetFloat("DirectionX", direction.x); // Set horizontal aiming direction
+            animator.SetFloat("DirectionY", direction.y); // Set vertical aiming direction
         }
-        else
-        {
-            RotateTowardsMovement(newPosition - transform.position);
-        }
+        Debug.Log($"Speed: {speed}, IsAiming: {isAiming}, DirectionX: {moveDirection.x}, DirectionY: {moveDirection.z}");
     }
 
     private Vector3 HandleMovement()
     {
-        Vector3 position = transform.position;
+        float horizontal = Input.GetAxis("Horizontal"); // Left/Right movement
+        float vertical = Input.GetAxis("Vertical");     // Forward/Backward movement
 
-        // Movement code (WASD)
-        if (Input.GetKey(KeyCode.W)) position += Vector3.forward * Time.deltaTime * 5;
-        if (Input.GetKey(KeyCode.S)) position += Vector3.back * Time.deltaTime * 5;
-        if (Input.GetKey(KeyCode.A)) position += Vector3.left * Time.deltaTime * 5;
-        if (Input.GetKey(KeyCode.D)) position += Vector3.right * Time.deltaTime * 5;
+        // Combine input into a direction vector
+        Vector3 direction = new Vector3(horizontal, 0, vertical);
 
-        return position;
+        // Normalize the direction to prevent diagonal speed boost
+        direction = direction.normalized;
+
+        // Calculate the new position based on movement direction and speed
+         // Adjust your move speed as necessary
+        Vector3 targetPosition = transform.position + direction * Time.deltaTime * moveSpeed;
+
+        // Store the movement direction for rotation and animation updates
+        moveDirection = direction;
+
+        return targetPosition;
     }
 
     private void RotateTowardsMouse()
     {
-        Vector3 playerPosition = transform.position;
-        Plane playerPlane = new Plane(Vector3.up, playerPosition + Vector3.up * 0.5f); // Adjust height as needed
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (playerPlane.Raycast(ray, out float distanceToPlane))
+        if (moveDirection.sqrMagnitude > 0.01f) // Avoid jittering for very small movements
         {
-            Vector3 targetPosition = ray.GetPoint(distanceToPlane);
-            Vector3 direction = targetPosition - playerPosition;
-            direction.y = 0;
+            // Calculate the target rotation
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
 
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            targetRotation *= Quaternion.Euler(0, aimRotationOffset, 0);
+            // Smoothly interpolate the rotation
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+        else
+        {
+            // If moveDirection is zero, maintain current rotation
+            transform.rotation = Quaternion.Slerp(transform.rotation, transform.rotation, rotationSpeed * Time.deltaTime);
         }
     }
 
     private void RotateTowardsMovement(Vector3 moveDirection)
     {
-        if (moveDirection != Vector3.zero)
+        if (moveDirection.sqrMagnitude > 0.01f) // Avoid small movements causing jitter
         {
+            // Calculate the target rotation based on movement direction
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+
+            // Smoothly interpolate the rotation
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
