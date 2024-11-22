@@ -16,6 +16,7 @@ TagManager:
   - SearchContainer
   - Obstical
   - o2tank
+  - O2Unlocked
   layers:
   - Default
   - TransparentFX
