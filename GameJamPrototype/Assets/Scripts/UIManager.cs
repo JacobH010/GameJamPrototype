@@ -11,7 +11,7 @@ public class UIManager : MonoBehaviour
     private float o2Decay = .1f; //Decay rate per half second. 
     private float o2DecayRate = .5f;//Rate of o2 Decay in seconds
     public bool o2DecayOn = true;
-    private float o2HealthDecay = 2.5f;
+    private float o2HealthDecay = 0.2f;
     private float kickO2Drain = 4;
     private float sprintMult = 2;
     public bool isSprinting;
@@ -22,6 +22,11 @@ public class UIManager : MonoBehaviour
     private float healthPacks;
     private float o2Tanks;
     private float ammoPacks;
+
+    [Header("Force Settings")]
+    public float xForce = 100f; // Force to apply on the X-axis
+    public float zTorque = 50f; // Torque to apply for Z rotation
+
 
 
     public Slider healthSlider;
@@ -46,34 +51,117 @@ public class UIManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    
+
     IEnumerator Decrement02()
     {
         while (o2DecayOn)
         {
             yield return new WaitForSeconds(o2DecayRate);
-            if (playerO2 >= 0)
+
+            if (o2Slider != null)
             {
-                
-                if (isSprinting)
+                // Check if the current slider is active and decrement O2 if it is
+                O2TankState o2TankState = o2Slider.GetComponentInParent<O2TankState>();
+                if (o2TankState != null && o2TankState.IsActive)
                 {
-                    playerO2 -= o2Decay * sprintMult;
+                    if (playerO2 > 0)
+                    {
+                        // Decrease oxygen
+                        if (isSprinting)
+                        {
+                            playerO2 -= o2Decay * sprintMult;
+                        }
+                        else
+                        {
+                            playerO2 -= o2Decay;
+                        }
+
+                        Debug.Log("Player o2 decremented to " + playerO2);
+
+                        // Update slider value
+                        o2Slider.value = playerO2;
+                    }
+                    else
+                    {
+                        // Oxygen is depleted, handle force application
+                        DraggableImage draggableImage = o2Slider.GetComponentInParent<DraggableImage>();
+                        if (draggableImage != null)
+                        {
+                            ApplyForceToDraggable(draggableImage);
+                        }
+
+                        // Reset health or handle zero oxygen behavior
+                        playerHealth -= o2HealthDecay;
+                        healthSlider.value = playerHealth;
+
+                        if (playerHealth <= 0)
+                        {
+                            GameOver();
+                        }
+                    }
                 }
-                else
-                {
-                    playerO2 -= o2Decay;
-                }
-                Debug.Log("Player o2 decremented to " + playerO2);
             }
-            else if (playerO2 < 0)
+
+            // Check if no O2 tank is active
+            if (!IsAnyO2TankActive())
             {
-                playerHealth -= o2HealthDecay ;
+                playerHealth -= o2HealthDecay * 2; // Decrease health rapidly
                 healthSlider.value = playerHealth;
+
+                Debug.Log("No active O2 tank! Health decreasing rapidly.");
+
+                if (playerHealth <= 0)
+                {
+                    GameOver();
+                }
             }
-            o2Slider.value = playerO2;
+
             yield return null;
-        }        
+        }
     }
+
+
+    private void ApplyForceToDraggable(DraggableImage draggableImage)
+    {
+        draggableImage.isXAxisLocked = false; // Unlock the X-axis
+
+        Rigidbody2D rb2D = draggableImage.GetComponent<Rigidbody2D>();
+        if (rb2D != null)
+        {
+            rb2D.AddForce(new Vector2(xForce, 0), ForceMode2D.Impulse); // Apply force on X-axis
+            rb2D.AddTorque(zTorque, ForceMode2D.Impulse); // Apply torque for Z rotation
+        }
+
+        Debug.Log($"Force applied: X={xForce}, Z rotation torque={zTorque}");
+    }
+
+    private bool IsAnyO2TankActive()
+    {
+        O2TankState[] o2Tanks = FindObjectsOfType<O2TankState>();
+        foreach (var tank in o2Tanks)
+        {
+            if (tank.IsActive)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public void UpdateO2FromSlider()
+    {
+        if (o2Slider != null)
+        {
+            playerO2 = o2Slider.value; // Sync the O2 value with the new slider
+            Debug.Log($"Player O2 updated to {playerO2} from new slider.");
+        }
+        else
+        {
+            Debug.LogError("O2 Slider is null. Cannot update player O2.");
+        }
+    }
+
     public void PlayerKickO2Consume()
     {
         if (o2DecayOn)

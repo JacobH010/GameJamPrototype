@@ -127,14 +127,16 @@ MonoBehaviour:
   clickableArea: {fileID: 101201108932053725}
   releasedGravityScale: 237.07
   flingForceMultiplier: 1500
-  rotationForceMultiplier: -5
+  rotationForceMultiplier: -100
   rotationSmoothing: 5
-  smoothing: 20
+  smoothing: 40
   centeringSmoothing: 34.06
   movementThreshold: 0.2
   canvasRectTransform: {fileID: 0}
   targetPosition: {x: 0, y: 0}
   lastDragDelta: {x: 0, y: 0}
+  isDragging: 0
+  isXAxisLocked: 0
 --- !u!50 &1542115592548981398
 Rigidbody2D:
   serializedVersion: 4
