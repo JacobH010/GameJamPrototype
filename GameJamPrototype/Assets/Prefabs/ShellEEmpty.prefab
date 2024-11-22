@@ -73,8 +73,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -227, y: -168}
-  m_SizeDelta: {x: -860, y: -440}
+  m_AnchoredPosition: {x: -227, y: -144}
+  m_SizeDelta: {x: -860, y: -488}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7691588281403747294
 CanvasRenderer:
@@ -131,6 +131,10 @@ MonoBehaviour:
   smoothing: 20
   centeringSmoothing: 34.06
   movementThreshold: 0.2
+  canvasRectTransform: {fileID: 0}
+  targetPosition: {x: 0, y: 0}
+  lastDragDelta: {x: 0, y: 0}
+  isDragging: 0
 --- !u!50 &1542115592548981398
 Rigidbody2D:
   serializedVersion: 4
