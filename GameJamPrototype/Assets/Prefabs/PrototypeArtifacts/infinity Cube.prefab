@@ -55,7 +55,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,8 +115,9 @@ MonoBehaviour:
   objectName: Infinity Cube
   monitaryValue: 100
   scanValue: 500
-  rarity: 2
+  commonality: 10
   itemWeight: 1
+  containerID: 
   sprites:
   - {fileID: 589684543, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}
   - {fileID: -1470068146, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}

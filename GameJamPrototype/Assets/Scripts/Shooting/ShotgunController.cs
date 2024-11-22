@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.VFX;
 
 public class ShotgunController : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class ShotgunController : MonoBehaviour
     public float spreadAngle = 15f;              // Maximum spread angle for each pellet
     public float fireRate = 1f;                  // Shots per second
     public float projectileSpeed = 20f;          // Speed of each projectile
-    public ParticleSystem muzzleFlash;           // Optional muzzle flash particle effect
+    public VisualEffect muzzleFlash;           // Optional muzzle flash particle effect
     public AudioSource shootingSound;            // Optional audio source for shotgun sound
 
     public int currentAmmo = 2;                  // Number of bullets before needing to reload
@@ -99,7 +100,7 @@ public class ShotgunController : MonoBehaviour
         {
             Quaternion spreadRotation = Quaternion.Euler(
                 Random.Range(-spreadAngle, spreadAngle), // Apply spread on the x-axis
-                0,                                      // No spread on the y-axis
+                Random.Range(-spreadAngle, spreadAngle),                                      // No spread on the y-axis
                 0
             );
 

@@ -131,6 +131,10 @@ MonoBehaviour:
   smoothing: 20
   centeringSmoothing: 34.06
   movementThreshold: 0.2
+  canvasRectTransform: {fileID: 0}
+  targetPosition: {x: 0, y: 0}
+  lastDragDelta: {x: 0, y: 0}
+  isDragging: 0
 --- !u!50 &8036790395614718771
 Rigidbody2D:
   serializedVersion: 4

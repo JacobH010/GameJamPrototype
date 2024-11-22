@@ -3198,6 +3198,9 @@ MonoBehaviour:
   spawnInterval: 0.75
   respawnDelay: 3
   spawnRadius: 10
+  player: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  aIManager: {fileID: 0}
 --- !u!65 &179399076
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3239,7 +3242,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11809,7 +11812,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19008,8 +19011,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47cb27ed96be3684694048235680dad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerHealth: 100
   o2DecayOn: 1
   isSprinting: 0
+  useHealth: {fileID: 0}
+  useO2: {fileID: 0}
+  healthPacksRemaining: {fileID: 0}
+  o2Remaining: {fileID: 0}
+  healthSlider: {fileID: 0}
+  o2Slider: {fileID: 0}
 --- !u!4 &1330618509 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4710983840306315618, guid: 9c351c8dd49bb164e81630da2d0cf9b0, type: 3}
@@ -34282,6 +34292,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 435961014206703887, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
       propertyPath: antialiasingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1264339787771176856, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
+      propertyPath: m_Antialiasing
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2031696708485593248, guid: ed1d8177a225e5f43baa02d6765165d5, type: 3}
