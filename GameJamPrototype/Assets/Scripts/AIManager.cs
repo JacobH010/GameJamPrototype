@@ -208,12 +208,12 @@ public class AIManager : MonoBehaviour
         Physics.Raycast(enemy.transform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer,
              ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore);
         // Debug.Log("Ray hit object: " + hit.collider.tag);
-        Debug.DrawRay(enemy.transform.position, directionToPlayer);
+        //Debug.DrawRay(enemy.transform.position, directionToPlayer);
         if (Physics.Raycast(enemy.transform.position, directionToPlayer, out hit, distanceToPlayer,
              ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore))
         {
-            Debug.Log("Player Hit by raycast");
-            Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
+           /// Debug.Log("Player Hit by raycast");
+           // Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
             // Check if the ray hit the player or an obstacle
             if (hit.transform == locationOfPlayer)
             {

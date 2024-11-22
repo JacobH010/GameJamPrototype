@@ -493,4 +493,8 @@ public class AIController : MonoBehaviour
             Debug.Log("Player Collision Detected - Not attacking");
         }
     }
+    public void KillEnemy()
+    {
+        Destroy(gameObject);
+    }
 }
