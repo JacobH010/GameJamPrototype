@@ -32,6 +32,10 @@ public class ShotgunController : MonoBehaviour
     public float shellForce = 100f;              // Leftward force for shell ejection
     public float shellUpwardForce = 50f;         // Upward force for shell ejection
     public float shellRotationalForce = 10f;     // Rotational force for shell ejection
+    public AudioSource shellLoadSound;
+    
+    private int lastAmmoCount = 2;
+    
 
     [Header("Delete Zone")]
     public Collider2D deleteZoneCollider;        // Delete zone collider reference
@@ -54,6 +58,7 @@ public class ShotgunController : MonoBehaviour
 
     private void Update()
     {
+        
         // Check if the barrel's gravity scale is not 50 and the z rotation is greater than -5
         if (barrelRigidbody.gravityScale != 50f && barrelRigidbody.rotation > -5f)
         {
@@ -99,7 +104,7 @@ public class ShotgunController : MonoBehaviour
         {
             Quaternion spreadRotation = Quaternion.Euler(
                 Random.Range(-spreadAngle, spreadAngle), // Apply spread on the x-axis
-                0,                                      // No spread on the y-axis
+                Random.Range(-spreadAngle, spreadAngle),                                      // No spread on the y-axis
                 0
             );
 
@@ -168,7 +173,11 @@ public class ShotgunController : MonoBehaviour
             {
                 deleteZoneCollider.enabled = (currentAmmo < maxAmmo && IsBarrelInRestrictedRotation());
             }
-
+            if (lastAmmoCount < currentAmmo)
+            {
+                shellLoadSound.Play();
+            }
+            lastAmmoCount = currentAmmo;
             yield return new WaitForSeconds(0.1f); // Check conditions every 0.1 seconds
         }
     }
@@ -230,6 +239,8 @@ public class ShotgunController : MonoBehaviour
         }
 
         shellsFired = 0;  // Reset shellsFired after ejection
+             
+
     }
 
     private bool IsBarrelInRestrictedRotation()
@@ -244,25 +255,32 @@ public class ShotgunController : MonoBehaviour
 
     public void Reload()
     {
+        Debug.Log("Sell Loaded on Reload");
         currentAmmo = maxAmmo; // Set ammo to max when reloading
         shellsFired = 0;       // Reset shellsFired on reload
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Something collided with it");
         if (other.CompareTag("AmmoBox"))
         {
+            Debug.Log("Shell load on OnTriggerEnter");
             Reload();
+            
             Destroy(other.gameObject);
         }
     }
 
     public void AddAmmo(int amount)
     {
+        Debug.Log("Shell loaded in Add Ammo");
         currentAmmo += amount;
+        
         if (currentAmmo > maxAmmo)
         {
             currentAmmo = maxAmmo;
         }
     }
+    
 }
