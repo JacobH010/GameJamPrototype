@@ -216,15 +216,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 353463011057971444, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 353463011057971444, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 353463011057971444, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 935110543436369445, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1758,6 +1758,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2683394983551867302, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 3536431803036737485, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 55
@@ -1776,7 +1780,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6067751881323452479, guid: 94aa96b2836032a4dae927fa5da0f62f, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
