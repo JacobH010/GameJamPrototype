@@ -86,11 +86,11 @@ public class AIManager : MonoBehaviour
         }*/
         if (playerGameObject == null)
         {
-            Debug.LogError("PlayerGameObject Null in start method");
+          //  Debug.LogError("PlayerGameObject Null in start method");
         }
         else
         {
-            Debug.Log("Player object is " +  playerGameObject.name);
+          //  Debug.Log("Player object is " +  playerGameObject.name);
         }
         GetPlayerLocation();
     }
@@ -147,7 +147,7 @@ public class AIManager : MonoBehaviour
         {
             //Debug.Log("Get Player Location ran");
             locationOfPlayer = playerObject.transform;//Sets player reference
-            //Debug.Log("Player Location is = " + playerObject.transform.position.ToString());
+           // Debug.Log("Player Location is = " + playerObject.transform.position.ToString());
             return locationOfPlayer.position;
             
         }
@@ -166,6 +166,7 @@ public class AIManager : MonoBehaviour
             //Check if enemy in range
             if (Vector3.Distance(enemy.transform.position, GetPlayerLocation()) <= detectionRange)
             {
+                //Debug.Log("Player in range");
                 if (HasLineOfSight(enemy))
                 {
                     //Debug.Log("Has Line of Sight returned truel");
@@ -206,21 +207,24 @@ public class AIManager : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(enemy.transform.position, GetPlayerLocation());
         Physics.Raycast(enemy.transform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer,
              ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore);
-    //    Debug.Log("Ray hit object: " + hit.collider.name);
-        
+        // Debug.Log("Ray hit object: " + hit.collider.tag);
+        //Debug.DrawRay(enemy.transform.position, directionToPlayer);
         if (Physics.Raycast(enemy.transform.position, directionToPlayer, out hit, distanceToPlayer,
              ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore))
         {
-          //  Debug.Log("Player Hit by raycast");
-            
+           /// Debug.Log("Player Hit by raycast");
+           // Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
             // Check if the ray hit the player or an obstacle
             if (hit.transform == locationOfPlayer)
             {
+                Debug.Log($"Line of sight returned true");
                 return true; // Clear line of sight
+                
             }
             else
             {
-                
+                Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
+                Debug.Log("Line of sight returned false");
                 return false;
             }
         }

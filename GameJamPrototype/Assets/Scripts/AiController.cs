@@ -51,7 +51,7 @@ public class AIController : MonoBehaviour
 
     //public GameObject playerPrefab;
   //  public GameObject playerGameObject;
-    private PlayerController playerController;
+    private PlayerController2 playerController;
 
     private Rigidbody rb;
    
@@ -65,7 +65,7 @@ public class AIController : MonoBehaviour
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
         rb = GetComponent<Rigidbody>();
-        playerController = FindObjectOfType<PlayerController>();
+        playerController = FindObjectOfType<PlayerController2>();
        
         if (playerController == null)
         {
@@ -474,7 +474,7 @@ public class AIController : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && isAttacking)
         {
             Debug.Log("damage player");
-           playerController.HitByEnemy(damage);
+          // playerController.HitByEnemy(damage);
             Rigidbody playerRigidbody = other.GetComponent<Rigidbody>();
             if (playerRigidbody != null)
             {
@@ -492,5 +492,9 @@ public class AIController : MonoBehaviour
         {
             Debug.Log("Player Collision Detected - Not attacking");
         }
+    }
+    public void KillEnemy()
+    {
+        Destroy(gameObject);
     }
 }

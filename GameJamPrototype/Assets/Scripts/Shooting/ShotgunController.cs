@@ -11,7 +11,7 @@ public class ShotgunController : MonoBehaviour
     public float projectileSpeed = 20f;          // Speed of each projectile
     public ParticleSystem muzzleFlash;           // Optional muzzle flash particle effect
     public AudioSource shootingSound;            // Optional audio source for shotgun sound
-
+    public float range = 10f;
     public int currentAmmo = 2;                  // Number of bullets before needing to reload
     public int maxAmmo = 2;                      // Maximum ammo limit
     public bool isOutOfAmmo = false;             // Tracks whether the player is out of ammo
@@ -32,6 +32,10 @@ public class ShotgunController : MonoBehaviour
     public float shellForce = 100f;              // Leftward force for shell ejection
     public float shellUpwardForce = 50f;         // Upward force for shell ejection
     public float shellRotationalForce = 10f;     // Rotational force for shell ejection
+    public AudioSource shellLoadSound;
+    
+    private int lastAmmoCount = 2;
+    
 
     [Header("Delete Zone")]
     public Collider2D deleteZoneCollider;        // Delete zone collider reference
@@ -54,6 +58,7 @@ public class ShotgunController : MonoBehaviour
 
     private void Update()
     {
+        
         // Check if the barrel's gravity scale is not 50 and the z rotation is greater than -5
         if (barrelRigidbody.gravityScale != 50f && barrelRigidbody.rotation > -5f)
         {
@@ -84,33 +89,88 @@ public class ShotgunController : MonoBehaviour
     {
         if (currentAmmo <= 0) return;  // Ensure there's ammo to shoot
 
-        // Reduce ammo count by one
+        // Reduce ammo count
         currentAmmo--;
         shellsFired++;  // Increment shellsFired count to track shots
 
-        // Play muzzle flash effect if assigned
+        // Play muzzle flash and sound
         if (muzzleFlash != null) muzzleFlash.Play();
-
-        // Play shooting sound if assigned
         if (shootingSound != null) shootingSound.Play();
 
-        // Loop to create each pellet with spread effect only on the x-axis (no y-axis spread)
+        // Shotgun parameters
+                // Maximum range of the shotgun
+        LayerMask collisionMask = LayerMask.GetMask("Default", "Enemy", "Obstical"); // Mask for walls, enemies, etc.
+
+        // Simulate each pellet
         for (int i = 0; i < pelletsPerShot; i++)
         {
-            Quaternion spreadRotation = Quaternion.Euler(
-                Random.Range(-spreadAngle, spreadAngle), // Apply spread on the x-axis
-                0,                                      // No spread on the y-axis
+            Quaternion randomRotation = Quaternion.Euler(
+                Random.Range(-spreadAngle, spreadAngle),
+                Random.Range(-spreadAngle, spreadAngle),
                 0
             );
 
-            GameObject pellet = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation * spreadRotation);
-            Rigidbody rb = pellet.GetComponent<Rigidbody>();
+            Vector3 shootDirection = randomRotation * firePoint.forward;
 
-            if (rb != null)
-            {
-                rb.velocity = pellet.transform.forward * projectileSpeed;
-            }
+            StartCoroutine(VisualizeRayWithSpeed(firePoint.position, shootDirection, range, projectileSpeed, collisionMask));
         }
+    }
+    private IEnumerator VisualizeRayWithSpeed(Vector3 startPosition, Vector3 direction, float range, float speed, LayerMask collisionMask)
+    {
+        float distanceTraveled = 0f;
+        Vector3 currentPosition = startPosition;
+
+        while (distanceTraveled < range)
+        {
+            // Move the "ray" forward at the given speed
+            float step = speed * Time.deltaTime; // Distance to move in this frame
+            distanceTraveled += step;
+
+            // Check for collisions
+            if (Physics.Raycast(currentPosition, direction, out RaycastHit hit, step, collisionMask))
+            {
+                Debug.DrawLine(currentPosition, hit.point, Color.red, 1f); // Draw the ray to the hit point
+                Debug.Log($"Hit object: {hit.collider.name}");
+
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    AIController enemyAI = hit.collider.GetComponent<AIController>();
+                    if (enemyAI != null)
+                    {
+                        enemyAI.KillEnemy();
+                    }
+                }
+
+                yield break; // Stop the coroutine when hitting something
+            }
+
+            // Update current position
+            Vector3 nextPosition = currentPosition + direction * step;
+            Debug.DrawLine(currentPosition, nextPosition, Color.yellow, 1f); // Draw the traveling ray
+
+            currentPosition = nextPosition;
+
+            yield return null; // Wait for the next frame
+        }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        if (firePoint == null) return; // Ensure firePoint is set
+
+         // Same as in the Shoot method
+        float coneAngle = spreadAngle; // Use the spreadAngle variable
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(firePoint.position, range); // Draw range as a sphere
+
+        // Draw the cone boundaries
+        Vector3 forward = firePoint.forward * range;
+        Quaternion leftRayRotation = Quaternion.Euler(0, -coneAngle, 0); // Left boundary
+        Quaternion rightRayRotation = Quaternion.Euler(0, coneAngle, 0); // Right boundary
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(firePoint.position, leftRayRotation * forward); // Left edge of cone
+        Gizmos.DrawRay(firePoint.position, rightRayRotation * forward); // Right edge of cone
     }
 
 
@@ -168,7 +228,11 @@ public class ShotgunController : MonoBehaviour
             {
                 deleteZoneCollider.enabled = (currentAmmo < maxAmmo && IsBarrelInRestrictedRotation());
             }
-
+            if (lastAmmoCount < currentAmmo)
+            {
+                shellLoadSound.Play();
+            }
+            lastAmmoCount = currentAmmo;
             yield return new WaitForSeconds(0.1f); // Check conditions every 0.1 seconds
         }
     }
@@ -230,6 +294,8 @@ public class ShotgunController : MonoBehaviour
         }
 
         shellsFired = 0;  // Reset shellsFired after ejection
+             
+
     }
 
     private bool IsBarrelInRestrictedRotation()
@@ -244,25 +310,32 @@ public class ShotgunController : MonoBehaviour
 
     public void Reload()
     {
+        Debug.Log("Sell Loaded on Reload");
         currentAmmo = maxAmmo; // Set ammo to max when reloading
         shellsFired = 0;       // Reset shellsFired on reload
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Something collided with it");
         if (other.CompareTag("AmmoBox"))
         {
+            Debug.Log("Shell load on OnTriggerEnter");
             Reload();
+            
             Destroy(other.gameObject);
         }
     }
 
     public void AddAmmo(int amount)
     {
+        Debug.Log("Shell loaded in Add Ammo");
         currentAmmo += amount;
+        
         if (currentAmmo > maxAmmo)
         {
             currentAmmo = maxAmmo;
         }
     }
+    
 }
