@@ -3853,7 +3853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8186a9af9650259479de05418797993b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPosition: {x: 10, y: -46}
+  targetPosition: {x: 10, y: -30}
   positionTolerance: 4.69
   grabCooldown: 0.3
 --- !u!50 &1493409491
@@ -4070,7 +4070,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleLock: 0
-  targetYPosition: 244
+  targetYPosition: 240
   targetRotation: {x: 0, y: 0, z: -90}
   moveDuration: 0.15
   pushForce: 10
@@ -4521,7 +4521,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 8.00002, y: -29.3}
+  m_AnchoredPosition: {x: 8, y: -229}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1976740134
