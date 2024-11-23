@@ -17,6 +17,8 @@ TagManager:
   - Obstical
   - o2tank
   - O2Unlocked
+  - HealthSil
+  - Syringe
   layers:
   - Default
   - TransparentFX
@@ -28,7 +30,7 @@ TagManager:
   - Player
   - Enemy
   - StopArea1
-  - 
+  - Trash
   - 
   - 
   - 
