@@ -33,9 +33,9 @@ public class ShotgunController : MonoBehaviour
     public float shellUpwardForce = 50f;         // Upward force for shell ejection
     public float shellRotationalForce = 10f;     // Rotational force for shell ejection
     public AudioSource shellLoadSound;
-    
+
     private int lastAmmoCount = 2;
-    
+
 
     [Header("Delete Zone")]
     public Collider2D deleteZoneCollider;        // Delete zone collider reference
@@ -43,6 +43,11 @@ public class ShotgunController : MonoBehaviour
     [Header("Manual Ejection Trigger")]
     [SerializeField] private bool triggerEmptyAndEject = true; // Inspector bool for triggering ejection
 
+    [Header("Blood Splatter Effects")]
+    public GameObject[] bloodSplatterEffects;
+    public GameObject bleedingEffectPrefab;
+    public float bleedingDuration = 10f;
+    public float worldFloorYValue = 0f;
     public bool IsOutOfAmmo => isOutOfAmmo;
 
     private void Start()
@@ -135,6 +140,42 @@ public class ShotgunController : MonoBehaviour
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     AIController enemyAI = hit.collider.GetComponent<AIController>();
+
+                    // Randomly choose a blood splatter effect and instantiate it at the hit point
+                    if (bloodSplatterEffects.Length > 0)
+                    {
+                        int randomIndex = Random.Range(0, bloodSplatterEffects.Length); // Choose a random effect
+                        GameObject chosenEffect = bloodSplatterEffects[randomIndex];
+
+                        if (chosenEffect != null)
+                        {
+                            // Adjust the hit point's Y value to the floor level
+                            Vector3 effectPosition = hit.point;
+                            effectPosition.y = worldFloorYValue;
+
+                            GameObject effect = Instantiate(chosenEffect, effectPosition, Quaternion.LookRotation(hit.normal));
+                            Destroy(effect, 6f); // Destroy the particle system after 6 seconds
+                        }
+                    }
+
+                    // Instantiate the bleeding effect at the adjusted Y value
+                    if (bleedingEffectPrefab != null)
+                    {
+                        // Adjust the hit point's Y value to the floor level
+                        Vector3 bleedingPosition = hit.point;
+                        bleedingPosition.y = worldFloorYValue;
+
+                        // Instantiate the bleeding effect
+                        GameObject bleedingEffect = Instantiate(bleedingEffectPrefab, bleedingPosition, Quaternion.identity);
+
+                        // Parent the effect to the enemy so it moves with them
+                        bleedingEffect.transform.SetParent(hit.collider.transform);
+
+                        // Destroy the bleeding effect after the specified duration
+                        Destroy(bleedingEffect, bleedingDuration);
+                    }
+
+                    // Handle enemy logic
                     if (enemyAI != null)
                     {
                         enemyAI.KillEnemy();

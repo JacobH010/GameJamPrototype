@@ -29,7 +29,7 @@ public class AIManager : MonoBehaviour
     public GameObject playerPrefab;
 
     public float playerSpeed { get; private set; }
-    public Vector3 playerDirection { get; private set; }
+    public Vector3 normalizedPlayerDirection { get; private set; }
     // called before start as game loads
     void Awake()
     {
@@ -315,7 +315,8 @@ public class AIManager : MonoBehaviour
             Vector3 playerLastSeenLocation = GetPlayerLocation();
             yield return new WaitForSeconds(0.25f);
             Vector3 playerNewLocation = GetPlayerLocation();
-            playerDirection = playerNewLocation - playerLastSeenLocation;
+            Vector3 playerDirection = playerNewLocation - playerLastSeenLocation;
+            normalizedPlayerDirection = playerDirection.normalized;
             float distance = Vector3.Distance(playerLastSeenLocation, playerNewLocation);
             playerSpeed = distance / .25f;
             

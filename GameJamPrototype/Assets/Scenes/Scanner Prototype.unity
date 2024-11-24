@@ -216,27 +216,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 353463011057971444, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 353463011057971444, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 353463011057971444, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 935110543436369445, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 935110543436369445, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 935110543436369445, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1498285574119502988, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_Enabled
@@ -244,11 +244,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3197733197239693338, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3197733197239693338, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3361567358724277968, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_BlockingMask.m_Bits
@@ -340,15 +340,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6144373098011957826, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6453390452015212175, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6453390452015212175, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
