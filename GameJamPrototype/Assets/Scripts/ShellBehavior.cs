@@ -15,5 +15,9 @@ public class ShellBehavior : MonoBehaviour
         {
             IsJustSpawned = false;
         }
+        else
+        {
+            Debug.LogWarning($"Unexpected object exited: {collision.name}, Tag: {collision.tag}");
+        }
     }
 }

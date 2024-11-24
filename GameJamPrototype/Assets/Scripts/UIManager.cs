@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,8 +8,8 @@ public class UIManager : MonoBehaviour
 {
     public float playerHealth = 100f;
     private float playerO2 = 100f;
-    private float o2Decay = .1f; // Decay rate per half second
-    private float o2DecayRate = .5f; // Rate of O2 decay in seconds
+    private float o2Decay = .1f; //Decay rate per half second. 
+    private float o2DecayRate = .5f;//Rate of o2 Decay in seconds
     public bool o2DecayOn = true;
     private float o2HealthDecay = 0.2f;
     private float kickO2Drain = 4;
@@ -18,63 +19,54 @@ public class UIManager : MonoBehaviour
     public Button useO2;
     public TextMeshProUGUI healthPacksRemaining;
     public TextMeshProUGUI o2Remaining;
-    private float healthPacks;
-    private float o2Tanks;
-    private float ammoPacks;
+    public float healthPacks;
+    public float o2Tanks;
+    public float ammoPacks;
 
     [Header("Force Settings")]
     public float xForce = 100f; // Force to apply on the X-axis
     public float zTorque = 50f; // Torque to apply for Z rotation
 
+
+
     public Slider healthSlider;
     public Slider o2Slider;
 
     private LoadoutManager loadoutManager;
-
+    
+    // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("UIManager started.");
         loadoutManager = LoadoutManager.loadoutManager;
-
         if (loadoutManager == null)
         {
-            Debug.LogError("LoadoutManager is NULL. Please ensure it is set correctly.");
+            Debug.LogError("Loadout MAnager NULL");
         }
-        else
-        {
-            Debug.Log("LoadoutManager successfully loaded.");
-        }
-
         AcceptLoadoutVariables();
         StartCoroutine(Decrement02());
-
         if (healthSlider == null)
         {
-            Debug.LogError("Health Slider is NULL at start.");
-        }
-        else
-        {
-            Debug.Log("Health Slider successfully initialized.");
+            Debug.LogError("Health Slider Null at start");
         }
     }
 
+    // Update is called once per frame
+
     IEnumerator Decrement02()
     {
-        Debug.Log("Starting O2 decrement coroutine.");
         while (o2DecayOn)
         {
             yield return new WaitForSeconds(o2DecayRate);
 
             if (o2Slider != null)
             {
+                // Check if the current slider is active and decrement O2 if it is
                 O2TankState o2TankState = o2Slider.GetComponentInParent<O2TankState>();
-
                 if (o2TankState != null && o2TankState.IsActive)
                 {
-                    Debug.Log("Active O2 tank detected.");
-
                     if (playerO2 > 0)
                     {
+                        // Decrease oxygen
                         if (isSprinting)
                         {
                             playerO2 -= o2Decay * sprintMult;
@@ -84,23 +76,23 @@ public class UIManager : MonoBehaviour
                             playerO2 -= o2Decay;
                         }
 
-                        Debug.Log($"Player O2 decremented to {playerO2}.");
+                        Debug.Log("Player o2 decremented to " + playerO2);
+
+                        // Update slider value
                         o2Slider.value = playerO2;
                     }
                     else
                     {
-                        Debug.LogWarning("Player O2 depleted. Applying force to draggable.");
+                        // Oxygen is depleted, handle force application
                         DraggableImage draggableImage = o2Slider.GetComponentInParent<DraggableImage>();
-
                         if (draggableImage != null)
                         {
                             ApplyForceToDraggable(draggableImage);
                         }
 
+                        // Reset health or handle zero oxygen behavior
                         playerHealth -= o2HealthDecay;
                         healthSlider.value = playerHealth;
-
-                        Debug.Log($"Player health decreased to {playerHealth} due to O2 depletion.");
 
                         if (playerHealth <= 0)
                         {
@@ -108,54 +100,37 @@ public class UIManager : MonoBehaviour
                         }
                     }
                 }
-                else
-                {
-                    Debug.LogWarning("No active O2 tank detected.");
-                }
-            }
-            else
-            {
-                Debug.LogError("O2 Slider is NULL. Cannot decrement O2.");
             }
 
+            // Check if no O2 tank is active
             if (!IsAnyO2TankActive())
             {
                 playerHealth -= o2HealthDecay * 2; // Decrease health rapidly
                 healthSlider.value = playerHealth;
-
-                Debug.Log($"No active O2 tank! Rapid health decay. Current health: {playerHealth}");
 
                 if (playerHealth <= 0)
                 {
                     GameOver();
                 }
             }
+
+            yield return null;
         }
     }
 
+
     private void ApplyForceToDraggable(DraggableImage draggableImage)
     {
-        if (draggableImage != null)
-        {
-            draggableImage.isXAxisLocked = false; // Unlock the X-axis
+        draggableImage.isXAxisLocked = false; // Unlock the X-axis
 
-            Rigidbody2D rb2D = draggableImage.GetComponent<Rigidbody2D>();
-            if (rb2D != null)
-            {
-                rb2D.AddForce(new Vector2(xForce, 0), ForceMode2D.Impulse);
-                rb2D.AddTorque(zTorque, ForceMode2D.Impulse);
-
-                Debug.Log($"Force applied to draggable: X={xForce}, Z torque={zTorque}");
-            }
-            else
-            {
-                Debug.LogError("Rigidbody2D is NULL on draggable image.");
-            }
-        }
-        else
+        Rigidbody2D rb2D = draggableImage.GetComponent<Rigidbody2D>();
+        if (rb2D != null)
         {
-            Debug.LogError("DraggableImage is NULL. Cannot apply force.");
+            rb2D.AddForce(new Vector2(xForce, 0), ForceMode2D.Impulse); // Apply force on X-axis
+            rb2D.AddTorque(zTorque, ForceMode2D.Impulse); // Apply torque for Z rotation
         }
+
+        Debug.Log($"Force applied: X={xForce}, Z rotation torque={zTorque}");
     }
 
     private bool IsAnyO2TankActive()
@@ -165,25 +140,23 @@ public class UIManager : MonoBehaviour
         {
             if (tank.IsActive)
             {
-                Debug.Log("Active O2 tank found.");
                 return true;
             }
         }
-
-        Debug.LogWarning("No active O2 tanks found.");
         return false;
     }
+
 
     public void UpdateO2FromSlider()
     {
         if (o2Slider != null)
         {
-            playerO2 = o2Slider.value;
-            Debug.Log($"Player O2 updated from slider to {playerO2}.");
+            playerO2 = o2Slider.value; // Sync the O2 value with the new slider
+            Debug.Log($"Player O2 updated to {playerO2} from new slider.");
         }
         else
         {
-            Debug.LogError("O2 Slider is NULL. Cannot update O2.");
+            Debug.LogError("O2 Slider is null. Cannot update player O2.");
         }
     }
 
@@ -192,76 +165,66 @@ public class UIManager : MonoBehaviour
         if (o2DecayOn)
         {
             playerO2 -= (o2Decay * kickO2Drain);
-            Debug.Log($"Player O2 consumed during kick. Current O2: {playerO2}");
         }
     }
-
+    public void RefillPlayerO2()
+    {
+        playerO2 = 100f;
+    }
+    
     public void HurtPlayer(float damage)
     {
         playerHealth -= damage;
-        Debug.Log($"Player hurt. Damage: {damage}, Current Health: {playerHealth}");
-
         if (healthSlider == null)
         {
-            Debug.LogError("Health Slider is NULL. Cannot update health.");
+            Debug.Log("Health Slider VAlue is null");
         }
         else
         {
-            healthSlider.value = playerHealth;
 
+
+            healthSlider.value = playerHealth;
             if (playerHealth <= 0)
             {
                 GameOver();
             }
         }
     }
-
     public void HealPlayer()
     {
         if (healthPacks > 0)
         {
-            healthPacks--;
+            healthPacks -= 1;
             playerHealth = 100;
             healthSlider.value = playerHealth;
             healthPacksRemaining.text = healthPacks.ToString();
-
-            Debug.Log($"Player healed. Health packs remaining: {healthPacks}");
-        }
-        else
-        {
-            Debug.LogWarning("No health packs remaining. Cannot heal player.");
         }
     }
-
     public void RefillO2()
     {
         if (o2Tanks > 0)
         {
-            o2Tanks--;
+            o2Tanks -= 1;
             playerO2 = 100;
             o2Slider.value = playerO2;
             o2Remaining.text = o2Tanks.ToString();
-
-            Debug.Log($"O2 refilled. O2 tanks remaining: {o2Tanks}");
-        }
-        else
-        {
-            Debug.LogWarning("No O2 tanks remaining. Cannot refill O2.");
         }
     }
-
     public void GameOver()
     {
-        Debug.LogError("Game Over triggered. Stopping time.");
+        Debug.Log("Game Over!!");
         Time.timeScale = 0f;
     }
-
     public void AcceptLoadoutVariables()
     {
         healthPacks = loadoutManager.healthPacks;
+        if (healthPacks == null)
+        {
+            Debug.Log("Health Packs Variable null");
+        }
         o2Tanks = loadoutManager.o2Tanks;
         ammoPacks = loadoutManager.ammoPacks;
 
-        Debug.Log($"Loadout variables accepted. Health packs: {healthPacks}, O2 tanks: {o2Tanks}, Ammo packs: {ammoPacks}");
+        Debug.Log("health packs selected = " + healthPacks + ". O2 tanks selected = " + o2Tanks + ". Ammo Selected = " + ammoPacks + ".");
     }
 }

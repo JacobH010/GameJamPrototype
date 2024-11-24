@@ -72,7 +72,6 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         }
 
         lastDragDelta = Vector2.zero; // Reset drag delta
-        Debug.Log("Dragging forcibly stopped.");
     }
 
 
@@ -118,8 +117,6 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
         isXAxisLocked = false; // Clear any locks
         lastDragDelta = Vector2.zero; // Reset fling-related state
         previousMousePosition = Vector3.zero; // Clear previous mouse position
-
-        Debug.Log("Shell reset.");
     }
 
 
@@ -265,8 +262,6 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
             lastDragDelta = Vector2.zero; // Initialize last drag delta
             previousMousePosition = Input.mousePosition; // Record the initial mouse position
 
-            Debug.Log("Dragging started.");
-
             // Force initial drag delta to simulate movement
             UpdateDragDelta();
         }
@@ -276,7 +271,6 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
     {
         Vector2 currentPosition = rectTransform.localPosition;
         lastDragDelta = targetPosition - currentPosition; // Force update of drag delta
-        Debug.Log($"Forced Drag Delta Update: lastDragDelta={lastDragDelta}");
     }
 
 
@@ -331,17 +325,7 @@ public class DraggableImage : MonoBehaviour, IPointerDownHandler, IDragHandler, 
                     float rotationForce = lastDragDelta.x * rotationForceMultiplier;
                     rb2D.AddTorque(rotationForce, ForceMode2D.Impulse);
                 }
-
-                Debug.Log($"Fling applied: force={flingForce}, rotationForce={(isXAxisLocked ? 0 : lastDragDelta.x * rotationForceMultiplier)}");
             }
-            else
-            {
-                Debug.LogWarning("No fling force applied; lastDragDelta was zero.");
-            }
-        }
-        else
-        {
-            Debug.LogError("Rigidbody2D is missing on the object!");
         }
 
         lastDragDelta = Vector2.zero; // Reset drag delta

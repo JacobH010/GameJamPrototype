@@ -58,6 +58,9 @@ public class O2StopDragging : MonoBehaviour
         if (tankRigidbody != null)
         {
             tankRigidbody.bodyType = RigidbodyType2D.Dynamic; // Set the Rigidbody to Dynamic
+            tankRigidbody.velocity = Vector2.zero; // Set velocity to 0
+            tankRigidbody.angularVelocity = 0f; // Reset angular velocity
+            Debug.Log($"Velocity reset for {tankRigidbody.gameObject.name}");
         }
 
         LockAllMovement(tank);

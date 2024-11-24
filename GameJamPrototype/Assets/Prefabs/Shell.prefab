@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 101201108932053725}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: ClickableArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ GameObject:
   - component: {fileID: 1542115592548981398}
   - component: {fileID: 1121838044246696986}
   - component: {fileID: 2561520308227996646}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: Shell
   m_TagString: Shell
   m_Icon: {fileID: 0}

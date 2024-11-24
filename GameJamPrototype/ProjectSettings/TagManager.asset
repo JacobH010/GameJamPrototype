@@ -19,6 +19,9 @@ TagManager:
   - O2Unlocked
   - HealthSil
   - Syringe
+  - Backpack
+  - O2TankBackpack
+  - SyringeBag
   layers:
   - Default
   - TransparentFX
@@ -31,10 +34,10 @@ TagManager:
   - Enemy
   - StopArea1
   - Trash
-  - 
-  - 
-  - 
-  - 
+  - DeleteZone
+  - Shell
+  - Barrel
+  - HealthGUI
   - 
   - 
   - 

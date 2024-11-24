@@ -21,19 +21,6 @@ public class O2TankHandler : MonoBehaviour
         {
             draggableImage.LockYAxisAndRotation(targetYPosition, targetRotation.z);
         }
-
-        // Only modify Rigidbody if not dragging
-        if (draggableImage != null && !draggableImage.isDragging)
-        {
-            Rigidbody2D rb2D = targetObject.GetComponent<Rigidbody2D>();
-            if (rb2D != null)
-            {
-                rb2D.constraints = RigidbodyConstraints2D.FreezeAll; // Lock position and rotation
-                Debug.Log($"{targetObject.name}: Rigidbody constraints set to FreezeAll.");
-            }
-        }
-
-        Debug.Log($"{targetObject.name} locked at Y={targetYPosition} with rotation={targetRotation.z}.");
     }
 
     private void UnlockMovement(GameObject targetObject)
@@ -47,38 +34,17 @@ public class O2TankHandler : MonoBehaviour
 
             // Unlock X-Axis
             draggableImage.isXAxisLocked = false;
-            Debug.Log($"{targetObject.name}: DraggableImage's isXAxisLocked set to false.");
 
             // Set flingForceMultiplier to 200000
             draggableImage.flingForceMultiplier = 200000f;
-            Debug.Log($"{targetObject.name}: flingForceMultiplier set to 200000.");
         }
-
-        // Only modify Rigidbody if not dragging
-        if (draggableImage != null && !draggableImage.isDragging)
-        {
-            Rigidbody2D rb2D = targetObject.GetComponent<Rigidbody2D>();
-            if (rb2D != null)
-            {
-                // Remove constraints and restore dynamic state
-                rb2D.constraints = RigidbodyConstraints2D.None;
-                rb2D.gravityScale = 500f;
-                Debug.Log($"{targetObject.name}: Rigidbody constraints cleared and gravity set to 500.");
-            }
-        }
-
-        Debug.Log($"{targetObject.name} unlocked and free to move.");
     }
-
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("o2tank"))
         {
-            Debug.Log($"{other.gameObject.name} entered the collider. Locking Y position.");
-
             toggleLock = true; // Enable toggleLock for this specific object
-
             LockMovement(other.gameObject); // Lock only the entering object
         }
 
@@ -92,14 +58,18 @@ public class O2TankHandler : MonoBehaviour
             // Check if the object is still within the bounds of the targetCollider
             if (targetCollider.bounds.Contains(other.transform.position))
             {
-                Debug.Log($"Exit ignored: {other.gameObject.name} is still within the bounds of {targetCollider.name}.");
                 return; // Ignore this exit event
             }
 
-            Debug.Log($"{other.gameObject.name} exited the collider. Clearing constraints.");
+            // Set gravity scale to 500
+            Rigidbody2D otherRb = other.GetComponent<Rigidbody2D>();
+            if (otherRb != null)
+            {
+                otherRb.gravityScale = 500f;
+                Debug.Log($"Gravity scale set to 500 for {other.gameObject.name}");
+            }
 
             toggleLock = false; // Disable toggleLock for this specific object
-
             UnlockMovement(other.gameObject); // Unlock only the exiting object
         }
     }
@@ -122,8 +92,6 @@ public class O2TankHandler : MonoBehaviour
 
                     // Apply force to push the overlapping object out of the collision area
                     overlapRb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
-
-                    Debug.Log($"{currentObject.name} pushed {overlap.name} out of overlap area.");
                 }
             }
         }

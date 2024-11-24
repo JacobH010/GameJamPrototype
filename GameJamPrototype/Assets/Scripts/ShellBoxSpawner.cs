@@ -15,6 +15,11 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public Sprite[] boxSprites;            // Array of sprites representing the box states
     public int maxShellCount = 12;         // Maximum number of shells the box can hold
 
+    public Transform o2StrapTop; // Reference to the O2 Strap Top GameObject in the Inspector
+
+
+
+
     private DraggableImage currentSpawnedShell;
 
     private void Awake()
@@ -36,10 +41,6 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHan
             shellCount--; // Decrease shell count
             UpdateBoxSprite(); // Update the sprite after spawning
         }
-        else
-        {
-            Debug.Log("No more shells left to spawn!");
-        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -56,7 +57,20 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         if (shotgunShellPrefab != null && uiPrototypeParent != null)
         {
+            // Spawn the shell as a child of the uiPrototypeParent
             GameObject spawnedShell = Instantiate(shotgunShellPrefab, spawnPoint.position, Quaternion.identity, uiPrototypeParent);
+
+            // Place the spawned shell in the hierarchy above O2 Strap Top
+            if (o2StrapTop != null)
+            {
+                int o2StrapIndex = o2StrapTop.GetSiblingIndex();
+                spawnedShell.transform.SetSiblingIndex(o2StrapIndex);
+                Debug.Log($"Placed {spawnedShell.name} above {o2StrapTop.name} in the hierarchy.");
+            }
+            else
+            {
+                Debug.LogWarning("O2 Strap Top is not assigned. Spawned shell will not be repositioned.");
+            }
 
             // Initialize the shell's behavior
             DraggableImage draggableComponent = spawnedShell.GetComponent<DraggableImage>();
@@ -82,45 +96,26 @@ public class ShellBoxSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 shellBehavior.MarkAsJustSpawned();
             }
         }
-        else
-        {
-            Debug.LogWarning("Shotgun shell prefab or UI prototype parent not set.");
-        }
     }
 
 
-    private void UpdateBoxSprite()
+    public void UpdateBoxSprite()
     {
-        // Ensure boxImage and boxSprites are set
-        if (boxImage != null && boxSprites != null && boxSprites.Length > 0)
+        // Ensure boxImage and boxSprites are properly configured
+        if (boxImage == null)
         {
-            int spriteIndex = Mathf.Clamp(shellCount, 0, boxSprites.Length - 1);
-            boxImage.sprite = boxSprites[spriteIndex];
+            return;
         }
-        else
-        {
-            Debug.LogWarning("UI Image or boxSprites not configured correctly.");
-        }
-    }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        ShellBehavior shellBehavior = collision.GetComponent<ShellBehavior>();
-
-        // Check if the colliding object is a shell and if it can be added back to the box
-        if (shellBehavior != null && !shellBehavior.IsJustSpawned)
+        if (boxSprites == null || boxSprites.Length == 0)
         {
-            if (shellCount < maxShellCount)
-            {
-                shellCount++; // Increment the shell count
-                UpdateBoxSprite(); // Update the UI
-                Destroy(collision.gameObject); // Destroy the shell
-                Debug.Log("Shell collected! Current shell count: " + shellCount);
-            }
-            else
-            {
-                Debug.Log("Shell box is full!");
-            }
+            return;
         }
+
+        // Calculate the correct sprite index based on shell count
+        int spriteIndex = Mathf.Clamp(shellCount, 0, boxSprites.Length - 1);
+
+        // Update the sprite
+        boxImage.sprite = boxSprites[spriteIndex];
     }
 }
