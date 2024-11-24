@@ -179,93 +179,40 @@ public class AIController : MonoBehaviour
     private IEnumerator Attack()
     {
         isAttacking = true;
-
-        // Set the AI speed for the chase
-        navMeshAgent.speed = attackSpeed;
-        navMeshAgent.acceleration = attackAccelartion;
-
+        isCooldown = true;
+        //animator.SetTrigger("LungeAttackAnim");
+        
+       // StartCoroutine(ResetTriggers("LungeAttackAnim"));
         while (isAttacking)
         {
-            // Get the player's current position
-            Vector3 playerPosition = aiManager.locationOfPlayer.transform.position;
 
-            // Calculate the direction to the player
-            Vector3 directionToPlayer = (playerPosition - transform.position).normalized;
+            navMeshAgent.speed = attackSpeed;
+            navMeshAgent.acceleration = attackAccelartion;
 
-            // Smoothly rotate the AI toward the player
-            Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // Adjust rotation speed
+            navMeshAgent.SetDestination(GetAttackPosition());
+            yield return null;
+            //Debug.Log("Attack Command Recieved");
+            yield return new WaitUntil(() => navMeshAgent.remainingDistance <= .8f);
 
-            // Set the AI destination to the player's current position
-            navMeshAgent.SetDestination(playerPosition);
+            isAttacking = false;
+            aiManager.RemoveFromAttackers(this);
 
-            // Check if the AI is close enough to the player
-            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-            {
-                // Stop the AI and interact with the player
-                navMeshAgent.isStopped = true;
+            animator.SetTrigger("StartFollow");
+            SetState(AIState.Following);
 
-                // Trigger any desired interaction here
-                //OnCollisionWithPlayer();
-
-                // End the attack
-                isAttacking = false;
-
-                // Transition back to following or other state
-                SetState(AIState.Following);
-            }
-            else
-            {
-                // Ensure the AI keeps moving
-                navMeshAgent.isStopped = false;
-            }
-
-            yield return null; // Wait for the next frame
         }
+
+
+        //StopCoroutine(Attack());
+
+
+        //Returned to follow
     }
     private Vector3 GetAttackPosition()
     {
-        // Player's current position and velocity
-        Transform playerTransform = aiManager.locationOfPlayer.transform;
-        Rigidbody playerRigidbody = aiManager.locationOfPlayer.GetComponent<Rigidbody>();
-
-        if (playerRigidbody == null)
-        {
-            Debug.LogWarning("Player Rigidbody not found. Defaulting to current position.");
-            return playerTransform.position; // Fallback to current position if Rigidbody is missing
-        }
-
-        Vector3 playerPosition = playerTransform.position;
-        Vector3 playerVelocity = playerRigidbody.velocity;
-
-        // AI's current position
-        Vector3 aiPosition = transform.position;
-
-        // Estimated initial time to reach the player (straight-line distance / AI speed)
-        float initialTravelTime = Vector3.Distance(aiPosition, playerPosition) / Mathf.Max(navMeshAgent.speed, 0.1f);
-
-        // Iteratively refine the prediction to account for AI travel time
-        float refinedTravelTime = initialTravelTime;
-        const int maxIterations = 5; // Limit iterations to prevent infinite loops
-        for (int i = 0; i < maxIterations; i++)
-        {
-            // Predict player's future position based on current velocity and refined travel time
-            Vector3 predictedPlayerPosition = playerPosition + playerVelocity * refinedTravelTime;
-
-            // Recalculate AI's travel time to the predicted position
-            refinedTravelTime = Vector3.Distance(aiPosition, predictedPlayerPosition) / Mathf.Max(navMeshAgent.speed, 0.1f);
-        }
-
-        // Final predicted player position
-        Vector3 finalPredictedPosition = playerPosition + playerVelocity * refinedTravelTime;
-
-        // Adjust the attack position to stop at the correct distance from the player
-        Vector3 attackDirection = (finalPredictedPosition - aiPosition).normalized;
-        Vector3 attackPosition = finalPredictedPosition - attackDirection * attackDistance;
-
-        // Debug visualization
-        Debug.DrawLine(aiPosition, finalPredictedPosition, Color.red, 0.5f);
-
+        //Calculate a position on the opposite side of the player
+        Vector3 attackPosition = aiManager.locationOfPlayer.transform.position -
+            (transform.position - aiManager.locationOfPlayer.transform.position).normalized * attackDistance;
         return attackPosition;
     }
     public IEnumerator Roam()
@@ -431,7 +378,7 @@ public class AIController : MonoBehaviour
                 Vector3 targetPosition = aiManager.GetPlayerLocation() - directionToPlayer * followDistance;
                 navMeshAgent.SetDestination(targetPosition);
 
-                if (Time.time >= lastHelpCall + helpCallCooldown && !isAttacking)//Call for help if following
+                if (Time.time >= lastHelpCall + helpCallCooldown)//Call for help if following
                 {
                     Debug.Log("Call For Help Triggered");
                     Debug.Log("CALLING FOR HELP");
@@ -605,25 +552,7 @@ public class AIController : MonoBehaviour
                // Debug.Log($"Enemy Velocity is {velocity.magnitude}");
               //S  Debug.Log($"Animator speed set to {animator.GetFloat("Speed")}");
             }
-            Vector3 movementDirection = navMeshAgent.velocity;
-
-            // Check if the enemy is moving
-            if (movementDirection.magnitude > 0.1f) // Threshold to prevent jitter when nearly stationary
-            {
-                // Smoothly rotate towards movement direction
-                Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // Adjust rotation speed if needed
-            }
             yield return null;
-            
-
-    // Check if the enemy is moving
-    if (movementDirection.magnitude > 0.1f) // Threshold to prevent jitter when nearly stationary
-    {
-        // Smoothly rotate towards movement direction
-        Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f); // Adjust rotation speed if needed
-    }
         }
     }
     IEnumerator ResetTriggers(string trigger)
