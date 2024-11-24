@@ -19,9 +19,9 @@ public class UIManager : MonoBehaviour
     public Button useO2;
     public TextMeshProUGUI healthPacksRemaining;
     public TextMeshProUGUI o2Remaining;
-    private float healthPacks;
-    private float o2Tanks;
-    private float ammoPacks;
+    public float healthPacks;
+    public float o2Tanks;
+    public float ammoPacks;
 
     [Header("Force Settings")]
     public float xForce = 100f; // Force to apply on the X-axis
@@ -107,8 +107,6 @@ public class UIManager : MonoBehaviour
             {
                 playerHealth -= o2HealthDecay * 2; // Decrease health rapidly
                 healthSlider.value = playerHealth;
-
-                Debug.Log("No active O2 tank! Health decreasing rapidly.");
 
                 if (playerHealth <= 0)
                 {
@@ -226,8 +224,6 @@ public class UIManager : MonoBehaviour
         }
         o2Tanks = loadoutManager.o2Tanks;
         ammoPacks = loadoutManager.ammoPacks;
-        healthPacksRemaining.text = healthPacks.ToString();
-        o2Remaining.text = o2Tanks.ToString();
 
         Debug.Log("health packs selected = " + healthPacks + ". O2 tanks selected = " + o2Tanks + ". Ammo Selected = " + ammoPacks + ".");
     }

@@ -33,7 +33,9 @@ public class ShotgunController : MonoBehaviour
     public float shellUpwardForce = 50f;         // Upward force for shell ejection
     public float shellRotationalForce = 10f;     // Rotational force for shell ejection
     public AudioSource shellLoadSound;
-    
+
+    public float deleteZoneEnableDelay = 1.0f;
+
     private int lastAmmoCount = 2;
     
 
@@ -62,20 +64,7 @@ public class ShotgunController : MonoBehaviour
         // Check if the barrel's gravity scale is not 50 and the z rotation is greater than -5
         if (barrelRigidbody.gravityScale != 50f && barrelRigidbody.rotation > -5f)
         {
-            Debug.Log($"IS Aiming is set to {playerController.isAiming} in Player Controller 2");
-            // Check if the player can shoot based on ammo, aiming status, cooldown, and barrel rotation
-            if (playerController != null && playerController.isAiming && !isOutOfAmmo && Input.GetButtonDown("Fire1") && Time.time >= nextFireTime && !IsBarrelInRestrictedRotation())
-            {
-                Shoot();
-                nextFireTime = Time.time + 1f / fireRate; // Set the next allowed firing time based on fire rate
-            }
-
-            // Trigger empty and eject when the player presses the 'R' key
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                EmptyAndEjectShells();  // Run the ejection code
-                triggerEmptyAndEject = true; // Reset the switch back to true after running
-            }
+           
         }
         else
         {
@@ -189,10 +178,29 @@ public class ShotgunController : MonoBehaviour
             gravitySet = true;
         }
 
+        // Start coroutine to enable delete zone collider after a delay
+        if (deleteZoneCollider != null)
+        {
+            StartCoroutine(EnableDeleteZoneColliderAfterDelay());
+        }
+
         // Start coroutine to eject loaded shells based on captured ammo count
         StartCoroutine(SpawnLoadedShellsWithDelay(shellsToEject));
         StartCoroutine(SpawnEmptyShellsWithDelay(shellsFired)); // Eject empty shells based on fired count
     }
+    private IEnumerator EnableDeleteZoneColliderAfterDelay()
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(deleteZoneEnableDelay);
+
+        // Enable the delete zone collider
+        if (deleteZoneCollider != null)
+        {
+            deleteZoneCollider.enabled = true;
+            Debug.Log("Delete zone collider enabled after delay.");
+        }
+    }
+
 
     // Called whenever a value in the Inspector is modified
     private void OnValidate()
@@ -209,7 +217,7 @@ public class ShotgunController : MonoBehaviour
     {
         while (true)
         {
-            if (currentAmmo > 0)
+            if (currentAmmo >= 1) // Set isOutOfAmmo to false when there are 1 or more shells
             {
                 isOutOfAmmo = false;
                 gravitySet = false;
@@ -218,24 +226,46 @@ public class ShotgunController : MonoBehaviour
                 {
                     barrelRigidbody.gravityScale = 0f;
                 }
+
+                // Disable delete zone collider when ammo is sufficient
+                if (deleteZoneCollider != null && deleteZoneCollider.enabled)
+                {
+                    deleteZoneCollider.enabled = false;
+                    Debug.Log("Delete zone collider disabled (ammo >= 1).");
+                }
             }
-            else if (!gravitySet && shellsFired > 0)
+            else if (currentAmmo < 1) // Set isOutOfAmmo to true when no ammo is left
             {
-                EmptyAndEjectShells();
+                isOutOfAmmo = true;
+
+                // Optional: Trigger additional logic when out of ammo
+                if (!gravitySet && shellsFired > 0)
+                {
+                    EmptyAndEjectShells();
+                }
             }
 
-            if (deleteZoneCollider != null)
+            // Enable delete zone collider if ammo is insufficient and restricted rotation applies
+            if (deleteZoneCollider != null && currentAmmo < maxAmmo && IsBarrelInRestrictedRotation() && !deleteZoneCollider.enabled)
             {
-                deleteZoneCollider.enabled = (currentAmmo < maxAmmo && IsBarrelInRestrictedRotation());
+                deleteZoneCollider.enabled = true;
+                Debug.Log("Delete zone collider enabled (ammo not at max and restricted rotation).");
             }
+
+            // Ammo change handling
             if (lastAmmoCount < currentAmmo)
             {
-                shellLoadSound.Play();
+                //shellLoadSound.Play();
             }
             lastAmmoCount = currentAmmo;
+
             yield return new WaitForSeconds(0.1f); // Check conditions every 0.1 seconds
         }
     }
+
+
+
+
 
     // Coroutine to spawn loaded shells based on current ammo count
     private IEnumerator SpawnLoadedShellsWithDelay(int shellsToEject)
@@ -317,15 +347,17 @@ public class ShotgunController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Something collided with it");
-        if (other.CompareTag("AmmoBox"))
+        if (!other.CompareTag("Shell"))
         {
-            Debug.Log("Shell load on OnTriggerEnter");
-            Reload();
-            
-            Destroy(other.gameObject);
+            Debug.LogWarning($"Unexpected object entered delete zone: {other.name}, Tag: {other.tag}");
+            return;
         }
+
+        // Process the shell as needed
+        Reload();
+        Destroy(other.gameObject);
     }
+
 
     public void AddAmmo(int amount)
     {

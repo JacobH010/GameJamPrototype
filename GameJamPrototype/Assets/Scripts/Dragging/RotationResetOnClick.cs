@@ -9,6 +9,7 @@ public class RotationResetOnClick : MonoBehaviour, IPointerDownHandler
     private Rigidbody2D rb;
     private ShotgunController shotgunController;
     private bool isResetting = false;
+    private BoxCollider2D shotgunLoaderCollider; // Reference to the ShotgunLoader's BoxCollider2D
 
     private void Awake()
     {
@@ -17,12 +18,20 @@ public class RotationResetOnClick : MonoBehaviour, IPointerDownHandler
 
         // Find and reference the ShotgunController component
         shotgunController = FindObjectOfType<ShotgunController>();
+
+        // Find the ShotgunLoader child object and its BoxCollider2D
+        Transform shotgunLoaderTransform = transform.Find("ShotgunLoader");
+        if (shotgunLoaderTransform != null)
+        {
+            shotgunLoaderCollider = shotgunLoaderTransform.GetComponent<BoxCollider2D>();
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Only proceed if there is ammo (IsOutOfAmmo is false)
-        if (shotgunController != null && !shotgunController.IsOutOfAmmo)
+        // Only proceed if current ammo is 1 or 2 and IsOutOfAmmo is false
+        if (shotgunController != null && !shotgunController.IsOutOfAmmo &&
+            (shotgunController.currentAmmo == 1 || shotgunController.currentAmmo == 2))
         {
             isResetting = true;
 
@@ -34,10 +43,11 @@ public class RotationResetOnClick : MonoBehaviour, IPointerDownHandler
                 rb.angularVelocity = 0f; // Stop any ongoing rotation
             }
 
-        }
-        else
-        {
-
+            // Disable the BoxCollider2D on the ShotgunLoader child
+            if (shotgunLoaderCollider != null)
+            {
+                shotgunLoaderCollider.enabled = false;
+            }
         }
     }
 

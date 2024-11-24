@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("DirectionX", direction.x); // Set horizontal aiming direction
             animator.SetFloat("DirectionY", direction.y); // Set vertical aiming direction
         }
-        Debug.Log($"Speed: {speed}, IsAiming: {isAiming}, DirectionX: {moveDirection.x}, DirectionY: {moveDirection.z}");
     }
 
     private Vector3 HandleMovement()
