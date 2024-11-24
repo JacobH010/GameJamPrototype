@@ -46,4 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
+  playerGameObject: {fileID: 0}
+  playerPrefab: {fileID: 0}
