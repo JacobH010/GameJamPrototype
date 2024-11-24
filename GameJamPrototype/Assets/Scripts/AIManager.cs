@@ -27,6 +27,9 @@ public class AIManager : MonoBehaviour
 
     public GameObject playerGameObject;
     public GameObject playerPrefab;
+
+    public float playerSpeed { get; private set; }
+    public Vector3 playerDirection { get; private set; }
     // called before start as game loads
     void Awake()
     {
@@ -57,6 +60,7 @@ public class AIManager : MonoBehaviour
         spawnManager = FindObjectOfType<SpawnManager>();
         InvokeRepeating(nameof(CheckEnemies), 0f, checkInterval);
         StartCoroutine(AssignAttackers());
+        StartCoroutine(MonitorPlayerMovement());
        // StartCoroutine(Start1());
         /*
         if (playerPrefab != null)
@@ -302,6 +306,19 @@ public class AIManager : MonoBehaviour
             {
                 enemy.RespondToHelpCall(helpPosition);
             }
+        }
+    }
+    IEnumerator MonitorPlayerMovement()
+    {
+        while (true)
+        {
+            Vector3 playerLastSeenLocation = GetPlayerLocation();
+            yield return new WaitForSeconds(0.25f);
+            Vector3 playerNewLocation = GetPlayerLocation();
+            playerDirection = playerNewLocation - playerLastSeenLocation;
+            float distance = Vector3.Distance(playerLastSeenLocation, playerNewLocation);
+            playerSpeed = distance / .25f;
+            
         }
     }
 }

@@ -189,8 +189,13 @@ public class AIController : MonoBehaviour
             navMeshAgent.speed = attackSpeed;
             navMeshAgent.acceleration = attackAccelartion;
 
-            navMeshAgent.SetDestination(GetAttackPosition());
-            yield return null;
+            //navMeshAgent.SetDestination(GetAttackPosition());
+            float playerSpeed = aiManager.playerSpeed;
+            Vector3 playerMoveDirection = aiManager.playerDirection;
+
+            Vector3 currentLocation = transform.position;
+            Vector3 distanceToPlayer = currentLocation - aiManager.GetPlayerLocation();
+                yield return null;
             //Debug.Log("Attack Command Recieved");
             yield return new WaitUntil(() => navMeshAgent.remainingDistance <= .8f);
 
@@ -210,10 +215,19 @@ public class AIController : MonoBehaviour
     }
     private Vector3 GetAttackPosition()
     {
+        
         //Calculate a position on the opposite side of the player
         Vector3 attackPosition = aiManager.locationOfPlayer.transform.position -
             (transform.position - aiManager.locationOfPlayer.transform.position).normalized * attackDistance;
+        
+        
+        
+        
         return attackPosition;
+
+
+
+
     }
     public IEnumerator Roam()
     {
