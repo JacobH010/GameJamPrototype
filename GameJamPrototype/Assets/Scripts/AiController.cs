@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -31,6 +32,8 @@ public class AIController : MonoBehaviour
     public float attackAccelartion = 30f;
     public float damage = 10f;
     public float pushForce = 10f;
+    public Vector2 attackLeadSecondsRange = new Vector2(.8f, 1.2f);
+    private float attackLeadSeconds;
     public bool isCooldown { get; private set; }
     //private float lastAttackTime = -Mathf.Infinity;
 
@@ -40,33 +43,40 @@ public class AIController : MonoBehaviour
     private float searchFrequency = 2f;
 
     //Help call settings
-    private float helpCallCooldown = 3f;
-    private float helpResponseRange = 25f;
+    public float helpCallCooldown = 8f;
+    public float helpResponseRange = 55f;
     private float lastHelpCall = -Mathf.Infinity;
-
+    private AudioSource helpCallAudio;
     //Object References
+    public Animator animator;
     public AIManager aiManager { get; private set; }
     public NavMeshAgent navMeshAgent { get; private set; }
     private SpawnManager spawnManager;
 
     //public GameObject playerPrefab;
-  //  public GameObject playerGameObject;
+    //  public GameObject playerGameObject;
     private PlayerController2 playerController;
 
     private Rigidbody rb;
-   
+    private bool stateMachineEnabled = true;
+    public bool isDead = false;
+
+    public float health = 100f;
+    public float damageOnHit = 25f;
     //Enum defining AI State Machine Variables
     public enum AIState { Roam, Following, Fleeing, Searching, Attacking }
     private AIState currentState = AIState.Roam;
 
     void Start()
     {
+        helpCallAudio = GetComponent<AudioSource>();
+        StartCoroutine(UpdateAnimatorSpeed());
         //Initialize References
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
         rb = GetComponent<Rigidbody>();
         playerController = FindObjectOfType<PlayerController2>();
-       
+
         if (playerController == null)
         {
             Debug.LogError("Player Controller null in AI Controller");
@@ -103,30 +113,38 @@ public class AIController : MonoBehaviour
         }
     }
 
-    //AI State Machine --- Contains states Roam, Following, Fleeing, Searching and Attacking
+    //AI State Machine --- Contains states CallingForHelp, Roam, Following, Fleeing, Searching and Attacking
     void SetState(AIState newState)
     {
+        if (!stateMachineEnabled) return;
         currentState = newState;
         StopAllCoroutines();
         switch (currentState)
         {
             case AIState.Roam:
                 StartCoroutine(Roam());
+                StartCoroutine(UpdateAnimatorSpeed());
                 break;
             case AIState.Following:
                 StartCoroutine(TickCooldown(Time.time));
                 StartCoroutine(FollowPlayer());
+                StartCoroutine(UpdateAnimatorSpeed());
                 break;
             case AIState.Fleeing:
                 StartCoroutine(FleeFromPlayer());
+                StartCoroutine(UpdateAnimatorSpeed());
                 break;
             case AIState.Searching:
                 StartCoroutine(SearchForPlayer());
-                break ;
-            case AIState.Attacking:
-               // Debug.Log("AI State set to Attacking");
-                StartCoroutine(Attack());
+                StartCoroutine(UpdateAnimatorSpeed());
                 break;
+            case AIState.Attacking:
+                // Debug.Log("AI State set to Attacking");
+                StartCoroutine(Attack());
+                StartCoroutine(UpdateAnimatorSpeed());
+                break;
+            
+
         }
     }
     public void DestroyEnemy()
@@ -145,20 +163,22 @@ public class AIController : MonoBehaviour
     {
         if (!isAttacking && !isCooldown)
         {
-         
+
             isAttacking = true;
             //Debug.Log("AIController executed AttackPlayer");
             SetState(AIState.Attacking);
         }
         else if (!isAttacking && isCooldown)
         {
-           // Debug.Log("Attack command recieved but in cooldown");
-        }else if(isAttacking && !isCooldown)
+            // Debug.Log("Attack command recieved but in cooldown");
+        }
+        else if (isAttacking && !isCooldown)
         {
-           // Debug.Log("Attack command recieved but already attacking");
-        }else if (isCooldown && isAttacking)
+            // Debug.Log("Attack command recieved but already attacking");
+        }
+        else if (isCooldown && isAttacking)
         {
-           // Debug.Log("Attack command recieved but cooling down and attacking");
+            // Debug.Log("Attack command recieved but cooling down and attacking");
         }
 
     }
@@ -167,51 +187,86 @@ public class AIController : MonoBehaviour
     {
         isAttacking = true;
         isCooldown = true;
+        //animator.SetTrigger("LungeAttackAnim");
+
+        // StartCoroutine(ResetTriggers("LungeAttackAnim"));
         while (isAttacking)
         {
-
             navMeshAgent.speed = attackSpeed;
             navMeshAgent.acceleration = attackAccelartion;
-            
-            navMeshAgent.SetDestination(GetAttackPosition());
-            yield return null;
-            //Debug.Log("Attack Command Recieved");
-            yield return new WaitUntil(() => navMeshAgent.remainingDistance <= .8f);
-            
+
+            float playerSpeed = aiManager.playerSpeed;
+            Vector3 playerMoveDirection = aiManager.normalizedPlayerDirection;
+
+            Vector3 attackLocation;
+
+            if (playerSpeed == 0)
+            {
+                // Player is stationary; move directly to their current location
+                attackLocation = aiManager.GetPlayerLocation();
+            }
+            else
+            {
+                // Calculate the predicted location of the player
+                attackLeadSeconds = Random.Range(attackLeadSecondsRange.x, attackLeadSecondsRange.y);
+                Vector3 predictedLocation = aiManager.GetPlayerLocation() + playerMoveDirection * playerSpeed * attackLeadSeconds;
+
+                // Calculate the attack location based on the predicted location
+                attackLocation = predictedLocation;
+            }
+
+            // Set the AI's destination to the calculated attack location
+            navMeshAgent.SetDestination(attackLocation);
+
+            // Wait until the AI reaches the target location
+            yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 0.8f);
+
+            // Attack is complete
             isAttacking = false;
             aiManager.RemoveFromAttackers(this);
-            
 
+            // Transition to follow state
+            animator.SetTrigger("StartFollow");
+            ResetTriggers("StartFollow");
             SetState(AIState.Following);
-           
         }
-        
+
+
         //StopCoroutine(Attack());
-        
-        
+
+
         //Returned to follow
     }
     private Vector3 GetAttackPosition()
     {
+        
         //Calculate a position on the opposite side of the player
         Vector3 attackPosition = aiManager.locationOfPlayer.transform.position -
             (transform.position - aiManager.locationOfPlayer.transform.position).normalized * attackDistance;
+        
+        
+        
+        
         return attackPosition;
+
+
+
+
     }
     public IEnumerator Roam()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         if (navMeshAgent == null)
         {
-           
+
             Debug.Log("Nav Mesh Agent Null");
 
         }
 
         while (currentState == AIState.Roam)
         {
-            
-            
+
+
             navMeshAgent.speed = roamingSpeed;
             // Set the NavMeshAgent's destination to the chosen target position
             navMeshAgent.SetDestination(GetBestPosition());
@@ -304,26 +359,31 @@ public class AIController : MonoBehaviour
         {
             isFollowing = true;
             isAttacking = false;
+            Debug.Log("Started Following");
+            animator.SetTrigger("StartFollowing");
+            StartCoroutine(ResetTriggers("StartFollowing"));
             SetState(AIState.Following);
-            
+
         }
     }
-   
-   
+
+
     public void StopFollowing()
     {
         if (isFollowing)
         {
-           isFollowing = false;
-           SetState(AIState.Searching);
-       }
-   }
+            animator.SetTrigger("StopFollowing");
+            StartCoroutine(ResetTriggers("StopFollowing"));
+            isFollowing = false;
+            SetState(AIState.Searching);
+        }
+    }
     IEnumerator FollowPlayer()
     {
         isFollowing = true;
-        isAttacking= false;
+        isAttacking = false;
         navMeshAgent = GetComponent<NavMeshAgent>();
-        if(navMeshAgent == null)
+        if (navMeshAgent == null)
         {
             Debug.LogError("Nav Mesh AGent Null in Follow Player");
         }
@@ -336,11 +396,11 @@ public class AIController : MonoBehaviour
         {
             navMeshAgent.speed = followSpeed;
             float distanceToPlayer = Vector3.Distance(transform.position, aiManager.GetPlayerLocation());
-            
+
 
             if (distanceToPlayer <= fleeDistance)
             {
-               SetState(AIState.Fleeing);
+                SetState(AIState.Fleeing);
 
             }
             else if (distanceToPlayer < followDistance)
@@ -358,26 +418,44 @@ public class AIController : MonoBehaviour
 
                 if (Time.time >= lastHelpCall + helpCallCooldown)//Call for help if following
                 {
-                    CallForHelp();
+                    Debug.Log("Call For Help Triggered");
+                    Debug.Log("CALLING FOR HELP");
+                    navMeshAgent.speed = 0;
+                    // CallingForHelp = true;
+                    lastHelpCall = Time.time;
+                    
+                    Debug.Log($"Last Help call time is {lastHelpCall}--- Next help call time is {helpCallCooldown}");
+                    Debug.Log("CallForHelp");
+                    //helpCallCooldown += lastHelpCall;
+                    helpCallAudio.Play();
+                    animator.SetTrigger("CallForBackup");
+                    StartCoroutine(ResetTriggers("CallForBackup"));
+                    aiManager.BroadcastHelpCall(transform.position, helpResponseRange);
+                    yield return new WaitForSeconds(1.3f);
+                    animator.SetTrigger("StartFollow");
+                    StartCoroutine(ResetTriggers("StartFollow"));
+                    //navMeshAgent.SetDestination(aiManager.GetPlayerLocation());
+                    navMeshAgent.speed = followSpeed;
+                    yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 1f);
                 }
                 if (!aiManager.HasLineOfSight(this))//Search if looses line of sight
                 {
                     SetState(AIState.Searching);
-                }           
+                }
+                if (isFollowing && !isfleeing && !isAttacking)
+                {
+                    Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * navMeshAgent.angularSpeed);
+                }
             }
             yield return null;
         }
-        void CallForHelp()
-        {
-            //Debug.Log("CALLING FOR HELP");
-           // CallingForHelp = true;
-            lastHelpCall = Time.time;
-            aiManager.BroadcastHelpCall(transform.position, helpResponseRange);
-        }
+        
     }
+    
     IEnumerator TickCooldown(float lastAttacktime)
     {
-        if(isCooldown)
+        if (isCooldown)
         {
             yield return new WaitUntil(() => Time.time >= (lastAttacktime + attackCooldown));
             isCooldown = false;
@@ -409,7 +487,7 @@ public class AIController : MonoBehaviour
             }
             yield return null;
         }
-        
+
     }
     private IEnumerator SearchForPlayer()
     {
@@ -455,11 +533,20 @@ public class AIController : MonoBehaviour
         transform.position = Vector3.zero;
         // Add other reset code here as necessary
     }
+
     private void OnEnable()
     {
+        stateMachineEnabled = true; // Re-enable the state machine
+        navMeshAgent.enabled = true; // Optional: Re-enable NavMeshAgent if needed
         SetState(AIState.Roam);
         navMeshAgent = GetComponent<NavMeshAgent>();
+        rb.isKinematic = false;
+        Collider enemyCollider = GetComponent<Collider>();
+        Collider playerCollider = aiManager.locationOfPlayer.GetComponent<Collider>();
+        Physics.IgnoreCollision(playerCollider, enemyCollider, false);
     }
+       
+    
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Projectile"))
@@ -474,12 +561,12 @@ public class AIController : MonoBehaviour
         if (other.gameObject.CompareTag("Player") && isAttacking)
         {
             Debug.Log("damage player");
-          // playerController.HitByEnemy(damage);
+            // playerController.HitByEnemy(damage);
             Rigidbody playerRigidbody = other.GetComponent<Rigidbody>();
             if (playerRigidbody != null)
             {
                 Vector3 forceDirection = (other.transform.position - transform.position).normalized;
-                Debug.Log("Force direction set =" +  forceDirection);
+                Debug.Log("Force direction set =" + forceDirection);
                 //Adds force to player in direction of AI movement
                 playerRigidbody.AddForce(forceDirection * pushForce, ForceMode.Impulse);
                 Debug.Log("Added force to player");
@@ -488,13 +575,60 @@ public class AIController : MonoBehaviour
             {
                 Debug.Log("Player rigidbody reference not found");
             }
-        } else if (other.gameObject.CompareTag("Player") && !isAttacking)
+        }
+        else if (other.gameObject.CompareTag("Player") && !isAttacking)
         {
             Debug.Log("Player Collision Detected - Not attacking");
         }
     }
     public void KillEnemy()
     {
-        Destroy(gameObject);
+        health -= damageOnHit;
+        Debug.Log($"Enemy damaged. now at {health} health remaining");
+        animator.SetTrigger("Damaged");
+        ResetTriggers("Damaged");
+        if (health <= 0)
+        {
+            stateMachineEnabled = false; // Disable the state machine
+            StopAllCoroutines(); // Stop any ongoing coroutines
+            isAttacking = false;
+            isFollowing = false;
+            animator.SetTrigger("Die");
+            aiManager.UnregisterEnemy(this);
+            rb.isKinematic = true;
+
+            // Disable collision with the player
+            Collider enemyCollider = GetComponent<Collider>();
+            Collider playerCollider = aiManager.locationOfPlayer.GetComponent<Collider>();
+            Physics.IgnoreCollision(playerCollider, enemyCollider, true);
+        }
+    }
+    IEnumerator UpdateAnimatorSpeed()
+    {
+        while (true)
+        {
+            Vector3 currentLocation = transform.position;
+            float time = .1f;
+            yield return new WaitForSeconds(time);
+            Vector3 newPosition = transform.position;
+            Vector3 distance = (currentLocation - newPosition);
+            Vector3 velocity = distance / time;
+            //Debug.Log($"Enemy Velocity is {velocity.magnitude}");
+            if (velocity.magnitude >= 0 && velocity.magnitude <= 100)
+            {
+
+
+                animator.SetFloat("Speed", velocity.magnitude);
+               // Debug.Log($"Enemy Velocity is {velocity.magnitude}");
+              //S  Debug.Log($"Animator speed set to {animator.GetFloat("Speed")}");
+            }
+            yield return null;
+        }
+    }
+    IEnumerator ResetTriggers(string trigger)
+    {
+        yield return new WaitForSeconds (0.2f);
+        animator.ResetTrigger(trigger);
+        yield return null;
     }
 }

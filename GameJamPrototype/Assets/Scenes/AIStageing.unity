@@ -1861,6 +1861,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 68.899994
       objectReference: {fileID: 0}
+    - target: {fileID: 3929317382537148993, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4326608305968493581, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1944,6 +1948,14 @@ PrefabInstance:
     - target: {fileID: 4473071133494774535, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0.00012207031
+      objectReference: {fileID: 0}
+    - target: {fileID: 4726284867216485752, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4788016040685927595, guid: e27661958f5e8de49901874214100f2b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6144373098011957826, guid: e27661958f5e8de49901874214100f2b, type: 3}
       propertyPath: m_Name
@@ -3680,6 +3692,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2075151606}
     - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bleedingDuration
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: worldFloorYValue
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
       propertyPath: deleteZoneCollider
       value: 
       objectReference: {fileID: 1534088762}
@@ -3687,6 +3707,30 @@ PrefabInstance:
       propertyPath: shellSpawnLocation
       value: 
       objectReference: {fileID: 1746715999}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bleedingEffectPrefab
+      value: 
+      objectReference: {fileID: 929468300236279442, guid: dee55d351bf6d784a80e417e41cdf716, type: 3}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bloodSplatterEffects.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bloodSplatterEffects.Array.data[0]
+      value: 
+      objectReference: {fileID: 199104213225714953, guid: e21a3dd9711347043972a4f3fb672b00, type: 3}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bloodSplatterEffects.Array.data[1]
+      value: 
+      objectReference: {fileID: 8705042798244801663, guid: 1589f321ee5f4534cbb728e127c49b6d, type: 3}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bloodSplatterEffects.Array.data[2]
+      value: 
+      objectReference: {fileID: 5339717533955316857, guid: d3e2424bec410644b852cb2218c172f5, type: 3}
+    - target: {fileID: 1929001765936764496, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
+      propertyPath: bloodSplatterEffects.Array.data[3]
+      value: 
+      objectReference: {fileID: 199104213225714953, guid: d605907583b44a54e8b287e554e29d25, type: 3}
     - target: {fileID: 6846244085824095104, guid: 04ee95a445a2d3f47ac4f5668dc02cc9, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -5188,7 +5232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3791255804949528283, guid: 6a277a2912da82e479589d7c8314b165, type: 3}
-  poolSize: 10
+  poolSize: 8
   spawnInterval: 1
   respawnDelay: 3
   spawnRadius: 10
@@ -5756,6 +5800,8 @@ MonoBehaviour:
   useO2: {fileID: 0}
   healthPacksRemaining: {fileID: 0}
   o2Remaining: {fileID: 0}
+  xForce: 100
+  zTorque: 50
   healthSlider: {fileID: 0}
   o2Slider: {fileID: 0}
 --- !u!1 &1927649788
@@ -5999,7 +6045,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3791255804949528283, guid: 6a277a2912da82e479589d7c8314b165, type: 3}
-  poolSize: 2
+  poolSize: 12
   spawnInterval: 1
   respawnDelay: 3
   spawnRadius: 10

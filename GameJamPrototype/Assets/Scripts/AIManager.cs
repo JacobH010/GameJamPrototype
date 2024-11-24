@@ -27,6 +27,9 @@ public class AIManager : MonoBehaviour
 
     public GameObject playerGameObject;
     public GameObject playerPrefab;
+
+    public float playerSpeed { get; private set; }
+    public Vector3 normalizedPlayerDirection { get; private set; }
     // called before start as game loads
     void Awake()
     {
@@ -57,6 +60,7 @@ public class AIManager : MonoBehaviour
         spawnManager = FindObjectOfType<SpawnManager>();
         InvokeRepeating(nameof(CheckEnemies), 0f, checkInterval);
         StartCoroutine(AssignAttackers());
+        StartCoroutine(MonitorPlayerMovement());
        // StartCoroutine(Start1());
         /*
         if (playerPrefab != null)
@@ -217,14 +221,14 @@ public class AIManager : MonoBehaviour
             // Check if the ray hit the player or an obstacle
             if (hit.transform == locationOfPlayer)
             {
-                Debug.Log($"Line of sight returned true");
+                //Debug.Log($"Line of sight returned true");
                 return true; // Clear line of sight
                 
             }
             else
             {
-                Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
-                Debug.Log("Line of sight returned false");
+               // Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
+               // Debug.Log("Line of sight returned false");
                 return false;
             }
         }
@@ -302,6 +306,20 @@ public class AIManager : MonoBehaviour
             {
                 enemy.RespondToHelpCall(helpPosition);
             }
+        }
+    }
+    IEnumerator MonitorPlayerMovement()
+    {
+        while (true)
+        {
+            Vector3 playerLastSeenLocation = GetPlayerLocation();
+            yield return new WaitForSeconds(0.25f);
+            Vector3 playerNewLocation = GetPlayerLocation();
+            Vector3 playerDirection = playerNewLocation - playerLastSeenLocation;
+            normalizedPlayerDirection = playerDirection.normalized;
+            float distance = Vector3.Distance(playerLastSeenLocation, playerNewLocation);
+            playerSpeed = distance / .25f;
+            
         }
     }
 }
