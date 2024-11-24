@@ -62,7 +62,7 @@ public class ShotgunController : MonoBehaviour
         // Check if the barrel's gravity scale is not 50 and the z rotation is greater than -5
         if (barrelRigidbody.gravityScale != 50f && barrelRigidbody.rotation > -5f)
         {
-            Debug.Log($"IS Aiming is set to {playerController.isAiming} in Player Controller 2");
+            //Debug.Log($"IS Aiming is set to {playerController.isAiming} in Player Controller 2");
             // Check if the player can shoot based on ammo, aiming status, cooldown, and barrel rotation
             if (playerController != null && playerController.isAiming && !isOutOfAmmo && Input.GetButtonDown("Fire1") && Time.time >= nextFireTime && !IsBarrelInRestrictedRotation())
             {

@@ -217,14 +217,14 @@ public class AIManager : MonoBehaviour
             // Check if the ray hit the player or an obstacle
             if (hit.transform == locationOfPlayer)
             {
-                Debug.Log($"Line of sight returned true");
+                //Debug.Log($"Line of sight returned true");
                 return true; // Clear line of sight
                 
             }
             else
             {
-                Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
-                Debug.Log("Line of sight returned false");
+               // Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
+               // Debug.Log("Line of sight returned false");
                 return false;
             }
         }

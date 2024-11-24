@@ -5188,7 +5188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3791255804949528283, guid: 6a277a2912da82e479589d7c8314b165, type: 3}
-  poolSize: 10
+  poolSize: 3
   spawnInterval: 1
   respawnDelay: 3
   spawnRadius: 10
@@ -5756,6 +5756,8 @@ MonoBehaviour:
   useO2: {fileID: 0}
   healthPacksRemaining: {fileID: 0}
   o2Remaining: {fileID: 0}
+  xForce: 100
+  zTorque: 50
   healthSlider: {fileID: 0}
   o2Slider: {fileID: 0}
 --- !u!1 &1927649788
@@ -5999,7 +6001,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 3791255804949528283, guid: 6a277a2912da82e479589d7c8314b165, type: 3}
-  poolSize: 2
+  poolSize: 0
   spawnInterval: 1
   respawnDelay: 3
   spawnRadius: 10
