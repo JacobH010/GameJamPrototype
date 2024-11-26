@@ -31,7 +31,7 @@ public class AIController : MonoBehaviour
     private float attackCooldown = 3f;
     public float attackAccelartion = 30f;
     public float damage = 10f;
-    public float pushForce = 10f;
+    public float pushForce = 100f;
     public Vector2 attackLeadSecondsRange = new Vector2(.8f, 1.2f);
     private float attackLeadSeconds;
     public bool isCooldown { get; private set; }
@@ -197,7 +197,7 @@ public class AIController : MonoBehaviour
 
             float playerSpeed = aiManager.playerSpeed;
             Vector3 playerMoveDirection = aiManager.normalizedPlayerDirection;
-
+            float distanceToPlayer = Vector3.Distance(aiManager.GetPlayerLocation(), transform.position);
             Vector3 attackLocation;
 
             if (playerSpeed == 0)
@@ -219,8 +219,13 @@ public class AIController : MonoBehaviour
             navMeshAgent.SetDestination(attackLocation);
 
             // Wait until the AI reaches the target location
-            yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 0.8f);
-
+            yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 0.2f);
+            yield return new WaitForSeconds(.8f);
+            /*if (distanceToPlayer < 4f)
+            {
+                StartCoroutine(LungeAttack(aiManager.GetPlayerLocation()));
+                yield return new WaitForSeconds(1f);
+            }*/
             // Attack is complete
             isAttacking = false;
             aiManager.RemoveFromAttackers(this);
@@ -236,6 +241,32 @@ public class AIController : MonoBehaviour
 
 
         //Returned to follow
+    }
+    private IEnumerator LungeAttack(Vector3 playerLocation)
+    {
+        // Calculate direction to the player
+        Vector3 directionToPlayer = Vector3.Normalize(playerLocation - transform.position);
+
+        // Ensure the AI only rotates on the horizontal plane
+        directionToPlayer.y = 0;
+
+        // Snap to face the player
+        transform.rotation = Quaternion.LookRotation(directionToPlayer);
+
+        // Trigger the lunge attack animation
+        if (animator != null)
+        {
+            animator.SetTrigger("LungeAttack");
+            
+        }
+        else
+        {
+            Debug.LogWarning("Animator component is not assigned!");
+        }
+
+        Debug.Log("Lunge attack executed toward player at " + playerLocation);
+        yield return new WaitForSeconds(1);
+        yield return null;
     }
     private Vector3 GetAttackPosition()
     {
@@ -568,25 +599,75 @@ public class AIController : MonoBehaviour
         //Debug.Log("Collision detected");
         if (other.gameObject.CompareTag("Player") && isAttacking)
         {
-            Debug.Log("damage player");
+
+            Debug.Log("Damage player");
             // playerController.HitByEnemy(damage);
-            Rigidbody playerRigidbody = other.GetComponent<Rigidbody>();
-            if (playerRigidbody != null)
+
+            CharacterController characterController = other.GetComponent<CharacterController>();
+            PlayerController2 playerController = other.GetComponent<PlayerController2>();
+            if (playerController != null)
             {
-                Vector3 forceDirection = (other.transform.position - transform.position).normalized;
-                Debug.Log("Force direction set =" + forceDirection);
-                //Adds force to player in direction of AI movement
-                playerRigidbody.AddForce(forceDirection * pushForce, ForceMode.Impulse);
-                Debug.Log("Added force to player");
+                if (playerController.bloodSplatterEffects.Length > 0)
+                {
+                    int randomIndex = Random.Range(0, playerController.bloodSplatterEffects.Length); // Choose a random effect
+                    GameObject chosenEffect = playerController.bloodSplatterEffects[randomIndex];
+
+                    if (chosenEffect != null)
+                    {
+                        // Adjust the hit point's Y value to the floor level
+                        Vector3 effectPosition = other.gameObject.transform.position;
+                        effectPosition.y = .1f;
+
+                        GameObject effect = Instantiate(chosenEffect, effectPosition, Quaternion.identity);
+                        Destroy(effect, 6f); // Destroy the particle system after 6 seconds
+                    }
+                }
+                playerController.DamagePlayer(damage);
+            }
+            if (characterController != null)
+            {
+                // Calculate the push direction
+                Vector3 forceDirection = other.transform.position - transform.position;
+
+                // Ignore vertical differences
+                forceDirection.y = 0;
+
+                // Normalize the direction
+                forceDirection = forceDirection.normalized;
+
+                Debug.Log("Force direction set = " + forceDirection);
+
+                // Simulate the push effect
+                StartCoroutine(ApplyPush(characterController, forceDirection * pushForce));
             }
             else
             {
-                Debug.Log("Player rigidbody reference not found");
+               // Debug.LogError("Player CharacterController reference not found");
+                    
             }
         }
         else if (other.gameObject.CompareTag("Player") && !isAttacking)
         {
             Debug.Log("Player Collision Detected - Not attacking");
+        }
+    }
+
+    // Coroutine to simulate the push effect
+    private IEnumerator ApplyPush(CharacterController characterController, Vector3 pushVelocity)
+    {
+        float pushDuration = 5f; // Duration of the push effect
+        float elapsed = 0f;
+
+        while (elapsed < pushDuration)
+        {
+            // Move the player in the push direction
+            characterController.Move(pushVelocity * Time.deltaTime);
+
+            // Gradually decrease the push velocity for a smooth effect
+            pushVelocity = Vector3.Lerp(pushVelocity, Vector3.zero, elapsed / pushDuration);
+
+            elapsed += Time.deltaTime;
+            yield return null;
         }
     }
     public void KillEnemy()

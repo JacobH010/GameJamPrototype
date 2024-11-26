@@ -13,7 +13,7 @@ public class LoadoutManager : MonoBehaviour
     public float ammoPacks { get; private set; }
     private float availableSlots;
     public Color defaultTextColor;
-
+    public string SceneToLoad;
     [Header("UI Components")]
     public Slider healthPacksSlider;
     public Slider o2TanksSlider;
@@ -95,7 +95,7 @@ public class LoadoutManager : MonoBehaviour
         if (availableSlots >= 0)
         {
             
-            SceneManager.LoadScene("MovementandReloadPrototype");
+            SceneManager.LoadScene(SceneToLoad);
         }
         else
         {

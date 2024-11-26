@@ -35,14 +35,18 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     private Animator animator;
     private CharacterController characterController;
     public GameObject characterMesh;
+    public GameObject[] bloodSplatterEffects;
+    public UIManager uiManager;
 
     [Header("Raycasting Settings")]
     public LayerMask raycastLayerMask;
 
     [Header("PlayerLoopOptomization")]
     public float movementAndAnimationUpdateRate = .03f;
-    
 
+    [Header("Balancing")]
+    private float timeLastHit = 0;
+    public float hitInvincibilityTime = .7f;
     // Start is called before the first frame update
     void Awake()
     {
@@ -234,7 +238,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
             Vector3 localVelocity = transform.InverseTransformDirection(worldVelocity);
 
             float forwardSpeed = localVelocity.z;
-        Debug.Log($"Animator speed set to {forwardSpeed}");
+        //Debug.Log($"Animator speed set to {forwardSpeed}");
             animator.SetFloat("Speed", forwardSpeed, 0.1f, Time.deltaTime);
 
             previousPosition = currentPosition;
@@ -248,12 +252,24 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         animator.SetFloat("DirectionX", directionX);
             animator.SetFloat("DirectionY", directionY);
 
-            Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
+            //Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
 
             if (animator.GetBool("IsAiming") != isAiming)
             {
                 animator.SetBool("IsAiming", isAiming);
             }
            
+    }
+    public void DamagePlayer(float damage)
+    {
+        if (Time.time > timeLastHit + hitInvincibilityTime)
+        {
+            timeLastHit = Time.time;
+            uiManager.HurtPlayer(damage);
+        }
+        else
+        {
+            return;
+        }
     }
 }
