@@ -93,7 +93,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         }
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         UpdateMovementAnimations();
