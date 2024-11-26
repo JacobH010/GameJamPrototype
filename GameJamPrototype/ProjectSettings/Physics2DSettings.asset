@@ -4,7 +4,7 @@
 Physics2DSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
-  m_Gravity: {x: 0, y: -9.81}
+  m_Gravity: {x: 0, y: -20}
   m_DefaultMaterial: {fileID: 0}
   m_VelocityIterations: 8
   m_PositionIterations: 3
@@ -45,4 +45,4 @@ Physics2DSettings:
   m_ReuseCollisionCallbacks: 1
   m_AutoSyncTransforms: 0
   m_GizmoOptions: 10
-  m_LayerCollisionMatrix: dfd3ffffffd7ffffffd7ffffffffffffffd7fffffed3ffffffd7ffffffd7ffffffd7ffffffd7ffffded7ffff08d0fffeffdfffff08c0fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  m_LayerCollisionMatrix: dfd3ffffffd7ffffffd7ffffffffffffffd7fffffe53ffffffd7ffffffd7ffffffd7ffffffd7ffffded7ffff08d0fffeffdfffff0840ffffffffffffdfdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
