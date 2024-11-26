@@ -12,6 +12,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     public float moveSpeed;
     public float rotationSpeed;
     public float sprintSpeedMult;
+    
     private float currentSpeed;
     private Vector2 movementInput;
     private Vector3 velocity;
@@ -25,6 +26,8 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     
     [Header("Aim Settings")]
     public Vector3 aimOffset = new Vector3(0, 45, 0);
+    public float aimSpeedMult;
+    public float aimSprintSpeedMult;
 
     [Header("Object References")]
     public RawImage renderTextureUIElement;
@@ -77,12 +80,24 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         if (context.performed)
         {
             isSprinting = true;
-            
-            currentSpeed = moveSpeed * sprintSpeedMult;
+
+            if (!isAiming)
+            {
+                currentSpeed = moveSpeed * sprintSpeedMult;
+            }else if (isAiming)
+            {
+                currentSpeed = moveSpeed * sprintSpeedMult * aimSpeedMult * aimSprintSpeedMult;
+            }
         } else if (context.canceled)
         {
             isSprinting = false;
-            currentSpeed = moveSpeed;
+            if (!isAiming)
+            {
+                currentSpeed = moveSpeed;
+            }else if (isAiming)
+            {
+                currentSpeed = moveSpeed * aimSpeedMult;
+            }
         }
     }
     public void OnAim(InputAction.CallbackContext context)
@@ -91,12 +106,14 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         {
             isAiming = true;
             animator.SetTrigger("EnterAiming");
+            currentSpeed = moveSpeed * aimSpeedMult;
             Debug.Log($"On Aim Detected, is aiming set to {isAiming}");
             
         }else if (context.canceled)
         {
             isAiming = false;
             animator.SetTrigger("ExitAiming");
+            currentSpeed = moveSpeed;
             Debug.Log($"On Aim Cancle Detected, is aiming set to {isAiming}");
         }
     }
@@ -217,6 +234,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
             Vector3 localVelocity = transform.InverseTransformDirection(worldVelocity);
 
             float forwardSpeed = localVelocity.z;
+        Debug.Log($"Animator speed set to {forwardSpeed}");
             animator.SetFloat("Speed", forwardSpeed, 0.1f, Time.deltaTime);
 
             previousPosition = currentPosition;
@@ -230,7 +248,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         animator.SetFloat("DirectionX", directionX);
             animator.SetFloat("DirectionY", directionY);
 
-            //Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
+            Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
 
             if (animator.GetBool("IsAiming") != isAiming)
             {
