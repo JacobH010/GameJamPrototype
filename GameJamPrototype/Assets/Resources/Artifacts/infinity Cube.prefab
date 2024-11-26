@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2298329131558412596}
   - component: {fileID: 8576417258465429871}
   - component: {fileID: 4466755377111662035}
-  m_Layer: 13
+  m_Layer: 29
   m_Name: infinity Cube
   m_TagString: Scanner
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 10
   flingDrag: 10
-  smoothing: 10
+  smoothing: 5.69
   initialGravityScale: 0
   maxGravityScale: 0
   gravityIncreaseDuration: 0
@@ -117,6 +117,7 @@ MonoBehaviour:
   scanValue: 500
   commonality: 1
   itemWeight: 1
+  containerID: 
   sprites:
   - {fileID: 589684543, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}
   - {fileID: -1470068146, guid: 8591d7587e02b4a46aac5305c0d1c567, type: 3}

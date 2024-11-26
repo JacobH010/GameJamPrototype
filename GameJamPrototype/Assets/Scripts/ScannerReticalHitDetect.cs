@@ -13,11 +13,14 @@ public class ScannerReticalHitDetect : MonoBehaviour
     public GameObject itemScanInfoScreen;
     public TextMeshProUGUI itemNameObject;
     public TextMeshProUGUI itemDescriptionObject;
+    public TextMeshProUGUI itemScanValueText;
 
     private string itemDesc = null;
     private string itemTitle = null;
+    private int itemScanValue = 0;
 
     private bool itemScannable = false;
+    public ScoreManager scoreManager;
     private void Update()
     {
         
@@ -41,6 +44,12 @@ public class ScannerReticalHitDetect : MonoBehaviour
             {
                 Debug.LogError("itemDesc is null");
             }
+            if (itemScanValue > -1)
+            {
+                itemScanValueText.text = "$ " + itemScanValue.ToString();
+            }
+           
+            
             itemScanInfoScreen.SetActive(true);
             scannerScreen.gameObject.SetActive(false);
             retical.gameObject.SetActive(false);
@@ -48,13 +57,16 @@ public class ScannerReticalHitDetect : MonoBehaviour
     }
     public void SaveScan()
     {
+        scoreManager.UpdateScore(itemScanValue);
         itemScanInfoScreen.SetActive(false );
         scannerScreen.gameObject.SetActive(true);
         retical.gameObject.SetActive(true);
-        itemNameObject.text = null;
+        /*itemNameObject.text = null;
         itemDescriptionObject.text = null;
+        itemScanValueText = null;
         itemDesc = null;
         itemTitle = null;
+        itemScanValue = 0;*/
     }
     // Start is called before the first frame update
     private void OnTriggerEnter2D(Collider2D collision)
@@ -77,8 +89,8 @@ public class ScannerReticalHitDetect : MonoBehaviour
             {
                 itemDesc = itemScript.flavorText;
                 itemTitle = itemScript.objectName;
-                Debug.Log(itemDesc);
-                Debug.Log(itemTitle);
+                itemScanValue = itemScript.scanValue;
+                Debug.Log($"Object: {itemTitle}, Scan Value: {itemScanValue}");
             }
 
 

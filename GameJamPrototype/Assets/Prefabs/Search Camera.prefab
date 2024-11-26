@@ -855,7 +855,10 @@ MonoBehaviour:
   selectedObject: {fileID: 0}
   commitScanButton: {fileID: 0}
   reticle: {fileID: 2451855940468944960}
+  mainRenderTexture: {fileID: 0}
   playerCamera: {fileID: 0}
+  player: {fileID: 0}
+  UI: {fileID: 0}
 --- !u!114 &9175738470231891916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1570,8 +1573,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3555039012639967318}
   - {fileID: 3043605998130093195}
+  - {fileID: 3555039012639967318}
   - {fileID: 2127225656965725539}
   - {fileID: 7024413780423191534}
   m_Father: {fileID: 0}
@@ -1837,6 +1840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e47fd2a396823645bbb0229a05b6312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  closeButton: {fileID: 0}
 --- !u!1 &7670882464682325705
 GameObject:
   m_ObjectHideFlags: 0
@@ -2117,8 +2121,8 @@ RectTransform:
   - {fileID: 2288016175251435278}
   - {fileID: 5024385058328759682}
   - {fileID: 1274659098856619136}
-  - {fileID: 6452407048801102831}
   - {fileID: 8433721397707717742}
+  - {fileID: 6452407048801102831}
   - {fileID: 1708966756785315538}
   m_Father: {fileID: 3043605998130093195}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -52,8 +52,8 @@ TagManager:
   - ShellEmpty
   - 
   - PostProcessing
-  - 
-  - 
+  - Scanner
+  - ScannerItems
   - 
   m_SortingLayers:
   - name: Default

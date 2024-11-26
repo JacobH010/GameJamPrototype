@@ -79,7 +79,7 @@ public class AIController : MonoBehaviour
 
         if (playerController == null)
         {
-            Debug.LogError("Player Controller null in AI Controller");
+            Debug.LogWarning("Player Controller null in AI Controller");
         }
         if (navMeshAgent == null)
         {
@@ -536,11 +536,19 @@ public class AIController : MonoBehaviour
 
     private void OnEnable()
     {
-        stateMachineEnabled = true; // Re-enable the state machine
-        navMeshAgent.enabled = true; // Optional: Re-enable NavMeshAgent if needed
-        SetState(AIState.Roam);
         navMeshAgent = GetComponent<NavMeshAgent>();
-        rb.isKinematic = false;
+        if (navMeshAgent != null && !navMeshAgent.enabled)
+        {
+            navMeshAgent.enabled = true; // Optional: Re-enable NavMeshAgent if needed
+        }
+        stateMachineEnabled = true; // Re-enable the state machine
+        
+        SetState(AIState.Roam);
+        if (rb != null)
+        {
+            rb.isKinematic = false;
+        }
+        
         Collider enemyCollider = GetComponent<Collider>();
         Collider playerCollider = aiManager.locationOfPlayer.GetComponent<Collider>();
         Physics.IgnoreCollision(playerCollider, enemyCollider, false);

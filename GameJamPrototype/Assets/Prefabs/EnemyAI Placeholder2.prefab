@@ -428,6 +428,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6275316378000386484, guid: a280f58992665814283944adb95ad05c, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6554442400769010109, guid: a280f58992665814283944adb95ad05c, type: 3}
       propertyPath: m_Name
       value: Hyerg

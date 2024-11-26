@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1577431501794549343}
   - component: {fileID: 1183842952400763961}
   - component: {fileID: 2535060163439111829}
-  m_Layer: 13
+  m_Layer: 29
   m_Name: Paperclip
   m_TagString: Scanner
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 10
   flingDrag: 10
-  smoothing: 10
+  smoothing: 5.69
   initialGravityScale: 0
   maxGravityScale: 0
   gravityIncreaseDuration: 0
@@ -111,12 +111,13 @@ MonoBehaviour:
   rotationSpeed: 35
   rotationSmoothness: 1.2
   rotationPreservation: 0.026
-  flavorText: This is flavor text from scanned from the item.
-  objectName: NAME
-  monitaryValue: 5
-  scanValue: 5
+  flavorText: Its...... a paperclip. what did you expect
+  objectName: Paperclip
+  monitaryValue: 0
+  scanValue: 0
   commonality: 10
   itemWeight: 1
+  containerID: 
 --- !u!50 &1577431501794549343
 Rigidbody2D:
   serializedVersion: 4

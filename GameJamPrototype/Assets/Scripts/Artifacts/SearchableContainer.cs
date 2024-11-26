@@ -13,11 +13,18 @@ public class SearchableContainer : MonoBehaviour
     private GameObject playerObject;
     private GameObject searchObject;
     private SaveManager saveManager;
-
+    private Camera renderCamera;
+    private PlayerController2 playerController;
+    public GameObject UI;
+    public GameObject mouseIcon;
+    public bool containerOpen = false;
+    
     private void Awake()
     {
         containerID = GenerateUniqueID();
-        playerObject = GameObject.Find("PF_Player Variant");
+        playerObject = GameObject.Find("PlayerCharacter");
+        playerController = playerObject.GetComponent<PlayerController2>();
+        renderCamera = playerController.renderTextureCamera;
         searchObject = GameObject.Find("Search Camera");
         //saveManager = FindObjectOfType<SaveManager>(); // Find the SaveManager in the scene
         
@@ -25,6 +32,7 @@ public class SearchableContainer : MonoBehaviour
     private void Start()
     {
         searchObject.SetActive(false);
+        mouseIcon.SetActive(false);
         saveManager = FindObjectOfType<SaveManager>(); // Find the SaveManager in the scene
     }
 
@@ -33,6 +41,7 @@ public class SearchableContainer : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             playerNearby = true;
+            mouseIcon.SetActive(true);
         }
     }
 
@@ -41,6 +50,7 @@ public class SearchableContainer : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             playerNearby = false;
+            mouseIcon.SetActive(false);
         }
     }
 
@@ -64,34 +74,41 @@ public class SearchableContainer : MonoBehaviour
     {
         if (playerNearby)
         {
-            if (playerNearby)
+
+
+            Debug.Log($"Opened container with {containerID}");
+
+            // Set this container as the active container
+            activeContainer = this;
+
+            // Configure the UI Button dynamically
+            SearchContainerUIManager.searchUIManager.SetCloseButton(() => CloseContainer());
+
+            // Try to load saved data for this container
+            LootContainerData savedData = saveManager.LoadAllContainers()
+                .Find(container => container.containerID == containerID);
+
+            if (savedData != null)
             {
-                Debug.Log($"Opened container with {containerID}");
-
-                // Set this container as the active container
-                activeContainer = this;
-
-                // Configure the UI Button dynamically
-                SearchContainerUIManager.searchUIManager.SetCloseButton(() => CloseContainer());
-
-                // Try to load saved data for this container
-                LootContainerData savedData = saveManager.LoadAllContainers()
-                    .Find(container => container.containerID == containerID);
-
-                if (savedData != null)
-                {
-                    Debug.Log($"Loading saved data for container {containerID}");
-                    LoadItemsFromData(savedData);
-                }
-                else
-                {
-                    Debug.Log($"No saved data for container {containerID}. Spawning new loot.");
-                    SpawnNewLoot();
-                }
-
-                playerObject.SetActive(false);
-                searchObject.SetActive(true);
+                Debug.Log($"Loading saved data for container {containerID}");
+                LoadItemsFromData(savedData);
             }
+            else
+            {
+                Debug.Log($"No saved data for container {containerID}. Spawning new loot.");
+                SpawnNewLoot();
+            }
+
+            playerObject.SetActive(false);
+            renderCamera.gameObject.SetActive(false);
+            UI.SetActive(false);
+            searchObject.SetActive(true);
+
+            containerOpen = true;
+        }
+        else if (!playerNearby)
+        {
+            Debug.Log("Player not detected nearby");
         }
     }
     private void LoadItemsFromData(LootContainerData containerData)
@@ -176,7 +193,10 @@ public class SearchableContainer : MonoBehaviour
 
             // Switch back to player view
             playerObject.SetActive(true);
+            renderCamera.gameObject.SetActive(true);
+            UI.SetActive(true );
             searchObject.SetActive(false);
+            containerOpen = false;
         }
     }
     private void ClearInstantiatedItems()

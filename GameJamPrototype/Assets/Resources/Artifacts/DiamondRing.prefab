@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3567525521955098622}
   - component: {fileID: 109288903589847345}
   - component: {fileID: 4664798593067390636}
-  m_Layer: 13
+  m_Layer: 29
   m_Name: DiamondRing
   m_TagString: Scanner
   m_Icon: {fileID: 0}
@@ -190,22 +190,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 10
   flingDrag: 10
-  smoothing: 10
+  smoothing: 5.69
   initialGravityScale: 0
   maxGravityScale: 0
   gravityIncreaseDuration: 0
-  xMomentumPreservation: 0.3
+  xMomentumPreservation: 0.32
   xVelocityTaperRate: 8
-  rotationSpeed: 35
-  rotationSmoothness: 1.2
-  rotationPreservation: 0.01
-  flavorText: A ring with what looks to be a precious stone in the top. Someone is
-    not happy to have lost this.
+  rotationSpeed: 9
+  rotationSmoothness: 0.99
+  rotationPreservation: 0
+  flavorText: A ring constructed of a silver band and a sparkling diamond for the
+    inset stone.
   objectName: Diamond Ring
-  monitaryValue: 500
-  scanValue: 10
-  commonality: 2
-  itemWeight: 2
+  monitaryValue: 239
+  scanValue: 50
+  commonality: 10
+  itemWeight: 1
+  containerID: 
 --- !u!50 &109288903589847345
 Rigidbody2D:
   serializedVersion: 4

@@ -271,7 +271,7 @@ public class ShotgunController : MonoBehaviour
             }
             if (lastAmmoCount < currentAmmo)
             {
-                //shellLoadSound.Play();
+                shellLoadSound.Play();
             }
             lastAmmoCount = currentAmmo;
             yield return new WaitForSeconds(0.1f); // Check conditions every 0.1 seconds

@@ -35,8 +35,9 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
 
     [Header("Raycasting Settings")]
     public LayerMask raycastLayerMask;
-    
 
+    [Header("PlayerLoopOptomization")]
+    public float movementAndAnimationUpdateRate = .03f;
     
 
     // Start is called before the first frame update
@@ -50,6 +51,13 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
             Debug.LogError("Render texture in player script null. assign value in inspector");
         }
 
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SearchContainer"))
+        {
+
+        }
     }
     private void OnEnable()
     {
@@ -93,49 +101,56 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         }
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         
         UpdateMovementAnimations();
         HandleMovement();
-        
+
+
     }
+    
     void Start()
     {
         currentSpeed = moveSpeed;
+        //StartCoroutine(UpdateMovementAnimations());
+        //StartCoroutine(HandleMovement());
     }
     void HandleMovement()
     {
-        // Apply gravity
-        if (characterController.isGrounded)
-        {
-            velocity.y = -2f;  // Small negative value to keep the player grounded
-        }
-        else
-        {
-            velocity.y += gravity * Time.deltaTime;  // Apply gravity over time
-        }
-        
-        // Move the character based on velocity (including gravity)
-        characterController.Move(velocity * Time.deltaTime);
-        // Handle movement input and apply movement
-        if (movementInput != Vector2.zero)
-        {
-            movementDirection = new Vector3(movementInput.x, 0, movementInput.y);
-            characterController.Move(movementDirection * currentSpeed * Time.deltaTime);
-            
-        }
-        if (isAiming)
-        {
-            
-            RotateTowardMouse();
-        }
-        else if (movementDirection != Vector3.zero)  // Prevent rotation when there's no input
-        {
-            
-            Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }
+       
+            // Apply gravity
+            if (characterController.isGrounded)
+            {
+                velocity.y = -2f;  // Small negative value to keep the player grounded
+            }
+            else
+            {
+                velocity.y += gravity * Time.deltaTime;  // Apply gravity over time
+            }
+
+            // Move the character based on velocity (including gravity)
+            characterController.Move(velocity * Time.deltaTime);
+            // Handle movement input and apply movement
+            if (movementInput != Vector2.zero)
+            {
+                movementDirection = new Vector3(movementInput.x, 0, movementInput.y);
+                characterController.Move(movementDirection * currentSpeed * Time.deltaTime);
+
+            }
+            if (isAiming)
+            {
+
+                RotateTowardMouse();
+            }
+            else if (movementDirection != Vector3.zero)  // Prevent rotation when there's no input
+            {
+
+                Quaternion targetRotation = Quaternion.LookRotation(movementDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+
+           
     }
     void RotateTowardMouse()
     {
@@ -194,29 +209,33 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     }
     void UpdateMovementAnimations()
     {
-        Vector3 currentPosition = transform.position;
-        Vector3 worldVelocity = (currentPosition - previousPosition) / Time.deltaTime;
+        
+            Vector3 currentPosition = transform.position;
+            
+            Vector3 worldVelocity = (currentPosition - previousPosition) / Time.deltaTime;
 
-        Vector3 localVelocity = transform.InverseTransformDirection(worldVelocity);
+            Vector3 localVelocity = transform.InverseTransformDirection(worldVelocity);
 
-        float forwardSpeed = localVelocity.z;
-        animator.SetFloat("Speed", forwardSpeed, 0.1f, Time.deltaTime);
+            float forwardSpeed = localVelocity.z;
+            animator.SetFloat("Speed", forwardSpeed, 0.1f, Time.deltaTime);
 
-        previousPosition = currentPosition;
+            previousPosition = currentPosition;
 
-        float directionX = localVelocity.x; // Left/Right
-        float directionY = localVelocity.z; // Forward/Backward
+            float directionX = localVelocity.x; // Left/Right
+            float directionY = localVelocity.z; // Forward/Backward
+            directionX = Mathf.Ceil(directionX * 20f) / 20f;
+            directionY = Mathf.Ceil(directionY * 20f) / 20f;
 
 
-        animator.SetFloat("DirectionX", directionX, 0.2f, Time.deltaTime);
-        animator.SetFloat("DirectionY", directionY, 0.2f, Time.deltaTime);
+        animator.SetFloat("DirectionX", directionX);
+            animator.SetFloat("DirectionY", directionY);
 
-        //Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
+            //Debug.Log($"DirectionX calculated as {directionX} -- DirectionY calculated as {directionY}-- animator updated to X:{animator.GetFloat("DirectionX")}, Y:{animator.GetFloat("DirectionX")}"); 
 
-        if (animator.GetBool("IsAiming") != isAiming)
-        {
-            animator.SetBool("IsAiming", isAiming);
-        }
-
+            if (animator.GetBool("IsAiming") != isAiming)
+            {
+                animator.SetBool("IsAiming", isAiming);
+            }
+           
     }
 }

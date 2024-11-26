@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8668074129429384908}
   - component: {fileID: -967241274335053973}
   - component: {fileID: -9052947380004822934}
-  m_Layer: 13
+  m_Layer: 29
   m_Name: Pencil
   m_TagString: Scanner
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVelocity: 10
   flingDrag: 10
-  smoothing: 10
+  smoothing: 5.69
   initialGravityScale: 0
   maxGravityScale: 0
   gravityIncreaseDuration: 0
@@ -110,12 +110,13 @@ MonoBehaviour:
   rotationSpeed: 35
   rotationSmoothness: 1.5
   rotationPreservation: 0.01
-  flavorText: Its a pencil
-  objectName: Pencil
+  flavorText: Just an ordinary pencil
+  objectName: '#2 Pencil'
   monitaryValue: 2
   scanValue: 0
   commonality: 10
   itemWeight: 1
+  containerID: 
 --- !u!60 &-967241274335053973
 PolygonCollider2D:
   m_ObjectHideFlags: 0

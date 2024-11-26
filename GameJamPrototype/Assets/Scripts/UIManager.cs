@@ -32,9 +32,12 @@ public class UIManager : MonoBehaviour
     public Slider healthSlider;
     public Slider o2Slider;
 
+
+
     private LoadoutManager loadoutManager;
     
     // Start is called before the first frame update
+    
     void Start()
     {
         loadoutManager = LoadoutManager.loadoutManager;
