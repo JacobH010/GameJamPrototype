@@ -37,6 +37,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     public GameObject characterMesh;
     public GameObject[] bloodSplatterEffects;
     public UIManager uiManager;
+    public AudioSource[] hitSounds;
 
     [Header("Raycasting Settings")]
     public LayerMask raycastLayerMask;
@@ -265,6 +266,8 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         if (Time.time > timeLastHit + hitInvincibilityTime)
         {
             timeLastHit = Time.time;
+            AudioSource hitSoundIndexed = hitSounds[Random.Range(0, hitSounds.Length)];
+            hitSoundIndexed.Play();
             uiManager.HurtPlayer(damage);
         }
         else

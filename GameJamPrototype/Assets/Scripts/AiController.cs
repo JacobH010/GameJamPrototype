@@ -53,6 +53,11 @@ public class AIController : MonoBehaviour
     public NavMeshAgent navMeshAgent { get; private set; }
     private SpawnManager spawnManager;
 
+    [Header("SFX")]
+    public AudioSource AttackGrowl;
+    public AudioSource followSnarl;
+    
+
     //public GameObject playerPrefab;
     //  public GameObject playerGameObject;
     private PlayerController2 playerController;
@@ -187,6 +192,8 @@ public class AIController : MonoBehaviour
     {
         isAttacking = true;
         isCooldown = true;
+        followSnarl.Pause();
+        AttackGrowl.Play();
         //animator.SetTrigger("LungeAttackAnim");
 
         // StartCoroutine(ResetTriggers("LungeAttackAnim"));
@@ -233,6 +240,8 @@ public class AIController : MonoBehaviour
             // Transition to follow state
             animator.SetTrigger("StartFollow");
             ResetTriggers("StartFollow");
+            followSnarl.Play();
+            AttackGrowl.Stop();
             SetState(AIState.Following);
         }
 
@@ -413,6 +422,7 @@ public class AIController : MonoBehaviour
     {
         isFollowing = true;
         isAttacking = false;
+        followSnarl.Play();
         navMeshAgent = GetComponent<NavMeshAgent>();
         if (navMeshAgent == null)
         {
@@ -471,7 +481,9 @@ public class AIController : MonoBehaviour
                 }
                 if (!aiManager.HasLineOfSight(this))//Search if looses line of sight
                 {
+                    followSnarl.Pause();
                     SetState(AIState.Searching);
+                    
                 }
                 if (isFollowing && !isfleeing && !isAttacking)
                 {
@@ -602,7 +614,7 @@ public class AIController : MonoBehaviour
 
             Debug.Log("Damage player");
             // playerController.HitByEnemy(damage);
-
+            
             CharacterController characterController = other.GetComponent<CharacterController>();
             PlayerController2 playerController = other.GetComponent<PlayerController2>();
             if (playerController != null)
