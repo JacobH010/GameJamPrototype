@@ -33,6 +33,7 @@ public class ShotgunController : MonoBehaviour
     public float shellUpwardForce = 50f;         // Upward force for shell ejection
     public float shellRotationalForce = 10f;     // Rotational force for shell ejection
     public AudioSource shellLoadSound;
+    public AudioSource shotgunOpeningSound;
 
     private int lastAmmoCount = 2;
 
@@ -100,7 +101,12 @@ public class ShotgunController : MonoBehaviour
 
         // Play muzzle flash and sound
         if (muzzleFlash != null) muzzleFlash.Play();
-        if (shootingSound != null) shootingSound.Play();
+        if (shootingSound != null)
+        {
+            shootingSound.pitch = Random.Range(.9f, 1.2f);
+            shootingSound.volume = Random.Range(.8f, 1);
+            shootingSound.Play();
+        }
 
         // Shotgun parameters
                 // Maximum range of the shotgun
@@ -218,6 +224,7 @@ public class ShotgunController : MonoBehaviour
     // Public method that can be called by other scripts to empty the shotgun and eject shells
     public void EmptyAndEjectShells()
     {
+        shotgunOpeningSound.Play();
         int shellsToEject = currentAmmo;  // Capture current ammo count to determine how many shells to eject
 
         // Set ammo to zero and mark as out of ammo
@@ -226,6 +233,7 @@ public class ShotgunController : MonoBehaviour
 
         if (barrelRigidbody != null && !gravitySet)
         {
+
             barrelRigidbody.gravityScale = 50f; // Set gravity
             gravitySet = true;
         }

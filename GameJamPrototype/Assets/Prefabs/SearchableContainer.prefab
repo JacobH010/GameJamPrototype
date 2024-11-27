@@ -219,6 +219,7 @@ MonoBehaviour:
   containerID: 
   UI: {fileID: 0}
   mouseIcon: {fileID: 2677277372220932185}
+  containerOpen: 0
 --- !u!135 &4073613336032026101
 SphereCollider:
   m_ObjectHideFlags: 0
