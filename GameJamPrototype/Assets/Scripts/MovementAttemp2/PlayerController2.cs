@@ -28,6 +28,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     public Vector3 aimOffset = new Vector3(0, 45, 0);
     public float aimSpeedMult;
     public float aimSprintSpeedMult;
+    public LayerMask floorMask;
 
     [Header("Object References")]
     public RawImage renderTextureUIElement;
@@ -48,6 +49,8 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     [Header("Balancing")]
     private float timeLastHit = 0;
     public float hitInvincibilityTime = .7f;
+
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -203,7 +206,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
             Ray ray = renderTextureCamera.ViewportPointToRay(new Vector3(normalizedPoint.x, normalizedPoint.y, 0));
 
             // Use the layer mask to exclude UI objects
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity/*, raycastLayerMask*/))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, floorMask))
             {
                 Quaternion rotationOffset = Quaternion.Euler(aimOffset);
                 Vector3 lookDirection = hit.point - transform.position;

@@ -48,6 +48,10 @@ public class BackpackUIClickHandler : MonoBehaviour
                 openBackpack.SetActive(true);
                 Debug.Log($"{openBackpack.name} has been enabled.");
             }
+            else
+            {
+                Debug.LogWarning("Set active not done");
+            }
         }
         else
         {
