@@ -55,7 +55,16 @@ public class AIController : MonoBehaviour
 
     [Header("SFX")]
     public AudioSource AttackGrowl;
-    public AudioSource followSnarl;
+    public AudioClip[] followSnarls;
+    public AudioSource followSnarlSource;
+    public AudioSource hurtSoundEffect;
+    public AudioClip[] carpetFootsteps;
+    public AudioClip[] tileFootsteps;
+    public AudioClip[] woodFootsteps;
+    public AudioClip[] rubbleFootsteps;
+    public AudioClip[] metalFootsteps;
+    public AudioSource footsteps;
+    public float audioPlayDelay = .5f;
     
 
     //public GameObject playerPrefab;
@@ -192,7 +201,9 @@ public class AIController : MonoBehaviour
     {
         isAttacking = true;
         isCooldown = true;
-        followSnarl.Pause();
+        StopCoroutine(FollowSnarls());
+        AttackGrowl.volume = Random.Range(.3f, .45f);
+        AttackGrowl.pitch = Random.Range(.2f, .5f);
         AttackGrowl.Play();
         //animator.SetTrigger("LungeAttackAnim");
 
@@ -226,7 +237,7 @@ public class AIController : MonoBehaviour
             navMeshAgent.SetDestination(attackLocation);
 
             // Wait until the AI reaches the target location
-            yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 0.2f);
+            //yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 0.2f);
             yield return new WaitForSeconds(.8f);
             /*if (distanceToPlayer < 4f)
             {
@@ -240,7 +251,7 @@ public class AIController : MonoBehaviour
             // Transition to follow state
             animator.SetTrigger("StartFollow");
             ResetTriggers("StartFollow");
-            followSnarl.Play();
+            StartCoroutine(FollowSnarls());
             AttackGrowl.Stop();
             SetState(AIState.Following);
         }
@@ -312,7 +323,7 @@ public class AIController : MonoBehaviour
             navMeshAgent.SetDestination(GetBestPosition());
 
             // Wait until the NavMeshAgent reaches the destination or until AI starts following
-            while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance && !isFollowing)
+            while (/*navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance &&*/ !isFollowing)
             {
                 yield return null; // Wait until the next frame
             }
@@ -422,8 +433,9 @@ public class AIController : MonoBehaviour
     {
         isFollowing = true;
         isAttacking = false;
-        followSnarl.Play();
+        
         navMeshAgent = GetComponent<NavMeshAgent>();
+        StartCoroutine(FollowSnarls());
         if (navMeshAgent == null)
         {
             Debug.LogError("Nav Mesh AGent Null in Follow Player");
@@ -459,15 +471,17 @@ public class AIController : MonoBehaviour
 
                 if (Time.time >= lastHelpCall + helpCallCooldown)//Call for help if following
                 {
-                    Debug.Log("Call For Help Triggered");
-                    Debug.Log("CALLING FOR HELP");
+                    //Debug.Log("Call For Help Triggered");
+                   // Debug.Log("CALLING FOR HELP");
                     navMeshAgent.speed = 0;
                     // CallingForHelp = true;
                     lastHelpCall = Time.time;
-                    
-                    Debug.Log($"Last Help call time is {lastHelpCall}--- Next help call time is {helpCallCooldown}");
-                    Debug.Log("CallForHelp");
+
+                    // Debug.Log($"Last Help call time is {lastHelpCall}--- Next help call time is {helpCallCooldown}");
+                    // Debug.Log("CallForHelp");
                     //helpCallCooldown += lastHelpCall;
+                    helpCallAudio.pitch = Random.Range(.7f, 1.3f);
+                    helpCallAudio.volume = Random.Range(.4f, .65f);
                     helpCallAudio.Play();
                     animator.SetTrigger("CallForBackup");
                     StartCoroutine(ResetTriggers("CallForBackup"));
@@ -477,11 +491,11 @@ public class AIController : MonoBehaviour
                     StartCoroutine(ResetTriggers("StartFollow"));
                     //navMeshAgent.SetDestination(aiManager.GetPlayerLocation());
                     navMeshAgent.speed = followSpeed;
-                    yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 1f);
+                   // yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 1f);
                 }
                 if (!aiManager.HasLineOfSight(this))//Search if looses line of sight
                 {
-                    followSnarl.Pause();
+                    StopCoroutine(FollowSnarls());
                     SetState(AIState.Searching);
                     
                 }
@@ -685,6 +699,9 @@ public class AIController : MonoBehaviour
     public void KillEnemy()
     {
         health -= damageOnHit;
+        hurtSoundEffect.volume = Random.Range(.6f, .8f);
+        hurtSoundEffect.pitch = Random.Range(1, 1);
+        hurtSoundEffect.Play();
         Debug.Log($"Enemy damaged. now at {health} health remaining");
         animator.SetTrigger("Damaged");
         ResetTriggers("Damaged");
@@ -696,12 +713,18 @@ public class AIController : MonoBehaviour
             isFollowing = false;
             animator.SetTrigger("Die");
             aiManager.UnregisterEnemy(this);
+            navMeshAgent.SetDestination(transform.position);
+            navMeshAgent.speed = 0;
+            navMeshAgent.angularSpeed = 0;
             rb.isKinematic = true;
 
             // Disable collision with the player
             Collider enemyCollider = GetComponent<Collider>();
             Collider playerCollider = aiManager.locationOfPlayer.GetComponent<Collider>();
             Physics.IgnoreCollision(playerCollider, enemyCollider, true);
+        } else if (health <= 50 && health > 1)
+        {
+            SetState(AIState.Fleeing);
         }
     }
     IEnumerator UpdateAnimatorSpeed()
@@ -731,5 +754,17 @@ public class AIController : MonoBehaviour
         yield return new WaitForSeconds (0.2f);
         animator.ResetTrigger(trigger);
         yield return null;
+    }
+    IEnumerator FollowSnarls()
+    {
+        while (isFollowing)
+        {
+            AudioClip followGrowl = followSnarls[Random.Range(0, followSnarls.Length - 1)];
+            followSnarlSource.clip = followGrowl;
+            followSnarlSource.pitch = Random.Range(.7f, 1.3f);
+            followSnarlSource.volume = Random.Range(.35f, .55f);
+            followSnarlSource.Play();
+            yield return new WaitForSeconds(Random.Range(4f, 7f));
+        }
     }
 }

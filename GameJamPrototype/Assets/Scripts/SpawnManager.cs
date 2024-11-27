@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -59,45 +60,77 @@ public class SpawnManager : MonoBehaviour
     }
     void SpawnEnemy()
     {
-        
 
-            //Find inactive enemy in pool
-            foreach (GameObject enemy in enemyPool)
+
+        //Find inactive enemy in pool
+        foreach (GameObject enemy in enemyPool)
+        {
+            if (!enemy.activeInHierarchy && !playerNearby) // Check if the enemy is inactive
             {
-                if (!enemy.activeInHierarchy && !playerNearby)//check if the enemy is inactive
-                {
-                    enemy.SetActive(true);
+                enemy.SetActive(true);
 
-                    enemy.transform.position = GetRandomSpawnPosition();//Set Spawn Position
-                                                                        //StartCoroutine(RespawnEnemy(enemy));
-                                                                        //Speed, Range, Follow Distance, Sttack Speed,
-                                                                        //Attack CoolDown, Search Duration
-                                                                        // enemyController.SetEnemyPerameters(speed, range, followDistance, attackSpeed, attackCooldown, searchDuration);
-                    break;
+                // Set a valid spawn position
+                Vector3 spawnPosition = GetRandomSpawnPosition();
+                enemy.transform.position = spawnPosition;
+
+                // Ensure the NavMeshAgent is reset and connected to the NavMesh
+                NavMeshAgent agent = enemy.GetComponent<NavMeshAgent>();
+                if (agent != null)
+                {
+                    agent.enabled = false; // Temporarily disable to reset
+                    agent.enabled = true;  // Re-enable to ensure connection
+                    if (agent.isOnNavMesh)
+                    {
+                        Debug.Log($"{enemy.name} successfully connected to NavMesh.");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"{enemy.name} failed to connect to NavMesh at {spawnPosition}.");
+                        enemy.SetActive(false); // Disable the enemy if not valid
+                    }
                 }
+                else
+                {
+                    Debug.LogError("No NavMeshAgent found on the spawned enemy prefab!");
+                    enemy.SetActive(false);
+                }
+
+                break; // Exit the loop after spawning one enemy
             }
-        
+        }
+
     }
-//    IEnumerator RespawnEnemy()
-//    {
-//        foreach (GameObject enemy in enemyPool)
-//        {
-//            if (enemy.activeInHierarchy)//Wait until enemy is deactivated
-//            {
-//                yield return null; //wait until next frame
-//            }
-//        }
-//        yield return new WaitForSeconds(respawnDelay);
-//        SpawnEnemy();
-//    }
+    //    IEnumerator RespawnEnemy()
+    //    {
+    //        foreach (GameObject enemy in enemyPool)
+    //        {
+    //            if (enemy.activeInHierarchy)//Wait until enemy is deactivated
+    //            {
+    //                yield return null; //wait until next frame
+    //            }
+    //        }
+    //        yield return new WaitForSeconds(respawnDelay);
+    //        SpawnEnemy();
+    //    }
     //ABSTRACTION
     Vector3 GetRandomSpawnPosition()
     {
         Vector3 randomDirection = Random.insideUnitSphere * spawnRadius;
-        randomDirection.y = 0;
+        randomDirection.y = 0.01320684f;
 
         Vector3 spawnPosition = transform.position + randomDirection;
-        return spawnPosition;
+
+        // Adjust to find nearest valid NavMesh position
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(spawnPosition, out hit, spawnRadius, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+        else
+        {
+            Debug.LogWarning("Spawn point outside NavMesh.");
+            return transform.position; // Fallback to spawner's position
+        }
     }
     public void ReAddToPool(GameObject enemy)
     {

@@ -50,7 +50,18 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     private float timeLastHit = 0;
     public float hitInvincibilityTime = .7f;
 
-    
+    [Header("Footstep SFX")]
+    public AudioClip[] carpetFootsteps;
+    public AudioClip[] tileFootsteps;
+    public AudioClip[] woodFootsteps;
+    public AudioClip[] rubbleFootsteps;
+    public AudioClip[] metalFootsteps;
+    public AudioSource footsteps;
+    private float footstepPlayDelay = .63f;
+    private float sprintStepsDelayMult = 1.7f;
+    public float aimStepsDelayMult = 2f;
+    public string materialTag = "Carpet";
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -65,11 +76,10 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("SearchContainer"))
-        {
-
-        }
+        
     }
+
+    
     private void OnEnable()
     {
         playerInput.Player.SetCallbacks(this);
@@ -114,14 +124,26 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         {
             isAiming = true;
             animator.SetTrigger("EnterAiming");
-            currentSpeed = moveSpeed * aimSpeedMult;
+            if (isSprinting)
+            {
+                currentSpeed = moveSpeed * aimSpeedMult * sprintSpeedMult;
+            }else if (!isSprinting)
+            {
+                currentSpeed = moveSpeed * aimSpeedMult;
+            }
             Debug.Log($"On Aim Detected, is aiming set to {isAiming}");
             
         }else if (context.canceled)
         {
             isAiming = false;
             animator.SetTrigger("ExitAiming");
-            currentSpeed = moveSpeed;
+            if (isSprinting)
+            {
+                currentSpeed = moveSpeed * sprintSpeedMult;
+            } else if(!isSprinting)
+            {
+                currentSpeed *= moveSpeed;
+            }
             Debug.Log($"On Aim Cancle Detected, is aiming set to {isAiming}");
         }
     }
@@ -138,6 +160,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     void Start()
     {
         currentSpeed = moveSpeed;
+        StartCoroutine(PlayFootstepSounds());
         //StartCoroutine(UpdateMovementAnimations());
         //StartCoroutine(HandleMovement());
     }
@@ -270,12 +293,58 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         {
             timeLastHit = Time.time;
             AudioSource hitSoundIndexed = hitSounds[Random.Range(0, hitSounds.Length)];
+            hitSoundIndexed.volume = Random.Range(.7f, 1);
+            hitSoundIndexed.pitch = Random.Range(.8f, 1.2f);
             hitSoundIndexed.Play();
             uiManager.HurtPlayer(damage);
         }
         else
         {
             return;
+        }
+    }
+    IEnumerator PlayFootstepSounds()
+    {
+        while (true)
+        {
+            //Debug.Log("Footstpes funciton callled");
+            if (characterController.isGrounded && movementInput != null)
+            {
+                //  Debug.Log("Is Grounded");
+                if (materialTag == "Carpet")
+                {
+
+                    //Debug.Log("Carpet detected");
+                    footsteps.clip = carpetFootsteps[Random.Range(0, carpetFootsteps.Length)];
+                    footsteps.volume = Random.Range(.3f, 4.25f);
+                    footsteps.pitch = Random.Range(.8f, 1.1f);
+                    footsteps.Play();
+                    if (!isAiming && !isSprinting)
+                    {
+                        yield return new WaitForSeconds(footstepPlayDelay);
+                    }
+                    else if (!isAiming && isSprinting)
+                    {
+                        yield return new WaitForSeconds(footstepPlayDelay / sprintStepsDelayMult);
+                    }
+                    if (!isSprinting && isAiming)
+                    {
+                        yield return new WaitForSeconds(footstepPlayDelay * aimStepsDelayMult);
+                    }
+                    if (isAiming && isSprinting)
+                    {
+                        yield return new WaitForSeconds((footstepPlayDelay * aimStepsDelayMult) / sprintStepsDelayMult);
+                    }
+
+                }
+                
+            }
+            else if (!characterController.isGrounded)
+            {
+                Debug.LogWarning("not grounded");
+            }
+            yield return null;
+
         }
     }
 }
