@@ -65,8 +65,9 @@ public class AIController : MonoBehaviour
     public AudioClip[] metalFootsteps;
     public AudioSource footsteps;
     public float audioPlayDelay = .5f;
-    
 
+    [Header("Debuging")]
+    public AIState currentState = AIState.Roam;
     //public GameObject playerPrefab;
     //  public GameObject playerGameObject;
     private PlayerController2 playerController;
@@ -79,12 +80,13 @@ public class AIController : MonoBehaviour
     public float damageOnHit = 25f;
     //Enum defining AI State Machine Variables
     public enum AIState { Roam, Following, Fleeing, Searching, Attacking }
-    private AIState currentState = AIState.Roam;
+    
 
     void Start()
     {
         helpCallAudio = GetComponent<AudioSource>();
         StartCoroutine(UpdateAnimatorSpeed());
+        //StartCoroutine(CheckEnemiesNavMesh());
         //Initialize References
         aiManager = AIManager.Instance; //Singleton instance of AIManager
         navMeshAgent = GetComponent<NavMeshAgent>(); //NavMeshAgent controls AI's Navigation
@@ -115,6 +117,27 @@ public class AIController : MonoBehaviour
 
         StartCoroutine(Roam());
     }
+    /*IEnumerator CheckEnemiesNavMesh()
+    {
+        while (true)
+        {
+            if (!navMeshAgent.isOnNavMesh)
+            {
+                Debug.LogWarning($"{gameObject.name} is off the NavMesh at position {transform.position}");
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(transform.position, out hit, 5.0f, NavMesh.AllAreas)) // Adjust maxDistance if needed
+                {
+                    navMeshAgent.Warp(hit.position);
+                    Debug.Log($"{gameObject.name} repositioned to NavMesh at {hit.position}");
+                }
+                else
+                {
+                    Debug.LogError($"Failed to find a valid NavMesh position near {transform.position}");
+                }
+            }
+            yield return new WaitForSeconds(.1f);
+        }
+    }*/
     void RegisterEnemyWithAIManager()
     {
         if (AIManager.Instance != null)
@@ -323,7 +346,7 @@ public class AIController : MonoBehaviour
             navMeshAgent.SetDestination(GetBestPosition());
 
             // Wait until the NavMeshAgent reaches the destination or until AI starts following
-            while (/*navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance &&*/ !isFollowing)
+            while (navMeshAgent.remainingDistance > navMeshAgent.stoppingDistance && !isFollowing)
             {
                 yield return null; // Wait until the next frame
             }
@@ -489,7 +512,7 @@ public class AIController : MonoBehaviour
                     yield return new WaitForSeconds(1.3f);
                     animator.SetTrigger("StartFollow");
                     StartCoroutine(ResetTriggers("StartFollow"));
-                    //navMeshAgent.SetDestination(aiManager.GetPlayerLocation());
+                    navMeshAgent.SetDestination(aiManager.GetPlayerLocation());
                     navMeshAgent.speed = followSpeed;
                    // yield return new WaitUntil(() => navMeshAgent.remainingDistance <= 1f);
                 }
@@ -623,7 +646,7 @@ public class AIController : MonoBehaviour
 
     {
         //Debug.Log("Collision detected");
-        if (other.gameObject.CompareTag("Player") && isAttacking)
+        if (other.gameObject.CompareTag("Player") )
         {
 
             Debug.Log("Damage player");

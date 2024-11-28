@@ -522,15 +522,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.23
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.23
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.23
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 80f8b87792a2e7940a059a4ae6467944, type: 3}
       propertyPath: m_LocalPosition.x
@@ -707,6 +707,7 @@ MonoBehaviour:
   metalFootsteps: []
   footsteps: {fileID: 0}
   audioPlayDelay: 0.5
+  currentState: 0
   isDead: 0
   health: 100
   damageOnHit: 25
@@ -729,8 +730,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.3388437
-  m_Center: {x: -0.0349818, y: 1.2822769, z: 0.18666975}
+  m_Radius: 1.2928505
+  m_Center: {x: -0.034981847, y: 1.32827, z: 0.1866697}
 --- !u!65 &5991621899075519210
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -798,10 +799,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.2512633
-  m_Height: 6.5726447
+  m_Radius: 1.5912933
+  m_Height: 8.013548
   m_Direction: 1
-  m_Center: {x: 0.04331505, y: 2.786323, z: 0}
+  m_Center: {x: -0.0710907, y: 4.017743, z: 0}
 --- !u!82 &-5079488958619423605
 AudioSource:
   m_ObjectHideFlags: 0
