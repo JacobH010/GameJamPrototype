@@ -28,6 +28,7 @@ public class AIManager : MonoBehaviour
     public GameObject playerGameObject;
     public GameObject playerPrefab;
 
+    public LayerMask targetLayers;
     public float playerSpeed { get; private set; }
     public Vector3 normalizedPlayerDirection { get; private set; }
     // called before start as game loads
@@ -210,18 +211,18 @@ public class AIManager : MonoBehaviour
        // Debug.Log("Direciton to player is " + directionToPlayer);
         float distanceToPlayer = Vector3.Distance(enemy.transform.position, GetPlayerLocation());
         Physics.Raycast(enemy.transform.position, directionToPlayer, out RaycastHit hit, distanceToPlayer,
-             ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore);
+             ~LayerMask.GetMask("Enemy", "Water"), QueryTriggerInteraction.Ignore);
         // Debug.Log("Ray hit object: " + hit.collider.tag);
-        //Debug.DrawRay(enemy.transform.position, directionToPlayer);
+       Debug.DrawRay(enemy.transform.position, directionToPlayer);
         if (Physics.Raycast(enemy.transform.position, directionToPlayer, out hit, distanceToPlayer,
-             ~LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore))
+             targetLayers, QueryTriggerInteraction.Ignore))
         {
-           /// Debug.Log("Player Hit by raycast");
-           // Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
+            //Debug.Log("Player Hit by raycast");
+            //Debug.Log($"Hit Transform - {hit.transform}, Player Transform{locationOfPlayer}");
             // Check if the ray hit the player or an obstacle
-            if (hit.transform == locationOfPlayer)
+            if (hit.collider.CompareTag("Player"))
             {
-                //Debug.Log($"Line of sight returned true");
+                Debug.LogWarning($"Line of sight returned true");
                 return true; // Clear line of sight
                 
             }

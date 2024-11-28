@@ -93,111 +93,81 @@ public class ShotgunController : MonoBehaviour
 
     private void Shoot()
     {
-        if (currentAmmo <= 0) return;  // Ensure there's ammo to shoot
+        if (currentAmmo <= 0) return; // Ensure there's ammo to shoot
 
         // Reduce ammo count
         currentAmmo--;
-        shellsFired++;  // Increment shellsFired count to track shots
+        shellsFired++; // Increment shellsFired count to track shots
 
         // Play muzzle flash and sound
-        if (muzzleFlash != null) muzzleFlash.Play();
+        muzzleFlash?.Play();
         if (shootingSound != null)
         {
             shootingSound.pitch = Random.Range(.9f, 1.2f);
-            shootingSound.volume = Random.Range(.8f, 1);
+            shootingSound.volume = Random.Range(.8f, 1f);
             shootingSound.Play();
         }
 
         // Shotgun parameters
-                // Maximum range of the shotgun
-        LayerMask collisionMask = LayerMask.GetMask("Default", "Enemy", "Obstical"); // Mask for walls, enemies, etc.
+        LayerMask collisionMask = LayerMask.GetMask("Default", "Enemy", "Obstacle"); // Adjust as needed
 
         // Simulate each pellet
         for (int i = 0; i < pelletsPerShot; i++)
         {
+            // Calculate random spread for the pellet
             Quaternion randomRotation = Quaternion.Euler(
                 Random.Range(-spreadAngle, spreadAngle),
                 Random.Range(-spreadAngle, spreadAngle),
                 0
             );
-
             Vector3 shootDirection = randomRotation * firePoint.forward;
 
-            StartCoroutine(VisualizeRayWithSpeed(firePoint.position, shootDirection, range, projectileSpeed, collisionMask));
-        }
-    }
-    private IEnumerator VisualizeRayWithSpeed(Vector3 startPosition, Vector3 direction, float range, float speed, LayerMask collisionMask)
-    {
-        float distanceTraveled = 0f;
-        Vector3 currentPosition = startPosition;
-
-        while (distanceTraveled < range)
-        {
-            // Move the "ray" forward at the given speed
-            float step = speed * Time.deltaTime; // Distance to move in this frame
-            distanceTraveled += step;
-
-            // Check for collisions
-            if (Physics.Raycast(currentPosition, direction, out RaycastHit hit, step, collisionMask))
+            // Perform the raycast
+            if (Physics.Raycast(firePoint.position, shootDirection, out RaycastHit hit, range, collisionMask))
             {
-                Debug.DrawLine(currentPosition, hit.point, Color.red, 1f); // Draw the ray to the hit point
+                Debug.DrawLine(firePoint.position, hit.point, Color.red, 1f); // Debug ray for visual feedback
                 Debug.Log($"Hit object: {hit.collider.name}");
 
+                // Handle enemy hit
                 if (hit.collider.CompareTag("Enemy"))
                 {
                     AIController enemyAI = hit.collider.GetComponent<AIController>();
 
-                    // Randomly choose a blood splatter effect and instantiate it at the hit point
+                    // Spawn blood splatter effect
                     if (bloodSplatterEffects.Length > 0)
                     {
-                        int randomIndex = Random.Range(0, bloodSplatterEffects.Length); // Choose a random effect
+                        int randomIndex = Random.Range(0, bloodSplatterEffects.Length);
                         GameObject chosenEffect = bloodSplatterEffects[randomIndex];
-
                         if (chosenEffect != null)
                         {
-                            // Adjust the hit point's Y value to the floor level
                             Vector3 effectPosition = hit.point;
                             effectPosition.y = worldFloorYValue;
 
                             GameObject effect = Instantiate(chosenEffect, effectPosition, Quaternion.LookRotation(hit.normal));
-                            Destroy(effect, 6f); // Destroy the particle system after 6 seconds
+                            Destroy(effect, 6f);
                         }
                     }
 
-                    // Instantiate the bleeding effect at the adjusted Y value
+                    // Spawn bleeding effect
                     if (bleedingEffectPrefab != null)
                     {
-                        // Adjust the hit point's Y value to the floor level
                         Vector3 bleedingPosition = hit.point;
                         bleedingPosition.y = worldFloorYValue;
 
-                        // Instantiate the bleeding effect
                         GameObject bleedingEffect = Instantiate(bleedingEffectPrefab, bleedingPosition, Quaternion.identity);
-
-                        // Parent the effect to the enemy so it moves with them
                         bleedingEffect.transform.SetParent(hit.collider.transform);
-
-                        // Destroy the bleeding effect after the specified duration
                         Destroy(bleedingEffect, bleedingDuration);
                     }
 
-                    // Handle enemy logic
-                    if (enemyAI != null)
-                    {
-                        enemyAI.KillEnemy();
-                    }
+                    // Apply damage to enemy
+                    enemyAI?.KillEnemy();
                 }
-
-                yield break; // Stop the coroutine when hitting something
             }
-
-            // Update current position
-            Vector3 nextPosition = currentPosition + direction * step;
-            Debug.DrawLine(currentPosition, nextPosition, Color.yellow, 1f); // Draw the traveling ray
-
-            currentPosition = nextPosition;
-
-            yield return null; // Wait for the next frame
+            else
+            {
+                // If the ray doesn't hit anything, draw a debug line for visualization
+                Debug.DrawLine(firePoint.position, firePoint.position + shootDirection * range, Color.yellow, 1f);
+            }
         }
     }
     private void OnDrawGizmosSelected()

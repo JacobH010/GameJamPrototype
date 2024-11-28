@@ -166,9 +166,14 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
     }
     void HandleMovement()
     {
-       
-            // Apply gravity
-            if (characterController.isGrounded)
+
+        if ( !isSprinting && !isAiming)
+        {
+            currentSpeed = moveSpeed;
+        }
+        
+        // Apply gravity
+        if (characterController.isGrounded)
             {
                 velocity.y = -2f;  // Small negative value to keep the player grounded
             }
