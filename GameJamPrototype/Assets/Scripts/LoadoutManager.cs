@@ -69,8 +69,8 @@ public class LoadoutManager : MonoBehaviour
         o2Tanks = o2TanksSlider.value;
         ammoPacks = ammoPacksSlider.value;
 
-        // Calculate available slots based on max allowed slots (6)
-        availableSlots = 6f - (healthPacks + (o2Tanks * 2f) + ammoPacks);
+        // Calculate available slots based on max allowed slots (12)
+        availableSlots = 12f - (healthPacks + (o2Tanks * 2f) + ammoPacks);
 
         // Display updated values if they are within allowed limits
         if (availableSlots >= 0)
