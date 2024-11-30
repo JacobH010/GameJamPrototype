@@ -161,6 +161,7 @@ MonoBehaviour:
   shellUpwardForce: 50
   shellRotationalForce: 10
   shellLoadSound: {fileID: 4808876830947238080}
+  shotgunOpeningSound: {fileID: 0}
   deleteZoneCollider: {fileID: 0}
   triggerEmptyAndEject: 1
   bloodSplatterEffects:
@@ -11662,6 +11663,14 @@ MonoBehaviour:
     m_Bits: 16777216
   movementAndAnimationUpdateRate: 0.001
   hitInvincibilityTime: 0.7
+  carpetFootsteps: []
+  tileFootsteps: []
+  woodFootsteps: []
+  rubbleFootsteps: []
+  metalFootsteps: []
+  footsteps: {fileID: 0}
+  aimStepsDelayMult: 2
+  materialTag: Carpet
 --- !u!136 &1798194445998346679
 CapsuleCollider:
   m_ObjectHideFlags: 0

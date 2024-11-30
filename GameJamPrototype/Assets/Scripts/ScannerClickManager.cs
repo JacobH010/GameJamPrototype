@@ -17,7 +17,7 @@ public class ScannerClickManager : ClickManager
     public GameObject UI;
     private GameObject[] searchableObjects;
     
-    private bool containerOpen = false;
+    public bool containerOpen = false;
     
 
 
@@ -59,78 +59,94 @@ public class ScannerClickManager : ClickManager
         }
     }
 
+    public void CloseContainerViaButton()
+    {
+        containerOpen = false;
+        Debug.Log("Container has been closed via button.");
+    }
+
     private void PerformPhysics3DRaycast()
     {
         if (playerController != null && playerController.isAiming == false && !containerOpen)
         {
-            // Ensure the reticle (RawImage displaying the render texture) is assigned
             if (mainRenderTexture == null)
             {
                 Debug.LogWarning("RawImage displaying the render texture (reticle) is not assigned.");
                 return;
             }
 
-            // Get the RectTransform of the RawImage
             RectTransform rectTransform = mainRenderTexture.GetComponent<RectTransform>();
-
-            // Convert the mouse position to local coordinates of the RawImage
             Vector2 localMousePosition;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                     rectTransform,
                     Input.mousePosition,
-                    null, // Pass the Canvas's world Camera here if not null
+                    null,
                     out localMousePosition))
             {
                 Debug.Log("Mouse is outside the RawImage.");
                 return;
             }
 
-            // Normalize the local position to the render texture's UV space (0 to 1)
             Vector2 normalizedUV = new Vector2(
                 (localMousePosition.x + rectTransform.rect.width / 2f) / rectTransform.rect.width,
                 (localMousePosition.y + rectTransform.rect.height / 2f) / rectTransform.rect.height
-                );
+            );
 
-            // Correct Y-axis inversion
             normalizedUV.y = 1f - normalizedUV.y;
 
-            // Flip Y-axis because UV coordinates are bottom-left origin
-            normalizedUV.y = 1f - normalizedUV.y;
-
-            Debug.Log($"Normalized UV: {normalizedUV}");
-
-            // Ensure UV is within the valid range
             if (normalizedUV.x < 0f || normalizedUV.x > 1f || normalizedUV.y < 0f || normalizedUV.y > 1f)
             {
                 Debug.Log("Mouse position is outside the render texture bounds.");
                 return;
             }
 
-            // Use the normalized UV to create a ray from the render texture camera
-            Ray ray = playerCamera.ViewportPointToRay(new Vector3(normalizedUV.x, normalizedUV.y, 0f));
+            // Flip Y-axis because UV coordinates are bottom-left origin
+            normalizedUV.y = 1f - normalizedUV.y;
 
-            // Debug the ray
+            Debug.Log($"Normalized UV: {normalizedUV}");
+
+            Ray ray = playerCamera.ViewportPointToRay(new Vector3(normalizedUV.x, normalizedUV.y, 0f));
             Debug.DrawRay(ray.origin, ray.direction * 50f, Color.green, 1f);
 
-            // Perform the raycast
-            if (Physics.Raycast(ray, out RaycastHit hit, 50f))
-            {
-                GameObject clickedObject = hit.collider.gameObject;
-                Debug.Log($"Raycast hit: {clickedObject.name}");
+            // Use Physics.RaycastAll to detect all hits along the ray
+            RaycastHit[] hits = Physics.RaycastAll(ray, 50f);
 
-                if (clickedObject.CompareTag("SearchContainer"))
+            if (hits.Length > 0)
+            {
+                Debug.Log($"Raycast hit {hits.Length} objects.");
+
+                foreach (var hit in hits)
                 {
-                    
-                    SearchableContainer containerScript = clickedObject.GetComponent<SearchableContainer>();
-                    if (containerScript.containerOpen == false)
+                    GameObject clickedObject = hit.collider.gameObject;
+                    Debug.Log($"Raycast hit: {clickedObject.name}, Collider: {hit.collider.name}");
+
+                    if (clickedObject.CompareTag("SearchContainer"))
                     {
-                        containerScript.OpenContainer();
-                        containerOpen = true;
-                    }
-                    else
-                    {
-                        containerOpen = false;
-                        return;
+                        SearchableContainer containerScript = clickedObject.GetComponent<SearchableContainer>();
+                        if (containerScript != null)
+                        {
+                            Debug.Log($"Hit collider: {hit.collider.name}, Target collider: {containerScript.targetCollider?.name}");
+                            if (hit.collider == containerScript.targetCollider)
+                            {
+                                Debug.Log("Raycast hit the correct target collider.");
+                                if (!containerScript.containerOpen)
+                                {
+                                    containerScript.OpenContainer();
+                                    containerOpen = true;
+                                    return; // Stop further processing once the target container is opened
+                                }
+                                else
+                                {
+                                    containerScript.CloseContainer();
+                                    containerOpen = false;
+                                    return; // Stop further processing once the container is closed
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log($"Raycast hit a collider, but it is not the target collider. Hit: {hit.collider.name}, Target: {containerScript.targetCollider?.name}");
+                            }
+                        }
                     }
                 }
             }
@@ -138,9 +154,16 @@ public class ScannerClickManager : ClickManager
             {
                 Debug.Log("Raycast did not hit any objects.");
             }
-            
+        }
+        else if (containerOpen)
+        {
+            Debug.Log("Container is already open.");
         }
     }
+
+
+
+
     private void PerformPhysics2DRaycast()
     {
         // Ensure Camera.main is assigned

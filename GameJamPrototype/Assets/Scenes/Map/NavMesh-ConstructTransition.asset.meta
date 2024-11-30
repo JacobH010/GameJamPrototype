@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:GameJamPrototype/Assets/Scenes/Map/NavMesh-ConstructTransition.asset.meta
 guid: dc1c8d0521714a6489e93936005bac7f
 NativeFormatImporter:
+========
+guid: 0054fcd79b3f5b44f90a1e35cf86033c
+DefaultImporter:
+>>>>>>>> 1cb931c0f0889c59b6a891cc7f51136960e28d96:GameJamPrototype/Assets/Scenes/Map 1.unity.meta
   externalObjects: {}
   mainObjectFileID: 23800000
   userData: 

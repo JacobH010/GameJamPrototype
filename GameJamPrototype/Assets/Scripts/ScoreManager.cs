@@ -6,9 +6,9 @@ using UnityEngine;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager scoreManager { get; private set; }
-    private int currentScore;
+    public int currentScore;
     private int score;
-    private int highScore;
+    public int highScore;
     public int savedHighScore { get; private set; }
 
     [Header("Object References")]
@@ -40,7 +40,7 @@ public class ScoreManager : MonoBehaviour
         if (globalScoreText != null)
         {
             currentScore += score;
-            globalScoreText.text = "Total Data Value: $" + currentScore.ToString();
+            globalScoreText.text = "$" + currentScore.ToString();
         }else if (globalScoreText == null)
         {
             Debug.LogError("globalScoreText in Score Manager is null. Object reference missing");
