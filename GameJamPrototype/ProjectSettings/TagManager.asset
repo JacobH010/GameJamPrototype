@@ -23,6 +23,7 @@ TagManager:
   - O2TankBackpack
   - SyringeBag
   - Carpet
+  - player
   layers:
   - Default
   - TransparentFX
