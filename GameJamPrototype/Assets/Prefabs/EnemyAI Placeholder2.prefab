@@ -41,7 +41,7 @@ AudioSource:
   m_GameObject: {fileID: 525763703425330709}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8406dc903c1ee8145aba3a720fdf9347, type: 2}
   m_audioClip: {fileID: 8300000, guid: f0b764c647d8326479fe70a0fb4cbe7b, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.404
@@ -297,7 +297,7 @@ AudioSource:
   m_GameObject: {fileID: 5053115625448827573}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8406dc903c1ee8145aba3a720fdf9347, type: 2}
   m_audioClip: {fileID: 8300000, guid: a781e955a3f4e9a43b2d11ab4d3960bc, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.898
@@ -425,7 +425,7 @@ AudioSource:
   m_GameObject: {fileID: 6089889527468450485}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8406dc903c1ee8145aba3a720fdf9347, type: 2}
   m_audioClip: {fileID: 8300000, guid: c27600b65c7a0e0489d21984b7d14b14, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.09
@@ -685,7 +685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackSpeed: 50
   attackAccelartion: 30
-  damage: 5
+  damage: 20.13
   pushForce: 1.5
   attackLeadSecondsRange: {x: 0.8, y: 1.2}
   helpCallCooldown: 8
@@ -812,7 +812,7 @@ AudioSource:
   m_GameObject: {fileID: 3791255804949528283}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8406dc903c1ee8145aba3a720fdf9347, type: 2}
   m_audioClip: {fileID: 8300000, guid: d4cf75944ebfbe6428c255a5a739e838, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.532
