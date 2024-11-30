@@ -685,7 +685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackSpeed: 50
   attackAccelartion: 30
-  damage: 5
+  damage: 8
   pushForce: 1.5
   attackLeadSecondsRange: {x: 0.8, y: 1.2}
   helpCallCooldown: 8
