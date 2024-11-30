@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,11 +36,15 @@ public class UIManager : MonoBehaviour
 
 
     private LoadoutManager loadoutManager;
+
+    [Header("Game Over Reference")]
+    public TextMeshProUGUI gameOverUI;
     
     // Start is called before the first frame update
     
     void Start()
     {
+        gameOverUI.gameObject.SetActive(false);
         loadoutManager = LoadoutManager.loadoutManager;
         if (loadoutManager == null)
         {
@@ -193,6 +198,11 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+    
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
     public void HealPlayer()
     {
         if (healthPacks > 0)
@@ -216,6 +226,7 @@ public class UIManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over!!");
+        gameOverUI.gameObject.SetActive(true);
         Time.timeScale = 0f;
     }
     public void AcceptLoadoutVariables()
