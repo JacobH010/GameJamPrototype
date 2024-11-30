@@ -111,7 +111,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 2047
+    m_Bits: 2039
 --- !u!114 &855669509203730516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +131,11 @@ MonoBehaviour:
   useO2: {fileID: 4785690684767589921}
   healthPacksRemaining: {fileID: 835342532284462192}
   o2Remaining: {fileID: 2576619823057225890}
+  healthPacks: 0
+  o2Tanks: 0
+  ammoPacks: 0
+  xForce: 100
+  zTorque: 50
   healthSlider: {fileID: 2687017531749129139}
   o2Slider: {fileID: 5354680079130889467}
 --- !u!1 &1452916957085974401

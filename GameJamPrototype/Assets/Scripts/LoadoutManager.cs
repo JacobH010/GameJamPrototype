@@ -94,13 +94,20 @@ public class LoadoutManager : MonoBehaviour
     {
         if (availableSlots >= 0)
         {
-            
+            // Find the MainMenuMusic GameObject and stop/destroy it
+            GameObject mainMenuMusic = GameObject.Find("MainMenuMusic");
+            if (mainMenuMusic != null)
+            {
+                Destroy(mainMenuMusic); // This will stop the music and remove the object
+            }
+
+            // Load the new scene
             SceneManager.LoadScene(SceneToLoad);
         }
         else
         {
-            
             Debug.LogError("Not enough available slots to start the game.");
         }
     }
+
 }

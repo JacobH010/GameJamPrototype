@@ -8,7 +8,7 @@ public class SearchableContainer : MonoBehaviour
     public static SearchableContainer activeContainer; // Tracks the currently active container
 
     public string containerID;
-    private bool playerNearby;
+    public bool playerNearby;
 
     private GameObject playerObject;
     private GameObject searchObject;
@@ -18,7 +18,11 @@ public class SearchableContainer : MonoBehaviour
     public GameObject UI;
     public GameObject mouseIcon;
     public bool containerOpen = false;
-    
+    public ScannerClickManager clickManager;
+
+    [SerializeField]
+    public Collider targetCollider;
+
     private void Awake()
     {
         containerID = GenerateUniqueID();
@@ -26,8 +30,11 @@ public class SearchableContainer : MonoBehaviour
         playerController = playerObject.GetComponent<PlayerController2>();
         renderCamera = playerController.renderTextureCamera;
         searchObject = GameObject.Find("Search Camera");
-        //saveManager = FindObjectOfType<SaveManager>(); // Find the SaveManager in the scene
-        
+
+        if (targetCollider == null)
+        {
+            Debug.LogWarning("Target Collider is not assigned in the Inspector!");
+        }
     }
     private void Start()
     {
@@ -36,12 +43,25 @@ public class SearchableContainer : MonoBehaviour
         saveManager = FindObjectOfType<SaveManager>(); // Find the SaveManager in the scene
     }
 
+    [SerializeField] private BoxCollider boxCollider; // Assign this in the Inspector
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             playerNearby = true;
             mouseIcon.SetActive(true);
+
+            // Enable the box collider
+            if (boxCollider != null)
+            {
+                boxCollider.enabled = true;
+                Debug.Log("Box Collider enabled.");
+            }
+            else
+            {
+                Debug.LogWarning("Box Collider reference is missing!");
+            }
         }
     }
 
@@ -51,20 +71,27 @@ public class SearchableContainer : MonoBehaviour
         {
             playerNearby = false;
             mouseIcon.SetActive(false);
+
+            // Disable the box collider
+            if (boxCollider != null)
+            {
+                boxCollider.enabled = false;
+                Debug.Log("Box Collider disabled.");
+            }
+            else
+            {
+                Debug.LogWarning("Box Collider reference is missing!");
+            }
         }
     }
+
 
     private string GenerateUniqueID()
     {
         string newID;
         do
         {
-            string part1 = Random.Range(0, 500).ToString();
-            string part2 = Random.Range(0, 500).ToString();
-            string part3 = Random.Range(0, 500).ToString();
-            string part4 = Random.Range(0, 500).ToString();
-
-            newID = $"{part1}-{part2}-{part3}-{part4}";
+            newID = $"{Random.Range(0, 500)}-{Random.Range(0, 500)}-{Random.Range(0, 500)}-{Random.Range(0, 500)}";
         } while (generatedIDs.Contains(newID));
         generatedIDs.Add(newID);
         return newID;
@@ -117,18 +144,22 @@ public class SearchableContainer : MonoBehaviour
 
         foreach (LootItemData itemData in containerData.items)
         {
-            Debug.Log($"Attempting to instantiate prefab: Artifacts/{itemData.itemID} at {itemData.itemPosition}");
+            Debug.Log($"Attempting to instantiate prefab: Artifacts/{itemData.itemID} at world position {itemData.itemPosition}");
 
             // Load the prefab from Resources
             GameObject prefab = Resources.Load<GameObject>($"Artifacts/{itemData.itemID}");
             if (prefab != null)
             {
+                Debug.Log("Successfully loaded GameObject");
 
-                Debug.Log("Sucessfully loaded GameObject");
-                Debug.Log(itemData.itemPosition.ToString());
-                // Instantiate a new item at the saved position
-                GameObject newItem = Instantiate(prefab, itemData.itemPosition, itemData.itemRotation );
-                
+                // Instantiate a new item without a parent so it spawns in the world
+                GameObject newItem = Instantiate(prefab);
+
+                // Set world position and rotation based on saved data
+                newItem.transform.position = itemData.itemPosition;
+                newItem.transform.rotation = itemData.itemRotation;
+
+                Debug.Log($"Instantiated new item {itemData.itemID} at world position {itemData.itemPosition}");
 
                 // Assign the containerID and prefabName to the new item
                 if (!newItem.TryGetComponent(out ItemCoontainerID itemContainer))
@@ -137,8 +168,6 @@ public class SearchableContainer : MonoBehaviour
                 }
                 itemContainer.containerID = containerID;
                 itemContainer.prefabName = itemData.itemID;
-
-                Debug.Log($"Instantiated new item {itemData.itemID} at {itemData.itemPosition}");
             }
             else
             {
@@ -195,8 +224,9 @@ public class SearchableContainer : MonoBehaviour
             playerObject.SetActive(true);
             renderCamera.gameObject.SetActive(true);
             UI.SetActive(true );
-            searchObject.SetActive(false);
             containerOpen = false;
+            searchObject.SetActive(false);
+            Debug.Log($"Container Open Set to False");
         }
     }
     private void ClearInstantiatedItems()
@@ -229,7 +259,7 @@ public class SearchableContainer : MonoBehaviour
                 items.Add(new LootItemData
                 {
                     itemID = item.prefabName, // Ensure this matches the prefab's name or unique ID
-                    itemPosition = item.transform.localPosition, // Save the local position relative to its parent
+                    itemPosition = item.transform.position, // Save the local position relative to its parent
                     itemRotation = item.transform.rotation
                 });
             }
