@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class AIManager : MonoBehaviour
@@ -19,7 +18,7 @@ public class AIManager : MonoBehaviour
     private List<AIController> activeEnemies = new List<AIController>();
     private List<AIController> attackers = new List<AIController>();
     public SpawnManager spawnManager { get; private set; }
-    private int attackThreshold = 3;
+    private int attackThreshold = 2;
     private int maxAttackers = 2;
     private int attackersNeeded = 0;
     private int lastAttackerCount = 0;

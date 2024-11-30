@@ -8,20 +8,27 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 98eebce7b229d1e41b93e988f82e0c9d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Prototype_OfficeLevel.unity
     guid: ece1cd977aaeede4d8365a5535f794a1
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AIStageing.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
     path: Assets/Scenes/LoadoutSelection.unity
     guid: 3819a50c1302c8c41b65274624999c85
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MovementandReloadPrototype.unity
     guid: 2a0d3bad87cd77044915512658ee62ea
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Map 1.unity
+    guid: d503d8d304cd9dc4cb6d35fecfa46484
+  - enabled: 0
+    path: Assets/Scenes/Map 2.unity
+    guid: b8438db92f4e8434789510ce5337f361
+  - enabled: 1
+    path: Assets/Scenes/Map.unity
+    guid: acceb83710f3fd5458d7bbd71a1ffd58
     guid: 0054fcd79b3f5b44f90a1e35cf86033c
   - enabled: 1
     path: Assets/Scenes/PauseMenuTesting.unity
