@@ -24,6 +24,10 @@ public class UIManager : MonoBehaviour
     public float o2Tanks;
     public float ammoPacks;
 
+    private AudioSource o2DecayAudioSource; // AudioSource for O2 decay sound
+    public AudioClip o2DecayClip; // Assign this in the Unity Inspector
+    private bool isHealthDecaying = false;
+
     [Header("Force Settings")]
     public float xForce = 100f; // Force to apply on the X-axis
     public float zTorque = 50f; // Torque to apply for Z rotation
@@ -39,6 +43,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Game Over Reference")]
     public TextMeshProUGUI gameOverUI;
+
     
     // Start is called before the first frame update
     
@@ -56,7 +61,12 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("Health Slider Null at start");
         }
+        o2DecayAudioSource = gameObject.AddComponent<AudioSource>();
+        o2DecayAudioSource.clip = o2DecayClip;
+        o2DecayAudioSource.loop = true; // Loop the sound while o2HealthDecay is active
     }
+
+
 
     // Update is called once per frame
 
@@ -66,15 +76,15 @@ public class UIManager : MonoBehaviour
         {
             yield return new WaitForSeconds(o2DecayRate);
 
+            bool healthDecayingNow = false; // Tracks if health is decaying this iteration
+
             if (o2Slider != null)
             {
-                // Check if the current slider is active and decrement O2 if it is
                 O2TankState o2TankState = o2Slider.GetComponentInParent<O2TankState>();
                 if (o2TankState != null && o2TankState.IsActive)
                 {
                     if (playerO2 > 0)
                     {
-                        // Decrease oxygen
                         if (isSprinting)
                         {
                             playerO2 -= o2Decay * sprintMult;
@@ -85,23 +95,18 @@ public class UIManager : MonoBehaviour
                         }
 
                         Debug.Log("Player o2 decremented to " + playerO2);
-
-                        // Update slider value
                         o2Slider.value = playerO2;
                     }
                     else
                     {
-                        // Oxygen is depleted, handle force application
-                        
-                        DraggableImage draggableImage = o2Slider.GetComponentInParent<DraggableImage>();
-                        if (draggableImage != null)
-                        {
-                            ApplyForceToDraggable(draggableImage);
-                        }
-                        Debug.Log($"Player Health Decaying to {playerHealth}");
-                        // Reset health or handle zero oxygen behavior
+                        healthDecayingNow = true; // Health is decaying
                         playerHealth -= o2HealthDecay;
                         healthSlider.value = playerHealth;
+
+                        if (!o2DecayAudioSource.isPlaying)
+                        {
+                            o2DecayAudioSource.Play();
+                        }
 
                         if (playerHealth <= 0)
                         {
@@ -111,11 +116,16 @@ public class UIManager : MonoBehaviour
                 }
             }
 
-            // Check if no O2 tank is active
             if (!IsAnyO2TankActive() && !scannerClickManager.containerOpen)
             {
-                playerHealth -= o2HealthDecay * 2; // Decrease health rapidly
+                healthDecayingNow = true; // Health is decaying rapidly
+                playerHealth -= o2HealthDecay * 2;
                 healthSlider.value = playerHealth;
+
+                if (!o2DecayAudioSource.isPlaying)
+                {
+                    o2DecayAudioSource.Play();
+                }
 
                 if (playerHealth <= 0)
                 {
@@ -123,7 +133,20 @@ public class UIManager : MonoBehaviour
                 }
             }
 
+            // Stop the sound if health is no longer decaying
+            if (isHealthDecaying && !healthDecayingNow)
+            {
+                o2DecayAudioSource.Stop();
+            }
+
+            isHealthDecaying = healthDecayingNow; // Update the state
             yield return null;
+        }
+
+        // Ensure the audio stops when the coroutine ends
+        if (o2DecayAudioSource.isPlaying)
+        {
+            o2DecayAudioSource.Stop();
         }
     }
 
