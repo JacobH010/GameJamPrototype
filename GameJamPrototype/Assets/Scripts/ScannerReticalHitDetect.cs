@@ -109,8 +109,15 @@ public class ScannerReticalHitDetect : MonoBehaviour
         }
 
         // Update the player's score
-        scoreManager.UpdateScore(itemScanValue);
-        Debug.Log($"Score updated by {itemScanValue} points.");
+        if (ScoreManager.scoreManager != null)
+        {
+            ScoreManager.scoreManager.UpdateScore(itemScanValue); // Updates both currentScore and highScore
+            Debug.Log($"Score updated by {itemScanValue} points. Current Score: {ScoreManager.scoreManager.currentScore}, High Score: {ScoreManager.scoreManager.highScore}");
+        }
+        else
+        {
+            Debug.LogError("ScoreManager instance is missing!");
+        }
 
         // Disable the scanned object
         currentScannedObject.SetActive(false);
@@ -125,6 +132,8 @@ public class ScannerReticalHitDetect : MonoBehaviour
         ResetScanner();
         itemScanInfoScreen.SetActive(true);
     }
+
+
 
 
     private void UpdateRemainingSaveText()
