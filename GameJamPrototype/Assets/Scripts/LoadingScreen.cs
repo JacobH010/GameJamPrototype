@@ -7,6 +7,7 @@ using UnityEngine.UI;
     {
         // [SerializeField] public GameObject loadingScreen;
         [SerializeField] public Slider progressBar;
+    public AudioSource elevatorOpen;
 
     public void Awake()
     {
@@ -36,8 +37,16 @@ using UnityEngine.UI;
                 if (operation.progress >= 0.9f)
                 {
                     // Optional: Wait for user input or a timed delay
-                    yield return new WaitForSeconds(.5f);
-                    operation.allowSceneActivation = true;
+                    
+                
+                if (elevatorOpen != null)
+                {
+                    elevatorOpen.Play();
+                    yield return new WaitForSeconds(1.25f);
+                    elevatorOpen.gameObject.SetActive(false);
+                }
+                yield return new WaitForSeconds(.75f);
+                operation.allowSceneActivation = true;
                 }
 
                 yield return null;

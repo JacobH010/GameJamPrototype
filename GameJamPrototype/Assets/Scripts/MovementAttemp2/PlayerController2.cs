@@ -313,7 +313,7 @@ public class PlayerController2 : MonoBehaviour, PlayerInputNew.IPlayerActions
         while (true)
         {
             //Debug.Log("Footstpes funciton callled");
-            if (characterController.isGrounded && movementInput != null)
+            if (characterController.isGrounded && movementInput != null && currentSpeed > .25f)
             {
                 //  Debug.Log("Is Grounded");
                 if (materialTag == "Carpet")
