@@ -3471,7 +3471,7 @@ PrefabInstance:
       objectReference: {fileID: 270829653}
     - target: {fileID: 6031927154806774347, guid: d3d3b320850b9564f868a7a8e67c8395, type: 3}
       propertyPath: SceneToLoad
-      value: Map 2
+      value: Map
       objectReference: {fileID: 0}
     - target: {fileID: 6031927154806774347, guid: d3d3b320850b9564f868a7a8e67c8395, type: 3}
       propertyPath: ammoPackText
