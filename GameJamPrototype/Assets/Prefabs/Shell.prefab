@@ -127,7 +127,7 @@ MonoBehaviour:
   clickableArea: {fileID: 101201108932053725}
   releasedGravityScale: 130
   flingForceMultiplier: 1500
-  rotationForceMultiplier: -100
+  rotationForceMultiplier: -50.49
   rotationSmoothing: 5
   smoothing: 40
   centeringSmoothing: 34.06

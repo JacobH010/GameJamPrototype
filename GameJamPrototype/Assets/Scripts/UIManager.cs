@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
 {
     public float playerHealth = 100f;
     private float playerO2 = 100f;
-    private float o2Decay = .25f; //Decay rate per half second. 
+    private float o2Decay = .33f; //Decay rate per half second. 
     private float o2DecayRate = .5f;//Rate of o2 Decay in seconds
     public bool o2DecayOn = true;
     private float o2HealthDecay = 1f;
