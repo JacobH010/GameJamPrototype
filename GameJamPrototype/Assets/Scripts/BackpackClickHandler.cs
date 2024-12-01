@@ -33,24 +33,24 @@ public class BackpackUIClickHandler : MonoBehaviour
     {
         if (backpack != null && targetUIElement != null)
         {
-            Debug.Log($"Backpack clicked. Starting smooth scale for {targetUIElement.name}");
+            
 
             // Start the scaling animation
             StartCoroutine(SmoothScale(targetUIElement, targetUIElement.localScale + scaleIncrement, scaleDuration));
 
             // Disable the Backpack GameObject
             backpack.SetActive(false);
-            Debug.Log($"{backpack.name} has been disabled.");
+
 
             // Enable the OpenBackpack GameObject
             if (openBackpack != null)
             {
                 openBackpack.SetActive(true);
-                Debug.Log($"{openBackpack.name} has been enabled.");
+  
             }
             else
             {
-                Debug.LogWarning("Set active not done");
+
             }
         }
         else
@@ -64,20 +64,20 @@ public class BackpackUIClickHandler : MonoBehaviour
     {
         if (openBackpack != null && targetUIElement != null)
         {
-            Debug.Log($"Close button clicked. Reverting scale for {targetUIElement.name}");
+
 
             // Start the scaling animation in reverse
             StartCoroutine(SmoothScale(targetUIElement, initialScale, scaleDuration, () =>
             {
                 // Disable the OpenBackpack GameObject after scaling down
                 openBackpack.SetActive(false);
-                Debug.Log($"{openBackpack.name} has been disabled.");
+
 
                 // Enable the Backpack GameObject
                 if (backpack != null)
                 {
                     backpack.SetActive(true);
-                    Debug.Log($"{backpack.name} has been enabled.");
+
                 }
             }));
         }
@@ -108,7 +108,7 @@ public class BackpackUIClickHandler : MonoBehaviour
 
         // Ensure the final scale is set exactly
         target.localScale = targetScale;
-        Debug.Log($"Interpolated smooth scale completed for {target.name}");
+
 
         // Call the onComplete action if provided
         onComplete?.Invoke();

@@ -103,7 +103,6 @@ public class ScannerClickManager : ClickManager
             // Flip Y-axis because UV coordinates are bottom-left origin
             normalizedUV.y = 1f - normalizedUV.y;
 
-            Debug.Log($"Normalized UV: {normalizedUV}");
 
             Ray ray = playerCamera.ViewportPointToRay(new Vector3(normalizedUV.x, normalizedUV.y, 0f));
             Debug.DrawRay(ray.origin, ray.direction * 50f, Color.green, 1f);
@@ -113,13 +112,10 @@ public class ScannerClickManager : ClickManager
 
             if (hits.Length > 0)
             {
-                Debug.Log($"Raycast hit {hits.Length} objects.");
 
                 foreach (var hit in hits)
                 {
                     GameObject clickedObject = hit.collider.gameObject;
-                    Debug.Log($"Raycast hit: {clickedObject.name}, Collider: {hit.collider.name}");
-
                     if (clickedObject.CompareTag("SearchContainer"))
                     {
                         SearchableContainer containerScript = clickedObject.GetComponent<SearchableContainer>();
@@ -152,7 +148,6 @@ public class ScannerClickManager : ClickManager
             }
             else
             {
-                Debug.Log("Raycast did not hit any objects.");
             }
         }
         else if (containerOpen)
@@ -187,7 +182,7 @@ public class ScannerClickManager : ClickManager
         if (hit.collider != null)
 {
     GameObject hitObject = hit.collider.gameObject;
-    Debug.Log($"2D Raycast hit: {hitObject.name} with tag {hitObject.tag}");
+
 
     if (hitObject.CompareTag("Scanner") || hitObject.CompareTag("Barrel"))
     {

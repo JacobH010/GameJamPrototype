@@ -4,26 +4,20 @@ using UnityEngine;
 
 public class GlowstickController : MonoBehaviour
 {
-    public GameObject glowstickPrefab;
-    public GameObject glowstickWorldObject;
-    // Start is called before the first frame update
-    void Start()
-    {
- 
-    }
+    public GameObject glowstickPrefab; // Assignable prefab in the inspector
+    public GameObject UIFinalized; // The parent GameObject in the Canvas
 
-    // Update is called once per frame
-    void Update()
+    private void OnMouseDown()
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (glowstickPrefab != null && UIFinalized != null)
         {
-            Instantiate<GameObject>(glowstickPrefab, GlowstickSpawnLocation());
+            // Instantiate the glowstickPrefab as a child of UIFinalized
+            GameObject newGlowstick = Instantiate(glowstickPrefab, UIFinalized.transform);
+            newGlowstick.transform.localPosition = Vector3.zero; // Adjust position if needed
         }
-    }
-    private Transform GlowstickSpawnLocation()
-    {
-        
-        return glowstickWorldObject.transform;
-
+        else
+        {
+            Debug.LogWarning("GlowstickPrefab or UIFinalized is not assigned in the inspector.");
+        }
     }
 }
