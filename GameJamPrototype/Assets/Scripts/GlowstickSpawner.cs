@@ -10,6 +10,8 @@ public class GlowstickSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHa
     [SerializeField] private Canvas canvas; // Canvas reference for pointer positions
     [SerializeField] private GameObject secondaryPrefab; // Secondary prefab to spawn after glowstick is destroyed
     [SerializeField] private GameObject spawnLocationObject; // Inspector-assignable object to determine spawn position for secondary prefab
+    [SerializeField] private AudioClip spawnSound; // Sound to play when spawning the glowstick
+    [SerializeField] private AudioSource audioSource; // AudioSource to play the sound
 
     private GameObject currentGlowstick; // Reference to the currently spawned glowstick
     private DraggableImage currentDraggableComponent; // Reference to the draggable component of the current glowstick
@@ -51,6 +53,9 @@ public class GlowstickSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHa
                 currentGlowstick.transform.SetParent(glowstickContainer, true);
                 Debug.Log($"Glowstick {currentGlowstick.name} added to container.");
             }
+
+            // Play the spawn sound
+            PlaySpawnSound();
 
             // Initialize dragging
             currentDraggableComponent = currentGlowstick.GetComponent<DraggableImage>();
@@ -95,4 +100,16 @@ public class GlowstickSpawner : MonoBehaviour, IPointerDownHandler, IPointerUpHa
         }
     }
 
+    private void PlaySpawnSound()
+    {
+        if (audioSource != null && spawnSound != null)
+        {
+            audioSource.PlayOneShot(spawnSound); // Play the spawn sound effect
+            Debug.Log("Spawn sound played.");
+        }
+        else
+        {
+            Debug.LogWarning("AudioSource or SpawnSound is not assigned.");
+        }
+    }
 }
