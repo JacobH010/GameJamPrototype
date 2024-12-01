@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8680180734028115595}
   - component: {fileID: 2985269332076197583}
-  - component: {fileID: 6370407295567629598}
   - component: {fileID: 3567525521955098622}
   - component: {fileID: 109288903589847345}
-  - component: {fileID: 4664798593067390636}
+  - component: {fileID: 7687244886572280703}
   m_Layer: 29
   m_Name: DiamondRing
   m_TagString: Scanner
@@ -88,94 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &6370407295567629598
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4600537823810059370}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.63, y: 2.13}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.21499999, y: -0.935}
-      - {x: 0.275, y: -0.905}
-      - {x: 0.39499998, y: -0.825}
-      - {x: 0.585, y: -0.625}
-      - {x: 0.695, y: -0.42499998}
-      - {x: 0.73499995, y: -0.385}
-      - {x: 0.765, y: -0.325}
-      - {x: 0.775, y: -0.21499999}
-      - {x: 0.815, y: -0.175}
-      - {x: 0.815, y: 0.205}
-      - {x: 0.805, y: 0.21499999}
-      - {x: 0.765, y: 0.265}
-      - {x: 0.745, y: 0.325}
-      - {x: 0.545, y: 0.515}
-      - {x: 0.435, y: 0.525}
-      - {x: 0.415, y: 0.59499997}
-      - {x: 0.33499998, y: 0.675}
-      - {x: 0.325, y: 0.715}
-      - {x: 0.175, y: 0.815}
-      - {x: 0.095, y: 0.84499997}
-      - {x: -0.065, y: 0.84499997}
-      - {x: -0.195, y: 0.815}
-      - {x: -0.285, y: 0.755}
-      - {x: -0.325, y: 0.715}
-      - {x: -0.415, y: 0.59499997}
-      - {x: -0.475, y: 0.475}
-      - {x: -0.475, y: 0.285}
-      - {x: -0.49499997, y: 0.255}
-      - {x: -0.525, y: 0.185}
-      - {x: -0.655, y: 0.055}
-      - {x: -0.73499995, y: -0.145}
-      - {x: -0.775, y: -0.185}
-      - {x: -0.815, y: -0.305}
-      - {x: -0.815, y: -0.73499995}
-      - {x: -0.78499997, y: -0.805}
-      - {x: -0.66499996, y: -0.885}
-      - {x: -0.66499996, y: -0.92499995}
-      - {x: -0.60499996, y: -0.98499995}
-      - {x: -0.42499998, y: -1.0649999}
-      - {x: -0.095, y: -1.0649999}
-      - {x: -0.024999999, y: -1.055}
-      - {x: 0.065, y: -1.035}
-      - {x: 0.125, y: -0.965}
-  m_UseDelaunayMesh: 0
 --- !u!114 &3567525521955098622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +115,7 @@ MonoBehaviour:
   objectName: Diamond Ring
   monitaryValue: 239
   scanValue: 50
-  commonality: 10
+  commonality: 50
   itemWeight: 1
   containerID: 
 --- !u!50 &109288903589847345
@@ -234,14 +145,14 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &4664798593067390636
-BoxCollider2D:
+--- !u!70 &7687244886572280703
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4600537823810059370}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -266,16 +177,6 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.63, y: 2.13}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.63, y: 2.13}
-  m_EdgeRadius: 0
+  m_Offset: {x: -0.08, y: -0.14}
+  m_Size: {x: 1.92, y: 2.05}
+  m_Direction: 0

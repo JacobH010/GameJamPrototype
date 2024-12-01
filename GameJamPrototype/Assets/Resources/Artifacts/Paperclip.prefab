@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2249591391766715432}
   - component: {fileID: 3947675249578449964}
   - component: {fileID: 1577431501794549343}
-  - component: {fileID: 1183842952400763961}
   - component: {fileID: 2535060163439111829}
   m_Layer: 29
   m_Name: Paperclip
@@ -31,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.831, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 0}
+  m_LocalScale: {x: 1.73, y: 1.73, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -115,7 +114,7 @@ MonoBehaviour:
   objectName: Paperclip
   monitaryValue: 0
   scanValue: 0
-  commonality: 10
+  commonality: 100
   itemWeight: 1
   containerID: 
 --- !u!50 &1577431501794549343
@@ -145,97 +144,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &1183842952400763961
-PolygonCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2794933642991192975}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.6, y: 2.68}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Points:
-    m_Paths:
-    - - {x: 0.14, y: -1.1}
-      - {x: 0.22, y: -0.97999996}
-      - {x: 0.26, y: -0.9}
-      - {x: 0.32999998, y: -0.64}
-      - {x: 0.39, y: -0.59}
-      - {x: 0.42, y: -0.45}
-      - {x: 0.48, y: -0.35}
-      - {x: 0.45999998, y: -0.16}
-      - {x: 0.48999998, y: -0.17}
-      - {x: 0.53, y: -0.13}
-      - {x: 0.58, y: -0.02}
-      - {x: 0.62, y: 0.099999994}
-      - {x: 0.69, y: 0.44}
-      - {x: 0.75, y: 0.48999998}
-      - {x: 0.78, y: 0.65999997}
-      - {x: 0.78, y: 1.1}
-      - {x: 0.76, y: 1.12}
-      - {x: 0.74, y: 1.18}
-      - {x: 0.71999997, y: 1.1999999}
-      - {x: 0.58, y: 1.3199999}
-      - {x: 0.08, y: 1.3199999}
-      - {x: 0.03, y: 1.29}
-      - {x: -0.08, y: 1.24}
-      - {x: -0.099999994, y: 1.22}
-      - {x: -0.17, y: 1.09}
-      - {x: -0.26, y: 0.9}
-      - {x: -0.29999998, y: 0.74}
-      - {x: -0.34, y: 0.62}
-      - {x: -0.42999998, y: 0.47}
-      - {x: -0.5, y: 0.21}
-      - {x: -0.55, y: 0.14999999}
-      - {x: -0.6156067, y: -0.015470255}
-      - {x: -0.65999997, y: -0.17999999}
-      - {x: -0.74, y: -0.5}
-      - {x: -0.79999995, y: -0.65999997}
-      - {x: -0.79999995, y: -0.79999995}
-      - {x: -0.78, y: -0.79999995}
-      - {x: -0.78, y: -1.06}
-      - {x: -0.75, y: -1.11}
-      - {x: -0.66999996, y: -1.1999999}
-      - {x: -0.55, y: -1.31}
-      - {x: -0.52, y: -1.3199999}
-      - {x: -0.08, y: -1.3199999}
-      - {x: -0.049999997, y: -1.31}
-      - {x: 0, y: -1.26}
-      - {x: 0.07, y: -1.23}
-  m_UseDelaunayMesh: 0
 --- !u!61 &2535060163439111829
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -243,7 +151,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2794933642991192975}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

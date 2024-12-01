@@ -18,8 +18,8 @@ public class ScannerItems : DragCashScript
     public int scanValue = 5;
 
     [Tooltip("Commonality 10 is very common")]
-    [Range(1,10)]
-    public int commonality = 10;
+    [Range(1,100)]
+    public int commonality = 100;
 
     
 
