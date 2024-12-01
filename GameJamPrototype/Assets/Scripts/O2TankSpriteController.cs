@@ -21,7 +21,7 @@ public class O2TankSpriteController : MonoBehaviour
             return;
         }
 
-        Debug.Log("UIManager found successfully.");
+
 
         // Ensure the O2TankBackpack is assigned
         if (o2TankBackpack != null)
@@ -33,7 +33,7 @@ public class O2TankSpriteController : MonoBehaviour
             {
                 // Set the shell count to match the player's O2 tanks from the UIManager
                 shellBoxSpawner.shellCount = Mathf.RoundToInt(uiManager.o2Tanks);
-                Debug.Log($"ShellBoxSpawner shellCount set to {shellBoxSpawner.shellCount} (UIManager o2Tanks = {uiManager.o2Tanks}).");
+
             }
             else
             {
