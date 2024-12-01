@@ -245,8 +245,4 @@ public class UIManager : MonoBehaviour
 
         Debug.Log("health packs selected = " + healthPacks + ". O2 tanks selected = " + o2Tanks + ". Ammo Selected = " + ammoPacks + ".");
     }
-    private void Update()
-    {
-        Debug.Log($"Player Health is currently {playerHealth} Health Slider is {healthSlider.value}");
-    }
 }
