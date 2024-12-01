@@ -23,6 +23,12 @@ public class SearchableContainer : MonoBehaviour
     [SerializeField]
     public Collider targetCollider;
 
+    [Header("Sprite Settings")]
+    [SerializeField] private Sprite newDrawerSprite; // Sprite assignable in the Inspector
+    [SerializeField] private GameObject drawerObject; // Reference to the Drawer GameObject
+
+    [SerializeField] private BoxCollider boxCollider; // Assign this in the Inspector
+
     private void Awake()
     {
         containerID = GenerateUniqueID();
@@ -36,14 +42,13 @@ public class SearchableContainer : MonoBehaviour
             Debug.LogWarning("Target Collider is not assigned in the Inspector!");
         }
     }
+
     private void Start()
     {
         searchObject.SetActive(false);
         mouseIcon.SetActive(false);
         saveManager = FindObjectOfType<SaveManager>(); // Find the SaveManager in the scene
     }
-
-    [SerializeField] private BoxCollider boxCollider; // Assign this in the Inspector
 
     private void OnTriggerEnter(Collider other)
     {
@@ -85,7 +90,6 @@ public class SearchableContainer : MonoBehaviour
         }
     }
 
-
     private string GenerateUniqueID()
     {
         string newID;
@@ -101,9 +105,10 @@ public class SearchableContainer : MonoBehaviour
     {
         if (playerNearby)
         {
-
-
             Debug.Log($"Opened container with {containerID}");
+
+            // Update the sprite when the container opens
+            UpdateDrawerSprite();
 
             // Set this container as the active container
             activeContainer = this;
@@ -138,30 +143,42 @@ public class SearchableContainer : MonoBehaviour
             Debug.Log("Player not detected nearby");
         }
     }
+
+    private void UpdateDrawerSprite()
+    {
+        // Change the sprite of the Drawer object
+        if (drawerObject != null && newDrawerSprite != null)
+        {
+            SpriteRenderer spriteRenderer = drawerObject.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = newDrawerSprite;
+                Debug.Log("Drawer sprite has been updated.");
+            }
+            else
+            {
+                Debug.LogWarning("Drawer GameObject does not have a SpriteRenderer component.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Drawer Object or New Drawer Sprite is not assigned.");
+        }
+    }
+
     private void LoadItemsFromData(LootContainerData containerData)
     {
         Debug.Log($"Loading {containerData.items.Count} items for container {containerID}");
 
         foreach (LootItemData itemData in containerData.items)
         {
-            Debug.Log($"Attempting to instantiate prefab: Artifacts/{itemData.itemID} at world position {itemData.itemPosition}");
-
-            // Load the prefab from Resources
             GameObject prefab = Resources.Load<GameObject>($"Artifacts/{itemData.itemID}");
             if (prefab != null)
             {
-                Debug.Log("Successfully loaded GameObject");
-
-                // Instantiate a new item without a parent so it spawns in the world
                 GameObject newItem = Instantiate(prefab);
-
-                // Set world position and rotation based on saved data
                 newItem.transform.position = itemData.itemPosition;
                 newItem.transform.rotation = itemData.itemRotation;
 
-                Debug.Log($"Instantiated new item {itemData.itemID} at world position {itemData.itemPosition}");
-
-                // Assign the containerID and prefabName to the new item
                 if (!newItem.TryGetComponent(out ItemCoontainerID itemContainer))
                 {
                     itemContainer = newItem.AddComponent<ItemCoontainerID>();
@@ -175,6 +192,7 @@ public class SearchableContainer : MonoBehaviour
             }
         }
     }
+
     private void SpawnNewLoot()
     {
         Queue<Transform> queue = new Queue<Transform>();
@@ -184,61 +202,51 @@ public class SearchableContainer : MonoBehaviour
         {
             Transform current = queue.Dequeue();
 
-            // Check for the LootSpawner component
             LootSpawner lootSpawner = current.GetComponent<LootSpawner>();
             if (lootSpawner != null)
             {
                 lootSpawner.SpawnLoot(containerID);
             }
 
-            // Enqueue all children of the current transform
             foreach (Transform child in current)
             {
                 queue.Enqueue(child);
             }
         }
     }
+
     public void CloseContainer()
     {
         if (activeContainer == this)
         {
-            // Collect the container state
             LootContainerData containerData = new LootContainerData
             {
                 containerID = containerID,
                 items = GetItemsInContainer()
             };
 
-            // Save the container state
             saveManager.SaveContainerData(containerData);
-
-            Debug.Log($"Container {containerID} saved.");
-
-            // Clear the active container reference
             activeContainer = null;
 
-            //Destroy all items instansiated 
             ClearInstantiatedItems();
 
-            // Switch back to player view
             playerObject.SetActive(true);
             renderCamera.gameObject.SetActive(true);
-            UI.SetActive(true );
+            UI.SetActive(true);
             containerOpen = false;
             searchObject.SetActive(false);
-            Debug.Log($"Container Open Set to False");
         }
     }
+
     private void ClearInstantiatedItems()
     {
         ItemCoontainerID[] itemsInScene = FindObjectsOfType<ItemCoontainerID>();
 
         foreach (ItemCoontainerID item in itemsInScene)
         {
-            // Check if the item's containerID matches this container's ID
             if (item.containerID == containerID)
             {
-                Destroy(item.gameObject); // Destroy the item
+                Destroy(item.gameObject);
             }
         }
     }
@@ -247,25 +255,21 @@ public class SearchableContainer : MonoBehaviour
     {
         List<LootItemData> items = new List<LootItemData>();
 
-        // Find all objects in the scene with the ItemCoontainerID component
         ItemCoontainerID[] allItems = FindObjectsOfType<ItemCoontainerID>();
 
         foreach (ItemCoontainerID item in allItems)
         {
-            // Check if the item's containerID matches this container's ID
             if (item.containerID == containerID)
             {
-                string origionalName = item.name.Replace("(Clone)", "").Trim();
                 items.Add(new LootItemData
                 {
-                    itemID = item.prefabName, // Ensure this matches the prefab's name or unique ID
-                    itemPosition = item.transform.position, // Save the local position relative to its parent
+                    itemID = item.prefabName,
+                    itemPosition = item.transform.position,
                     itemRotation = item.transform.rotation
                 });
             }
         }
 
-        Debug.Log($"Collected {items.Count} items from container {containerID}");
         return items;
     }
 }
