@@ -300,6 +300,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
+  activeSound: {fileID: 8300000, guid: e1ced4784d22d29489a05fb6ec18a0e9, type: 3}
+  inactiveSound: {fileID: 8300000, guid: 065a3f20b21a0fe4eb8465a1d9c53372, type: 3}
+  effectsMixerGroup: {fileID: 24300002, guid: 8406dc903c1ee8145aba3a720fdf9347, type: 2}
 --- !u!114 &6502328337960540575
 MonoBehaviour:
   m_ObjectHideFlags: 0
