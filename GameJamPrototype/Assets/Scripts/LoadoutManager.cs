@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class LoadoutManager : MonoBehaviour
 {
-    public static LoadoutManager loadoutManager { get; private set; }
+     public static LoadoutManager loadoutManager { get; private set; }
+    public LoadingScreen loadingScreen;
     // Inventory settings
     public float healthPacks { get; private set; }
     public float o2Tanks { get; private set; }
@@ -102,7 +103,7 @@ public class LoadoutManager : MonoBehaviour
             }
 
             // Load the new scene
-            SceneManager.LoadScene(SceneToLoad);
+            loadingScreen.LoadScene(SceneToLoad);
         }
         else
         {
