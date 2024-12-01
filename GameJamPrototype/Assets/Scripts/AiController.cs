@@ -636,7 +636,7 @@ public class AIController : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Projectile"))
+        if (collision.gameObject.CompareTag("Projectile") && !isDead)
         {
             gameObject.SetActive(false);
         }
@@ -645,7 +645,7 @@ public class AIController : MonoBehaviour
 
     {
         //Debug.Log("Collision detected");
-        if (other.gameObject.CompareTag("Player") )
+        if (other.gameObject.CompareTag("Player") && !isDead)
         {
 
             Debug.Log("Damage player");
@@ -729,6 +729,7 @@ public class AIController : MonoBehaviour
         ResetTriggers("Damaged");
         if (health <= 0)
         {
+            isDead = true;
             stateMachineEnabled = false; // Disable the state machine
             StopAllCoroutines(); // Stop any ongoing coroutines
             isAttacking = false;
@@ -754,7 +755,7 @@ public class AIController : MonoBehaviour
         while (true)
         {
             Vector3 currentLocation = transform.position;
-            float time = .1f;
+            float time = .03f;
             yield return new WaitForSeconds(time);
             Vector3 newPosition = transform.position;
             Vector3 distance = (currentLocation - newPosition);

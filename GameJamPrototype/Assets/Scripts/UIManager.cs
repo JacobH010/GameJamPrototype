@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     public Slider healthSlider;
     public Slider o2Slider;
 
-
+    public ScannerClickManager scannerClickManager;
 
     private LoadoutManager loadoutManager;
 
@@ -92,12 +92,13 @@ public class UIManager : MonoBehaviour
                     else
                     {
                         // Oxygen is depleted, handle force application
+                        
                         DraggableImage draggableImage = o2Slider.GetComponentInParent<DraggableImage>();
                         if (draggableImage != null)
                         {
                             ApplyForceToDraggable(draggableImage);
                         }
-
+                        Debug.Log($"Player Health Decaying to {playerHealth}");
                         // Reset health or handle zero oxygen behavior
                         playerHealth -= o2HealthDecay;
                         healthSlider.value = playerHealth;
@@ -111,7 +112,7 @@ public class UIManager : MonoBehaviour
             }
 
             // Check if no O2 tank is active
-            if (!IsAnyO2TankActive())
+            if (!IsAnyO2TankActive() && !scannerClickManager.containerOpen)
             {
                 playerHealth -= o2HealthDecay * 2; // Decrease health rapidly
                 healthSlider.value = playerHealth;
@@ -148,10 +149,13 @@ public class UIManager : MonoBehaviour
         {
             if (tank.IsActive)
             {
+                Debug.Log("O2 Tank Active");
                 return true;
             }
         }
+        Debug.Log("O2 Tank Not Found");
         return false;
+        
     }
 
 
@@ -240,5 +244,9 @@ public class UIManager : MonoBehaviour
         ammoPacks = loadoutManager.ammoPacks;
 
         Debug.Log("health packs selected = " + healthPacks + ". O2 tanks selected = " + o2Tanks + ". Ammo Selected = " + ammoPacks + ".");
+    }
+    private void Update()
+    {
+        Debug.Log($"Player Health is currently {playerHealth} Health Slider is {healthSlider.value}");
     }
 }

@@ -23,13 +23,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Map 1.unity
     guid: d503d8d304cd9dc4cb6d35fecfa46484
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Map 2.unity
     guid: b8438db92f4e8434789510ce5337f361
   - enabled: 1
     path: Assets/Scenes/Map.unity
     guid: acceb83710f3fd5458d7bbd71a1ffd58
-    guid: 0054fcd79b3f5b44f90a1e35cf86033c
   - enabled: 1
     path: Assets/Scenes/PauseMenuTesting.unity
     guid: 4bcec20f2f150ab4c954bf0245c6578e
