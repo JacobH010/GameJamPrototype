@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class O2TankBackpackCollisionHandler : MonoBehaviour
 {
@@ -24,15 +25,28 @@ public class O2TankBackpackCollisionHandler : MonoBehaviour
 
             if (o2TankBehavior != null)
             {
+                // Access the slider component of the O2 tank
+                Slider o2Slider = collision.GetComponentInChildren<Slider>();
+                if (o2Slider != null)
+                {
+                    // Check the slider value and prevent collision handling if 99 or less
+                    if (o2Slider.value <= 99)
+                    {
+                        Debug.Log($"O2 Tank {collision.gameObject.name} has a slider value of {o2Slider.value}. Collision ignored.");
+                        return;
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"No Slider found on O2 Tank {collision.gameObject.name}. Proceeding with default collision handling.");
+                }
+
                 // If the tank is marked as just spawned, do not delete it
                 if (o2TankBehavior.IsJustSpawned)
                 {
                     Debug.Log($"O2 Tank {collision.gameObject.name} just spawned and cannot be deleted yet.");
                     return;
                 }
-
-                // Increment the shell count in ShellBoxSpawner
-                
 
                 // Destroy the O2 tank
                 Destroy(collision.gameObject);
