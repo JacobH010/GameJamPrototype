@@ -110,9 +110,8 @@ MonoBehaviour:
   rotationSpeed: 35
   rotationSmoothness: 1.5
   rotationPreservation: 0.01
-  flavorText: One of a two peice set of anomalous dolls of a plumber dolls that has
-    various effects when giving mushrooms. The second half of this set has never
-    been found.
+  flavorText: One of a two peice set of anomalous plumber dolls that have various
+    effects when given mushrooms. The second half of this set has never been found.
   objectName: Green Plumber Doll
   monitaryValue: 500
   scanValue: 500

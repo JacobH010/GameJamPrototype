@@ -111,7 +111,7 @@ MonoBehaviour:
   rotationSmoothness: 1.5
   rotationPreservation: 0.01
   flavorText: A Regular Coffee Cup.
-  objectName: Coffee Boy
+  objectName: Coffee Cup
   monitaryValue: 0
   scanValue: 0
   commonality: 100

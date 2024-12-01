@@ -345,8 +345,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clickableArea: {fileID: 5621917593410691457}
-  releasedGravityScale: 237.07
-  flingForceMultiplier: 1500
+  releasedGravityScale: 106.81
+  flingForceMultiplier: 2000
   rotationForceMultiplier: 0
   rotationSmoothing: 34.09
   smoothing: 40

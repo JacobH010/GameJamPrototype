@@ -204,7 +204,7 @@ public class ShotgunController : MonoBehaviour
         if (barrelRigidbody != null && !gravitySet)
         {
 
-            barrelRigidbody.gravityScale = 50f; // Set gravity
+            barrelRigidbody.gravityScale = 75f; // Set gravity
             gravitySet = true;
         }
 
@@ -261,27 +261,15 @@ public class ShotgunController : MonoBehaviour
     {
         yield return new WaitForSeconds(shellSpawnDelay);
 
-        float minForce = 20f;
-        float maxForce = 300f;
-
         for (int i = 0; i < shellsToEject; i++)
         {
             GameObject shell = Instantiate(loadedShellPrefab, shellSpawnLocation.position, Quaternion.identity, canvas.transform);
             Rigidbody2D shellRb = shell.GetComponent<Rigidbody2D>();
 
-            // Set the shell's IsJustSpawned flag to false
-            ShellBehavior shellBehavior = shell.GetComponent<ShellBehavior>();
-            if (shellBehavior != null)
-            {
-                shellBehavior.IsJustSpawned = false;
-            }
-
+            // Apply forces to loaded shells
             if (shellRb != null)
             {
-                float randomLeftForce = Random.Range(minForce, maxForce);
-                float randomUpwardForce = Random.Range(minForce, maxForce);
-                Vector2 force = new Vector2(-randomLeftForce, randomUpwardForce);
-
+                Vector2 force = new Vector2(-shellForce, shellUpwardForce);
                 shellRb.AddForce(force, ForceMode2D.Impulse);
                 shellRb.AddTorque(shellRotationalForce, ForceMode2D.Impulse);
             }
@@ -293,28 +281,21 @@ public class ShotgunController : MonoBehaviour
     {
         yield return new WaitForSeconds(shellSpawnDelay);
 
-        float minForce = 20f;
-        float maxForce = 300f;
-
         for (int i = 0; i < shellsToEject; i++)
         {
             GameObject shell = Instantiate(shellEmptyPrefab, shellSpawnLocation.position, Quaternion.identity, canvas.transform);
             Rigidbody2D shellRb = shell.GetComponent<Rigidbody2D>();
 
+            // Apply forces to empty shells
             if (shellRb != null)
             {
-                float randomLeftForce = Random.Range(minForce, maxForce);
-                float randomUpwardForce = Random.Range(minForce, maxForce);
-                Vector2 force = new Vector2(-randomLeftForce, randomUpwardForce);
-
+                Vector2 force = new Vector2(-shellForce, shellUpwardForce);
                 shellRb.AddForce(force, ForceMode2D.Impulse);
                 shellRb.AddTorque(shellRotationalForce, ForceMode2D.Impulse);
             }
         }
 
-        shellsFired = 0;  // Reset shellsFired after ejection
-             
-
+        shellsFired = 0; // Reset shellsFired after ejection
     }
 
     private bool IsBarrelInRestrictedRotation()

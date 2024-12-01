@@ -5,6 +5,12 @@ public class GrayscaleEffect : MonoBehaviour
     public Material grayscaleMaterial; // Assign the material with the grayscale shader.
     [Range(0, 1)] public float intensity = 0; // Grayscale intensity controlled by health.
 
+    private void Awake()
+    {
+        // Initialize grayscale intensity based on default health value (e.g., 100).
+        UpdateGrayscaleIntensity(100f);
+    }
+
     // Call this method when the health slider value changes.
     public void UpdateGrayscaleIntensity(float health)
     {

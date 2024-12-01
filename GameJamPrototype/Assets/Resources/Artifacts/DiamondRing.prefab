@@ -113,9 +113,9 @@ MonoBehaviour:
   flavorText: A ring constructed of a silver band and a sparkling diamond for the
     inset stone.
   objectName: Diamond Ring
-  monitaryValue: 239
+  monitaryValue: 50
   scanValue: 50
-  commonality: 50
+  commonality: 15
   itemWeight: 1
   containerID: 
 --- !u!50 &109288903589847345
